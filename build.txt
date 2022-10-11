@@ -1,0 +1,6 @@
+author = Verveine
+displayName = Genshin Mod
+hideCode = true
+hideResources = true
+homepage = https://discord.gg/DZKtVwq
+version = 0.1

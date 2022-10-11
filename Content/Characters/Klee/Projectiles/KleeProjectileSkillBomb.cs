@@ -1,0 +1,78 @@
+﻿using Microsoft.Xna.Framework;
+using GenshinMod.Content.Dusts;
+using System;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.ModLoader;
+using Terraria.ID;
+using Terraria.Audio;
+using GenshinMod.Common.ModObjects;
+
+namespace GenshinMod.Content.Characters.Klee.Projectiles
+{
+    public class KleeProjectileSkillBomb : GenshinProjectile
+	{
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Dodoco mine");
+		}
+
+		public override Color? GetAlpha(Color lightColor)
+		{
+			lightColor *= 3f;
+			return lightColor;
+		}
+
+		public override void SetDefaults()
+		{
+			Projectile.width = 14;
+			Projectile.height = 24;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.aiStyle = 0;
+			Projectile.timeLeft = 900; // 15 sec
+			Main.projFrames[Projectile.type] = 8;
+		}
+
+		public override void OnSpawn(IEntitySource source)
+        {
+			Projectile.frame = Main.rand.Next(8);
+			Projectile.timeLeft -= Main.rand.Next(60);
+			if (IsLocalOwner) Projectile.netUpdate = true;
+		}
+
+        public override void SafeAI()
+		{
+			Projectile.velocity.Y += 0.10f;
+			Projectile.velocity.X *= 0.975f;
+
+			Projectile.friendly = timeSpent > 60;
+
+			if (timeSpent % 6 == 0)
+			{
+				Projectile.frame++;
+				if (Projectile.frame > 7) Projectile.frame = 0;
+			}
+
+			SpawnDust<KleeSparkleDust>(0.5f, 0.5f, 10, 1, 60);
+			SpawnDust<KleeSparkleDustBigRed>(0.5f, 1f, 10, 1, 300);
+		}
+
+        public override void Kill(int timeLeft)
+        {
+			int type = ModContent.ProjectileType<KleeExplosionSmall>();
+			SpawnProjectile(Projectile.Center, VelocityImmobile, type, Projectile.damage * 5, Projectile.knockBack);
+
+			SpawnDust<KleeSparkleDust>(0.75f, 1f, 10, 6);
+			SpawnDust(DustID.Smoke, 0.5f, 1f, 5, 3);
+
+			SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
+		}
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+		{
+			if (Projectile.velocity.Y != oldVelocity.Y) Projectile.velocity.Y *= 0f;
+				return false;
+        }
+    }
+}
