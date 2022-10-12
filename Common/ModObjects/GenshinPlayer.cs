@@ -14,14 +14,14 @@ namespace GenshinMod.Common.ModObjects
 {
     public class GenshinPlayer : ModPlayer
     {
-        public GenshinCharacter CharacterCurrent;
-        public List<GenshinCharacter> CharacterTeam;
-        public int timerMovement = 0;
-        public int timerUse = 0;
-        public int timerUseRef = 0;
-        public int lastUseDirection = 1;
-
-        public bool IsUsing() => timerUse > 0;
+        public GenshinCharacter CharacterCurrent; // Currently selected character;
+        public List<GenshinCharacter> CharacterTeam; // Current team of 4 characters
+        public int TimerMovement = 0; // Used for animations
+        public int TimerUse = 0; // Used for animations (swing)
+        public int TimerUseRef = 0; // Used for animations
+        public int LastUseDirection = 1; // Animation swing direction
+        public int Timer = 0; // Increased by 1 every frame
+        public bool IsUsing() => TimerUse > 0;
 
         public override void Initialize()
         {
@@ -50,7 +50,7 @@ namespace GenshinMod.Common.ModObjects
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
         {
             if (Player.active)
-            {
+            { // Hide player
                 Player.head = -1;
                 Player.body = -1;
                 Player.legs = -1;
@@ -72,17 +72,19 @@ namespace GenshinMod.Common.ModObjects
 
         public override void ResetEffects()
         {
+            Timer++;
+
             if (Player.velocity.X != 0)
             {
-                timerMovement += 1 + (int)(Math.Abs(Player.velocity.X) * 1.25f);
-                if (timerMovement >= 140) timerMovement = 0;
+                TimerMovement += 1 + (int)(Math.Abs(Player.velocity.X) * 1.25f);
+                if (TimerMovement >= 140) TimerMovement = 0;
             }
-            else timerMovement = 0;
+            else TimerMovement = 0;
 
-            if (timerUse > 0)
+            if (TimerUse > 0)
             {
-                timerUse--;
-                if (timerUse <= 0) timerUseRef = 0;
+                TimerUse--;
+                if (TimerUse <= 0) TimerUseRef = 0;
             }
 
             foreach (GenshinCharacter character in CharacterTeam)
@@ -108,7 +110,7 @@ namespace GenshinMod.Common.ModObjects
             Vector2 drawPosition = (Player.position + new Vector2(Player.width * 0.5f, Player.gfxOffY + 20 + 530)).Floor();
             drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
             Point coord = new Point((int)(Player.position.X / 16), (int)(Player.position.Y / 16));
-            SpriteEffects effect = (IsUsing() ? lastUseDirection : Player.direction) == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects effect = (IsUsing() ? LastUseDirection : Player.direction) == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             int movementFrame = 0;
             int legFrame = 0;
@@ -120,13 +122,13 @@ namespace GenshinMod.Common.ModObjects
                 }
                 else
                 {
-                    while ((movementFrame + 1) * 10 < timerMovement)
+                    while ((movementFrame + 1) * 10 < TimerMovement)
                     {
                         movementFrame++;
                     }
                     movementFrame += 6;
 
-                    if (IsUsing() && lastUseDirection != Player.direction)
+                    if (IsUsing() && LastUseDirection != Player.direction)
                     {
                         legFrame = 19 - movementFrame + 6;
                     }
@@ -134,10 +136,10 @@ namespace GenshinMod.Common.ModObjects
             }
 
             int useFrame = -1;
-            if (timerUse > 0)
+            if (TimerUse > 0)
             {
                 useFrame = 3;
-                while (useFrame * (timerUseRef / 4) >= timerUse)
+                while (useFrame * (TimerUseRef / 4) >= TimerUse)
                 {
                     useFrame--;
                 }
@@ -174,7 +176,7 @@ namespace GenshinMod.Common.ModObjects
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
-            GiveTeamEnergy(CharacterElement.NONE, 1); // TEMP
+            //GiveTeamEnergy(CharacterElement.NONE, 1); // TEMP
         }
 
         public void GiveTeamEnergy(CharacterElement element, float value)

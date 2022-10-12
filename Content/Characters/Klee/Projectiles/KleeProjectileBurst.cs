@@ -30,7 +30,8 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.tileCollide = true;
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 20;
-			projectileTrail = true;
+			ProjectileTrail = true;
+			Element = Common.GameObjects.CharacterElement.PYRO;
 		}
 
 		public override void OnSpawn(IEntitySource source)

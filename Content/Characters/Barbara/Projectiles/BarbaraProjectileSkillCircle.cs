@@ -29,6 +29,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.timeLeft = 901;
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
+			Element = Common.GameObjects.CharacterElement.HYDRO;
 		}
 
         public override void OnSpawn(IEntitySource source)
@@ -75,7 +76,8 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
         public override void Kill(int timeLeft)
         {
-            base.Kill(timeLeft);
+			SpawnDust<BarbaraDustStarBig>(0.1f, 1f, 0, 4);
+			SpawnDust<BarbaraDustStar>(0.2f, 1f, 0, 4);
         }
 
         public override void PostDraw(Color lightColor)

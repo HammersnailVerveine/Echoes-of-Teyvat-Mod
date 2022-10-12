@@ -56,9 +56,9 @@ namespace GenshinMod.Common.GameObjects
         {
             UseTimeCurrent = UseTime;
             CooldownCurrent = Cooldown;
-            Character.GenshinPlayer.timerUse = UseTime;
-            Character.GenshinPlayer.timerUseRef = UseTime;
-            Character.GenshinPlayer.lastUseDirection = Main.MouseWorld.X - Player.Center.X > 0 ? 1 : -1;
+            Character.GenshinPlayer.TimerUse = UseTime;
+            Character.GenshinPlayer.TimerUseRef = UseTime;
+            Character.GenshinPlayer.LastUseDirection = Main.MouseWorld.X - Player.Center.X > 0 ? 1 : -1;
             OnUse();
         }
 

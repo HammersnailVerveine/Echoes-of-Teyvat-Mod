@@ -13,5 +13,10 @@ namespace GenshinMod.Content.Characters.Barbara
 			AbilitySkill = new BarbaraAbilitySkill().Initialize(this);
 			AbilityBurst = new BarbaraAbilityBurst().Initialize(this);
 		}
-	}
+
+        public override void SafePostUpdate()
+        {
+			if (GenshinPlayer.Timer % 600 == 0) GainEnergyFlat(1f);
+        }
+    }
 }

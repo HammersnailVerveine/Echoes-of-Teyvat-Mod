@@ -1,3 +1,5 @@
+using GenshinMod.Common.GameObjects;
+using GenshinMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,11 +14,17 @@ namespace GenshinMod.Common.ModObjects
 {
     public abstract class GenshinProjectile : ModProjectile
     {
-        public bool projectileTrail = false; // Will the projectile leave a trail of afterimages ?
-        public float projectileTrailOffset = 0f; // Offcenters the afterimages a bit. useless without projectileTrail activated. Looks terrible on most projectiles.
+        public bool ProjectileTrail = false; // Will the projectile leave a trail of afterimages ?
+        public float ProjectileTrailOffset = 0f; // Offcenters the afterimages a bit. useless without projectileTrail activated. Looks terrible on most projectiles.
+        public CharacterElement Element = CharacterElement.NONE; // Projectile element
+        public int ElementalParticles = 0; // Number of particles (value : 1) spawned on first hit
+
+        public bool FirstHit = false; // Has the projectile hit a target yet ?
 
         public virtual void SafeAI() { }
         public virtual void SafePostAI() { }
+        public virtual void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit) { }
+        public virtual void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
 
         public int timeSpent = 0;
@@ -58,7 +66,7 @@ namespace GenshinMod.Common.ModObjects
         public sealed override void PostAI()
         {
             SafePostAI();
-            if (projectileTrail)
+            if (ProjectileTrail)
             {
                 PostAITrail();
             }
@@ -66,7 +74,7 @@ namespace GenshinMod.Common.ModObjects
 
         public sealed override bool PreDraw(ref Color lightColor)
         {
-            if (projectileTrail)
+            if (ProjectileTrail)
             {
                 PreDrawTrail(Main.spriteBatch, lightColor);
             }
@@ -81,7 +89,7 @@ namespace GenshinMod.Common.ModObjects
 
         public void PreDrawTrail(SpriteBatch spriteBatch, Color lightColor)
         {
-            float offSet = projectileTrailOffset + 0.5f;
+            float offSet = ProjectileTrailOffset + 0.5f;
             Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Value.Width * offSet, Projectile.height * offSet);
             for (int k = 0; k < Projectile.oldPos.Length; k++)
             {
@@ -149,6 +157,31 @@ namespace GenshinMod.Common.ModObjects
                 Dust dust = Main.dust[Dust.NewDust(position - new Vector2(offSet, offSet), offSet * 2, offSet * 2, type)];
                 dust.velocity = new Vector2(Main.rand.NextFloat(-velocity, velocity), Main.rand.NextFloat(-velocity, velocity)) + direction;
             }
+        }
+
+        public void SpawnElementalParticle(CharacterElement element, float value, int number = 1)
+        {
+            int type = ModContent.ProjectileType<ProjectileElementalParticle>();
+            for (int i = 0; i < number; i ++)
+            {
+                int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, type, 0, 0f, Projectile.owner, (float)element, value);
+            }
+        }
+
+        public sealed override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            if (!FirstHit)
+            {
+                FirstHit = true;
+
+                if (ElementalParticles > 0)
+                {
+                    SpawnElementalParticle(Element, 1f, ElementalParticles);
+                }
+
+                OnFirstHitNPC(target, damage, knockback, crit);
+            }
+            SafeOnHitNPC(target, damage, knockback, crit);
         }
     }
 }

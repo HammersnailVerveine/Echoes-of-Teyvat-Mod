@@ -34,6 +34,8 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 300;
 			Projectile.penetrate = -1;
+			Element = Common.GameObjects.CharacterElement.PYRO;
+			ElementalParticles = 4;
 		}
 
 		public override void OnSpawn(IEntitySource source)

@@ -123,7 +123,12 @@ namespace GenshinMod.Common.GameObjects
             if (element == CharacterElement.NONE) value *= 2;
             else if (element == Element) value *= 3;
 
-            Energy += value;
+            GainEnergyFlat(value);
+        }
+
+        public void GainEnergyFlat(float value)
+        {
+            Energy += value * StatEnergyRecharge;
             if (Energy > AbilityBurst.Energy) Energy = AbilityBurst.Energy;
         }
 
