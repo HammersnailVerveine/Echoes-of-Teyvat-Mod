@@ -11,7 +11,7 @@ namespace GenshinMod.Content.Characters.Barbara
 			AbilityNormal = new BarbaraAbilityNormal().Initialize(this);
 			AbilityCharged = new BarbaraAbilityCharged().Initialize(this);
 			AbilitySkill = new BarbaraAbilitySkill().Initialize(this);
-			AbilityBurst = new BarbaraAbilityNormal().Initialize(this);
+			AbilityBurst = new BarbaraAbilityBurst().Initialize(this);
 		}
 	}
 }

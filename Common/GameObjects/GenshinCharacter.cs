@@ -31,20 +31,21 @@ namespace GenshinMod.Common.GameObjects
         public string Name;
         public CharacterElement Element;
 
-        public int HealthMax;
-        public int Defense;
+        public int FlatHealth; // Max health no modifiers
+        public int FlatDefense; // Max defense no modifiers
 
         // Dynamic variables
 
-        public int Health;
-        public int Energy;
-        public int Mastery;
+        public int Health = 100; // Current health
+        public float Energy = 0f; // Current energy
 
-        public float BonusDamage;
-        public float BonusHealth;
-        public float BonusDefense;
-        public float BonusMastery;
-        public float BonusEnergyRecharge;
+        public float StatDamage = 1f; // Damage % (base = 100%)
+        public float StatEnergyRecharge = 1f; // Energy Recharge % (base = 100%)
+        public float StatHealth = 0f; // Health bonus % (of FlatHealth, base = 0%)
+        public float StatDefense = 0f; // Defense bonus % (of FlatDefense, base = 0%)
+        public int StatElementalMastery = 0; // Elemental mastery (base = 0)
+        public int StatDamageFlat = 0; // Bonus flat damage (base = 0)
+        public int StatHealthFlat = 0; // Bonus flat health (base = 0)
 
         public abstract void SetDefaults();
         public virtual void SafePreUpdate() { }
@@ -109,11 +110,21 @@ namespace GenshinMod.Common.GameObjects
 
         public void TryUseAbility(GenshinAbility ability)
         {
-            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility)
+            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy)
             {
+                Energy -= ability.Energy;
                 AbilityCurrent = ability;
                 ability.Use();
             }
+        }
+
+        public void GainEnergy(CharacterElement element, float value)
+        {
+            if (element == CharacterElement.NONE) value *= 2;
+            else if (element == Element) value *= 3;
+
+            Energy += value;
+            if (Energy > AbilityBurst.Energy) Energy = AbilityBurst.Energy;
         }
 
         public bool CanUseAbility => AbilityCurrent == null;

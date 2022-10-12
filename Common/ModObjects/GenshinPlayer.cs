@@ -171,5 +171,16 @@ namespace GenshinMod.Common.ModObjects
             spriteBatch.Draw(textureHead, drawPosition, rectangleHead, Lighting.GetColor(coord), 0f, textureHead.Size() * 0.5f, 1f, effect, 0f);
             spriteBatch.Draw(textureArms, drawPosition, rectangleArms, Lighting.GetColor(coord), 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
         }
+
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+        {
+            GiveTeamEnergy(CharacterElement.NONE, 1); // TEMP
+        }
+
+        public void GiveTeamEnergy(CharacterElement element, float value)
+        {
+            foreach (GenshinCharacter character in CharacterTeam)
+                character.GainEnergy(element, character == CharacterCurrent ? value : value * 0.6f);   
+        }
     }
 }
