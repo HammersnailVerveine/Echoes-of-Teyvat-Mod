@@ -26,6 +26,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.penetrate = -1;
 			Main.projFrames[Projectile.type] = 3;
 			Element = Common.GameObjects.CharacterElement.HYDRO;
+			ElementalParticles = 1;
 		}
 
         public override Color? GetAlpha(Color lightColor)

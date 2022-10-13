@@ -36,7 +36,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
         {
 			Projectile.scale = 2.5f;
 			Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);
-			texture ??= ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			texture ??= GetTexture();
 		}
 
         public override void SafeAI()

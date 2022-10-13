@@ -8,11 +8,13 @@ using Terraria.ID;
 using Terraria.Audio;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Common.GameObjects;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GenshinMod.Content.Projectiles
 {
     public class ProjectileElementalParticle : GenshinProjectile
 	{
+		public static Texture2D texture;
 		public Color GlowColor;
 
 		public override void SetStaticDefaults()
@@ -20,53 +22,61 @@ namespace GenshinMod.Content.Projectiles
 			DisplayName.SetDefault("Elemental Energy");
 		}
 
-		public override Color? GetAlpha(Color lightColor) => GlowColor * 0.75f;
+		public override Color? GetAlpha(Color lightColor) => GlowColor * 0.7f;
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 12;
-			Projectile.height = 12;
+			Projectile.width = 8;
+			Projectile.height = 8;
 			Projectile.friendly = false;
 			Projectile.tileCollide = false;
 			Projectile.aiStyle = 0;
-			Projectile.timeLeft = 600;
-			ProjectileTrail = true;
+            Projectile.timeLeft = 600;
+			Projectile.scale = 1f;
+            ProjectileTrail = true;
 		}
 
 		public override void OnSpawn(IEntitySource source)
-        {
-            Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);
+		{
+			texture ??= GetTexture();
+			Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);
 			Projectile.velocity += new Vector2(Main.rand.NextFloat(3f, 5f)).RotatedByRandom(MathHelper.ToRadians(360));
 			GlowColor = GetColor(GetElement());
 		}
 
         public override void SafeAI()
 		{
-			Player player = Main.LocalPlayer;
-			if (!player.dead)
-            {
-				Vector2 direction = player.Center - Projectile.Center;
-				if (direction.Length() < player.width)
-                {
-					player.GetModPlayer<GenshinPlayer>().GiveTeamEnergy(GetElement(), Projectile.ai[1]);
-					Projectile.active = false;
-                }
-
-				direction.Normalize();
-				direction *= 1.2f;
-				Projectile.velocity += direction;
-				if (Projectile.velocity.Length() > 7f)
+			if (timeSpent > 30)
+			{
+				Player player = Main.LocalPlayer;
+				if (!player.dead)
 				{
-					Projectile.velocity.Normalize();
-					Projectile.velocity *= 5f;
+					Vector2 direction = player.Center - Projectile.Center;
+					if (direction.Length() < player.width)
+					{
+						player.GetModPlayer<GenshinPlayer>().GiveTeamEnergy(GetElement(), Projectile.ai[1]);
+						Projectile.active = false;
+					}
+
+					direction.Normalize();
+					direction *= 1.2f;
+					Projectile.velocity += direction;
+					if (Projectile.velocity.Length() > 7f)
+					{
+						Projectile.velocity.Normalize();
+						Projectile.velocity *= 5f;
+					}
 				}
 			}
+			else Projectile.velocity *= 0.95f;
 			Projectile.rotation += 0.2f;
 			Lighting.AddLight(Projectile.Center, 0.3f, 0.3f, 0.3f);
 		}
-
-        public override void Kill(int timeLeft)
-        {
+		public override void PostDraw(Color lightColor)
+		{
+			SpriteBatch spriteBatch = Main.spriteBatch;
+			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+			spriteBatch.Draw(texture, drawPosition, null, GlowColor * 0.5f, - Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.6f, SpriteEffects.None, 0f);
 		}
 
 		public CharacterElement GetElement()
@@ -109,7 +119,7 @@ namespace GenshinMod.Content.Projectiles
 				case CharacterElement.HYDRO:
 					return new Color(30, 139, 255);
 				case CharacterElement.PYRO:
-					return new Color(255, 102, 68);
+					return new Color(255, 116, 61);
 				default:
 					return new Color(235, 235, 255);
 			}

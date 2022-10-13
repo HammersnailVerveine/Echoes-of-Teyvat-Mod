@@ -7,6 +7,7 @@ namespace GenshinMod.Content.Characters.Klee
 	{
         public override void SetDefaults()
 		{
+			Name = "Klee";
 			Element = CharacterElement.PYRO;
 			AbilityNormal = new KleeAbilityNormal().Initialize(this);
 			AbilityCharged = new KleeAbilityCharged().Initialize(this);

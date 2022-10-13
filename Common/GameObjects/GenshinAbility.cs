@@ -10,20 +10,20 @@ namespace GenshinMod.Common.GameObjects
 {
     public abstract class GenshinAbility
     {
-        public GenshinCharacter Character;
-        public string Name;
-        //public Texture2D Texture;
-        //public Texture2D TextureBackground;
-        public int Damage = 0;
-        public int UseTime = 1;
-        public float KnockBack = 0f;
-        public float Velocity = 0f;
-        public float Stamina = 0;
-        public int Cooldown = 0;
-        public int Energy = 0;
+        public string Name; // Ability Name
+        public int Damage = 0; // Ability base Damage
+        public int UseTime = 1; // Ability base UseTime
+        public float KnockBack = 0f; // Ability base Knockback
+        public float Velocity = 0f; // Ability base Projectile Veloctiy
+        public float Stamina = 0; // Ability base Stamina Cost
+        public int Cooldown = 0; // Ability base Cooldown
+        public int Energy = 0; // Ability Particle generation (nb of particles)
+        public int ChargesMax = 1; // Ability Maximum number of charges
 
-        public int UseTimeCurrent = 0;
-        public int CooldownCurrent = 0;
+        public int UseTimeCurrent = 0; // Current usetime (>0 = current being used)
+        public int CooldownCurrent = 0; // Current Cooldown (0 = ready)
+        public int ChargesCurrent = 0; // Current number of available charges
+        public GenshinCharacter Character; // Owner character (setup in Initialize())
 
         public abstract void SetDefaults();
         public abstract void OnUse();
@@ -31,7 +31,7 @@ namespace GenshinMod.Common.GameObjects
         public virtual void OnUseEnd() { }
         public virtual void SafeResetEffects() { }
 
-        public virtual bool CanUse() => CooldownCurrent <= 0;
+        public virtual bool CanUse() => ChargesCurrent > 0;
 
         public virtual IEntitySource GetSource() => Player.GetSource_Misc("GenshinMod Attack");
 
@@ -43,17 +43,25 @@ namespace GenshinMod.Common.GameObjects
         {
             Character = character;
             SetDefaults();
+            ChargesCurrent = ChargesMax;
             return this;
         }
 
         public void ResetEffects()
         {
             if (CooldownCurrent > 0) CooldownCurrent--;
+            if (CooldownCurrent <= 0 && ChargesCurrent < ChargesMax)
+            {
+                ChargesCurrent++;
+                if (ChargesCurrent < ChargesMax) CooldownCurrent = Cooldown;
+            }
+
             SafeResetEffects();
         }
 
         public void Use()
         {
+            ChargesCurrent--;
             UseTimeCurrent = UseTime;
             CooldownCurrent = Cooldown;
             Character.GenshinPlayer.TimerUse = UseTime;
