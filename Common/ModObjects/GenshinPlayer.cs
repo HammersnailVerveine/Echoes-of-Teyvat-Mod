@@ -35,7 +35,7 @@ namespace GenshinMod.Common.ModObjects
         {
             //PlayerInput.ScrollWheelDeltaForUI = 0;
             PlayerInput.ScrollWheelDelta = 0;
-            Player.statManaMax2 = 0;
+            //Player.statManaMax2 = 0;
 
             foreach (GenshinCharacter character in CharacterTeam)
                 character.PreUpdate();

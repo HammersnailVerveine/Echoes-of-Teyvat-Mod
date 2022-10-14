@@ -66,9 +66,9 @@ namespace GenshinMod.Content.UI
 			if (skillCooldown > 0) // Skill Text Cooldown Display
             {
 				string text = (Math.DivRem(skillCooldown, 60).Quotient).ToString();
-				Vector2 position = skillLocation + new Vector2(TextureSkillBackground.Width + 8f, TextureSkillBackground.Height) * 0.32f;
-				if (text.Length == 1) position.X += 4f;
-				if (text == "1") position.X += 4f;
+				Vector2 position = skillLocation + new Vector2(TextureSkillBackground.Width, TextureSkillBackground.Height) * 0.32f;
+				if (text.Length == 1) position.X += 5f;
+				if (text.StartsWith("1")) position.X += 5f;
 
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, text, position, Color.White, 0f, Vector2.Zero, new Vector2(1.5f, 1.5f));
 			}
@@ -125,9 +125,9 @@ namespace GenshinMod.Content.UI
 			if (burstCooldown > 0) // Bust Text Cooldown Display
 			{
 				string text = (Math.DivRem(burstCooldown, 60).Quotient).ToString();
-				Vector2 position = burstLocation + new Vector2(TextureBurstBackground.Width + 12f, TextureBurstBackground.Height) * 0.35f;
-				if (text.Length == 1) position.X += 4f;
-				if (text == "1") position.X += 4f;
+				Vector2 position = burstLocation + new Vector2(TextureBurstBackground.Width + 5f, TextureBurstBackground.Height) * 0.35f;
+				if (text.Length == 1) position.X += 5f;
+				if (text.StartsWith("1")) position.X += 5f;
 
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, text, position, Color.White, 0f, Vector2.Zero, new Vector2(1.75f, 1.75f));
 			}

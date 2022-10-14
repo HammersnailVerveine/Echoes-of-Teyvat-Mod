@@ -61,7 +61,7 @@ namespace GenshinMod.Content.Projectiles
 					direction.Normalize();
 					direction *= 1.2f;
 					Projectile.velocity += direction;
-					if (Projectile.velocity.Length() > 7f)
+					if (Projectile.velocity.Length() > (timeSpent > 210 ? 10f : 7f))
 					{
 						Projectile.velocity.Normalize();
 						Projectile.velocity *= 5f;
@@ -76,6 +76,7 @@ namespace GenshinMod.Content.Projectiles
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+			spriteBatch.Draw(texture, drawPosition, null, Color.White * 0.8f, -Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.8f, SpriteEffects.None, 0f);
 			spriteBatch.Draw(texture, drawPosition, null, GlowColor * 0.5f, - Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.6f, SpriteEffects.None, 0f);
 		}
 
@@ -121,7 +122,7 @@ namespace GenshinMod.Content.Projectiles
 				case CharacterElement.PYRO:
 					return new Color(255, 116, 61);
 				default:
-					return new Color(235, 235, 255);
+					return new Color(215, 215, 255);
 			}
 		}
 	}

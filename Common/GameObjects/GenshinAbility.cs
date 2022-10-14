@@ -63,10 +63,10 @@ namespace GenshinMod.Common.GameObjects
         {
             ChargesCurrent--;
             UseTimeCurrent = UseTime;
-            CooldownCurrent = Cooldown;
             Character.GenshinPlayer.TimerUse = UseTime;
             Character.GenshinPlayer.TimerUseRef = UseTime;
             Character.GenshinPlayer.LastUseDirection = Main.MouseWorld.X - Player.Center.X > 0 ? 1 : -1;
+            if (CooldownCurrent <= 0) CooldownCurrent = Cooldown;
             OnUse();
         }
 

@@ -19,7 +19,6 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             UseTime = 40;
             Velocity = 0.00f;
             Cooldown = 60 * 32;
-            ChargesMax = 3;
         }
 
         public override void OnUse()
