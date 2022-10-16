@@ -56,14 +56,6 @@ namespace GenshinMod.Common.GlobalObjets
             ElementTimerDendro--;
             ElementTimerHydro--;
             ElementTimerPyro--;
-
-            ElementTimerGeo = 1;
-            ElementTimerAnemo = 1;
-            ElementTimerCryo = 1;
-            ElementTimerElectro = 1;
-            ElementTimerDendro = 1;
-            ElementTimerHydro = 1;
-            ElementTimerPyro = 1;
         }
 
         public override void AI(NPC npc)
