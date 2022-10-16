@@ -14,15 +14,18 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
         public override void SetDefaults()
         {
             Damage = 0;
-            KnockBack = 2f;
+            KnockBack = 0f;
             UseTime = 60;
             Velocity = 0f;
-            Cooldown = 900;
+            Cooldown = 1200;
             Energy = 80;
         }
 
         public override void OnUse()
         {
+            SoundEngine.PlaySound(SoundID.Splash);
+            int type = ModContent.ProjectileType<BarbaraProjectileBurstCircle>();
+            SpawnProjectile(Vector2.Zero, type);
         }
 
         public override void OnUseEnd()

@@ -1,4 +1,5 @@
 using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,8 +17,10 @@ namespace GenshinMod.Common.ModObjects
     {
         public bool ProjectileTrail = false; // Will the projectile leave a trail of afterimages ?
         public float ProjectileTrailOffset = 0f; // Offcenters the afterimages a bit. useless without projectileTrail activated. Looks terrible on most projectiles.
-        public CharacterElement Element = CharacterElement.NONE; // Projectile element
         public int ElementalParticles = 0; // Number of particles (value : 1) spawned on first hit
+        public CharacterElement Element = CharacterElement.NONE; // Projectile element
+        public int ElementApplication = ElementApplicationWeak;
+        public bool IgnoreICD = false;
 
         public bool FirstHit = false; // Has the projectile hit a target yet ?
 
@@ -27,9 +30,14 @@ namespace GenshinMod.Common.ModObjects
         public virtual void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
 
+        public static int ElementApplicationWeak => 570; // 9.5 sec
+        public static int ElementApplicationMedium => 900; // 15 sec
+        public static int ElementApplicationStrong => 1200; // 20 sec
+
         public int timeSpent = 0;
         public bool IsLocalOwner => Projectile.owner == Main.myPlayer;
         public Player Owner => Main.player[Projectile.owner];
+        public GenshinCharacter OwnerCharacter => Projectile.GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter;
         public bool FirstFrame => timeSpent == 1;
         public Texture2D GetTexture() => ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
@@ -73,67 +81,32 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public sealed override bool PreDraw(ref Color lightColor)
+        public sealed override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (ProjectileTrail)
+            if (!FirstHit)
             {
-                PreDrawTrail(Main.spriteBatch, lightColor);
+                FirstHit = true;
+
+                if (ElementalParticles > 0)
+                {
+                    SpawnElementalParticle(Element, 1f, ElementalParticles);
+                }
+
+                OnFirstHitNPC(target, damage, knockback, crit);
             }
-            return SafePreDraw(Main.spriteBatch, lightColor);
+            SafeOnHitNPC(target, damage, knockback, crit);
+        }
+
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            InflictElement(target, Element, ElementApplication);
         }
 
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage, float knockback, float ai0 = 0, float ai1 = 0)
         {
             int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), position, velocity, type, damage, knockback, Projectile.owner, ai0, ai1);
+            Main.projectile[proj].GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter = OwnerCharacter;
             return proj;
-        }
-
-        public void PreDrawTrail(SpriteBatch spriteBatch, Color lightColor)
-        {
-            float offSet = ProjectileTrailOffset + 0.5f;
-            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Value.Width * offSet, Projectile.height * offSet);
-            for (int k = 0; k < Projectile.oldPos.Length; k++)
-            {
-                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
-                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
-                spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0.3f);
-            }
-        }
-
-        public void PostAITrail()
-        {
-            for (int length = Projectile.oldPos.Length - 1; length > 0; length--)
-            {
-                Projectile.oldPos[length] = Projectile.oldPos[length - 1];
-            }
-            Projectile.oldPos[0] = Projectile.position;
-        }
-
-        public void spawnExplosionGore()
-        {
-            for (int g = 0; g < 2; g++)
-            {
-                int goreIndex = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
-                Main.gore[goreIndex].scale = 1f + Main.rand.NextFloat();
-                Main.gore[goreIndex].velocity.X = Main.gore[goreIndex].velocity.X + 1.5f;
-                Main.gore[goreIndex].velocity.Y = Main.gore[goreIndex].velocity.Y + 1.5f;
-                Main.gore[goreIndex].rotation = Main.rand.NextFloat();
-                goreIndex = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
-                Main.gore[goreIndex].scale = 1f + Main.rand.NextFloat();
-                Main.gore[goreIndex].velocity.X = Main.gore[goreIndex].velocity.X - 1.5f;
-                Main.gore[goreIndex].velocity.Y = Main.gore[goreIndex].velocity.Y + 1.5f;
-                Main.gore[goreIndex].rotation = Main.rand.NextFloat();
-                goreIndex = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
-                Main.gore[goreIndex].scale = 1f + Main.rand.NextFloat();
-                Main.gore[goreIndex].velocity.X = Main.gore[goreIndex].velocity.X + 1.5f;
-                Main.gore[goreIndex].velocity.Y = Main.gore[goreIndex].velocity.Y - 1.5f;
-                Main.gore[goreIndex].rotation = Main.rand.NextFloat();
-                goreIndex = Gore.NewGore(Projectile.GetSource_FromThis(), new Vector2(Projectile.position.X + Projectile.width / 2 - 24f, Projectile.position.Y + Projectile.height / 2 - 24f), default, Main.rand.Next(61, 64), 1f);
-                Main.gore[goreIndex].scale = 1f + Main.rand.NextFloat();
-                Main.gore[goreIndex].velocity.X = Main.gore[goreIndex].velocity.X - 1.5f;
-                Main.gore[goreIndex].velocity.Y = Main.gore[goreIndex].velocity.Y - 1.5f;
-                Main.gore[goreIndex].rotation = Main.rand.NextFloat();
-            }
         }
 
         public void SpawnDust<T>(float velocity = 0f, float scale = 1f, int offSet = 10, int quantity = 1, int chanceDenominator = 1) where T : ModDust => SpawnDust(ModContent.DustType<T>(), velocity, scale, offSet, quantity, chanceDenominator);
@@ -169,20 +142,40 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public sealed override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public void InflictElement(NPC npc, CharacterElement element, int duration)
         {
-            if (!FirstHit)
+            if (IgnoreICD) npc.GetGlobalNPC<GenshinGlobalNPC>().InflictElement(element, duration);
+            else if (OwnerCharacter.TryApplyElement(npc)) npc.GetGlobalNPC<GenshinGlobalNPC>().InflictElement(element, duration);
+        }
+
+        public sealed override bool PreDraw(ref Color lightColor)
+        {
+            if (ProjectileTrail)
             {
-                FirstHit = true;
-
-                if (ElementalParticles > 0)
-                {
-                    SpawnElementalParticle(Element, 1f, ElementalParticles);
-                }
-
-                OnFirstHitNPC(target, damage, knockback, crit);
+                PreDrawTrail(Main.spriteBatch, lightColor);
             }
-            SafeOnHitNPC(target, damage, knockback, crit);
+            return SafePreDraw(Main.spriteBatch, lightColor);
+        }
+
+        public void PreDrawTrail(SpriteBatch spriteBatch, Color lightColor)
+        {
+            float offSet = ProjectileTrailOffset + 0.5f;
+            Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Value.Width * offSet, Projectile.height * offSet);
+            for (int k = 0; k < Projectile.oldPos.Length; k++)
+            {
+                Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
+                Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
+                spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0.3f);
+            }
+        }
+
+        public void PostAITrail()
+        {
+            for (int length = Projectile.oldPos.Length - 1; length > 0; length--)
+            {
+                Projectile.oldPos[length] = Projectile.oldPos[length - 1];
+            }
+            Projectile.oldPos[0] = Projectile.position;
         }
     }
 }

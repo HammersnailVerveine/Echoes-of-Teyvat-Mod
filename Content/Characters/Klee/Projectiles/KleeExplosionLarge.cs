@@ -24,6 +24,8 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.penetrate = -1;
 			Main.projFrames[Projectile.type] = 9;
 			Element = Common.GameObjects.CharacterElement.PYRO;
+			ElementApplication = ElementApplicationMedium;
+			IgnoreICD = true;
 		}
 
         public override Color? GetAlpha(Color lightColor)

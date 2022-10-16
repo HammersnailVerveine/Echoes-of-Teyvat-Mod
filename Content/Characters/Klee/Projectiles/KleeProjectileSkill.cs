@@ -36,6 +36,8 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.penetrate = -1;
 			Element = Common.GameObjects.CharacterElement.PYRO;
 			ElementalParticles = 4;
+			ElementApplication = ElementApplicationMedium;
+			IgnoreICD = true;
 		}
 
 		public override void OnSpawn(IEntitySource source)

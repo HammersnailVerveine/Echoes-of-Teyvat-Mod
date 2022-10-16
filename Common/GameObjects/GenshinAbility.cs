@@ -73,6 +73,7 @@ namespace GenshinMod.Common.GameObjects
         public int SpawnProjectile(IEntitySource source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, int owner, float ai0 = 0, float ai1 = 0)
         {
             int proj = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, owner, ai0, ai1);
+            Main.projectile[proj].GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter = this.Character;
             return proj;
         }
 

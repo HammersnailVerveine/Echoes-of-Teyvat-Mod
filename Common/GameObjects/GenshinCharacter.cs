@@ -47,6 +47,8 @@ namespace GenshinMod.Common.GameObjects
         public int StatDamageFlat = 0; // Bonus flat damage (base = 0)
         public int StatHealthFlat = 0; // Bonus flat health (base = 0)
 
+        public List<ICDTracker> ICDTrackers;
+
         public abstract void SetDefaults();
         public virtual void SafePreUpdate() { }
         public virtual void SafePostUpdate() { }
@@ -64,6 +66,7 @@ namespace GenshinMod.Common.GameObjects
             TextureAbilityBurst ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/" + className + "/Textures/" + className + "_Ability_Burst", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             GenshinPlayer = modPlayer;
             Player = modPlayer.Player;
+            ICDTrackers = new List<ICDTracker>();
             SetDefaults();
             return this;
         }
@@ -106,6 +109,12 @@ namespace GenshinMod.Common.GameObjects
             AbilityCharged.ResetEffects();
             AbilitySkill.ResetEffects();
             AbilityBurst.ResetEffects();
+
+            for (int i = ICDTrackers.Count - 1; i >= 0; i--)
+            {
+                ICDTrackers[i].Timer--;
+                if (ICDTrackers[i].Timer <= 0) ICDTrackers.RemoveAt(i);
+            }
         }
 
         public void TryUseAbility(GenshinAbility ability)
@@ -132,7 +141,46 @@ namespace GenshinMod.Common.GameObjects
             if (Energy > AbilityBurst.Energy) Energy = AbilityBurst.Energy;
         }
 
+        public bool TryApplyElement(NPC npc)
+        {
+            foreach (ICDTracker tracker in ICDTrackers)
+            {
+                if (tracker.npc == npc)
+                {
+                    return tracker.TryApplyElement();
+                }
+            }
+
+            ICDTrackers.Add(new ICDTracker(npc));
+            return true;
+        }
+
         public bool CanUseAbility => AbilityCurrent == null;
         public bool IsCurrentCharacter => GenshinPlayer.CharacterCurrent == this;
+    }
+
+    public class ICDTracker
+    {
+        public NPC npc;
+        public int Timer;
+        public int HitCount;
+
+        public ICDTracker(NPC npc) {
+            this.npc = npc;
+            Timer = 150;
+            HitCount = 0;
+        }
+
+        public bool TryApplyElement()
+        {
+            HitCount++;
+            if (HitCount >= 3)
+            {
+                HitCount = 0;
+                return true;
+            }
+
+            return false;
+        }
     }
 }

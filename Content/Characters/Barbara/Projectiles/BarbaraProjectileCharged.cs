@@ -32,6 +32,8 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.alpha = 255;
 			Main.projFrames[Projectile.type] = 3;
 			Element = Common.GameObjects.CharacterElement.HYDRO;
+			ElementApplication = ElementApplicationMedium;
+			IgnoreICD = true;
 		}
 
         public override void OnSpawn(IEntitySource source)
