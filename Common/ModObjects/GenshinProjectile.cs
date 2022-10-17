@@ -38,6 +38,7 @@ namespace GenshinMod.Common.ModObjects
         public int timeSpent = 0;
         public bool IsLocalOwner => Projectile.owner == Main.myPlayer;
         public Player Owner => Main.player[Projectile.owner];
+        public GenshinPlayer OwnerGenshinPlayer => Owner.GetModPlayer<GenshinPlayer>();
         public GenshinCharacter OwnerCharacter => Projectile.GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter;
         public bool FirstFrame => timeSpent == 1;
         public Texture2D GetTexture() => ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
@@ -64,7 +65,7 @@ namespace GenshinMod.Common.ModObjects
 
         public sealed override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (!FirstHit)
+            if (!FirstHit && damage > 0)
             {
                 FirstHit = true;
 

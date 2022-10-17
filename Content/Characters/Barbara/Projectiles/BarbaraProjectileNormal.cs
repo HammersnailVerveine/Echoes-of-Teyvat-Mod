@@ -1,4 +1,5 @@
-﻿using GenshinMod.Common.ModObjects;
+﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using System;
@@ -56,6 +57,18 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 				SpawnDust<BarbaraDustBubble>(position, direction, 0.5f, 1f, 10, 4);
 				SpawnDust<BarbaraDustStar>(position, direction * 0.5f, 0.2f, 1f, 10, 3);
 				SpawnDust<BarbaraDustStar>(position, Vector2.Zero, 0.2f, 1f, 10, 2);
+			}
+		}
+
+        public override void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit)
+		{
+			if (OwnerCharacter is CharacterBarbara barbara)
+			{
+				if (barbara.skillActive)
+				{
+					foreach (GenshinCharacter character in OwnerGenshinPlayer.CharacterTeam)
+						character.Heal((int)(damage * 0.5f)); // TEMP
+				}
 			}
 		}
 

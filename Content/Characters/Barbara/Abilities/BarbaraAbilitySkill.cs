@@ -14,7 +14,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
     {
         public override void SetDefaults()
         {
-            Damage = 0;
+            Damage = 12;
             KnockBack = 0f;
             UseTime = 40;
             Velocity = 0.00f;

@@ -14,8 +14,7 @@ namespace GenshinMod.Content.Characters.Klee
 			AbilitySkill = new KleeAbilitySkill().Initialize(this);
 			AbilityBurst = new KleeAbilityBurst().Initialize(this);
 
-			FlatHealth = 100;
-			Energy = 0;
+			Health = 60;
 		}
     }
 }

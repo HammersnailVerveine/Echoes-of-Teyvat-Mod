@@ -53,7 +53,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			if (timeSpent == 60)
             {
 				int type = ModContent.ProjectileType<BarbaraProjectileSkillCircle>();
-				SpawnProjectile(Owner.Center, VelocityImmobile, type, 0, 0f, 0f);
+				SpawnProjectile(Owner.Center, VelocityImmobile, type, Projectile.damage, 0f, 0f);
 			}
 
 			if (Main.rand.NextBool(3)) // Dust special case

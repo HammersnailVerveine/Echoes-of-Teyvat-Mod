@@ -1,4 +1,5 @@
-﻿using GenshinMod.Common.ModObjects;
+﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -89,6 +90,18 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			}
 			if (Projectile.ai[0] != 0f)
 				Projectile.position = Main.npc[(int)Projectile.ai[0]].Center - Projectile.Size * 0.5f;
+		}
+
+		public override void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit)
+		{
+			if (OwnerCharacter is CharacterBarbara barbara)
+			{
+				if (barbara.skillActive)
+				{
+					foreach (GenshinCharacter character in OwnerGenshinPlayer.CharacterTeam)
+						character.Heal((int)(damage * 0.5f)); // TEMP
+				}
+			}
 		}
 
 		public override void PostDraw(Color lightColor)

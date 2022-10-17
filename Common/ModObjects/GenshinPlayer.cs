@@ -186,6 +186,7 @@ namespace GenshinMod.Common.ModObjects
 
         public void TrySwapCharacter(int slot)
         {
+            SoundEngine.PlaySound(SoundID.MenuTick);
             if (CharacterTeam.Count >= slot && CharacterCurrent.CanUseAbility)
             {
                 if (CharacterCurrent != CharacterTeam[slot])
@@ -199,7 +200,7 @@ namespace GenshinMod.Common.ModObjects
                     }
                 }
             }
-            SoundEngine.PlaySound(SoundID.MenuClose);
+            //SoundEngine.PlaySound(SoundID.MenuClose);
             return;
         }
     }

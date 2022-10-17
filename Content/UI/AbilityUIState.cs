@@ -14,7 +14,7 @@ using Terraria.UI.Chat;
 
 namespace GenshinMod.Content.UI
 {
-    public class AbilityUIState : GenshinUIState
+    public class UIStateAbility : GenshinUIState
 	{
 		public static Texture2D TextureSkillBackground;
 		public static Texture2D TextureSkillCharge;
@@ -40,6 +40,12 @@ namespace GenshinMod.Content.UI
 		}
 
 		public override void OnUIScaleChanged()
+		{
+			Left.Set(Main.screenWidth - 48f, 0f);
+			Top.Set(Main.screenHeight - 64f, 0f);
+		}
+
+		public override void OnResolutionChanged(int width, int height)
 		{
 			Left.Set(Main.screenWidth - 48f, 0f);
 			Top.Set(Main.screenHeight - 64f, 0f);
@@ -133,7 +139,7 @@ namespace GenshinMod.Content.UI
 			}
 		}
 
-		public Color GetBurstColor(GenshinCharacter character)
+		public static Color GetBurstColor(GenshinCharacter character)
         {
 			switch (character.Element)
             {

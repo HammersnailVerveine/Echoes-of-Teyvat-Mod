@@ -50,15 +50,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
 			if (timeSpent % 180 == 0)
             {
-				if (Owner.statLife < Owner.statLifeMax2)
-                {
-					int heal = Owner.statLifeMax2 - Owner.statLife;
-					Owner.statLife += heal;
-					Owner.HealEffect(heal, true);
-
-					SpawnDust<BarbaraDustStarBig>(0.1f, 1f, 0, 4);
-					SpawnDust<BarbaraDustStar>(0.2f, 1f, 0, 4);
-				}
+				OwnerCharacter.Heal(Projectile.damage);
 
 				SpawnDust<BarbaraDustStar>(0.2f, 1f, 10, 12);
 				pulse = -10;
@@ -72,6 +64,8 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 				Vector2 position = new Vector2(0f, Main.rand.NextFloat(Projectile.height / 2f - 5f, Projectile.height / 2f + 5f) * Projectile.scale).RotatedByRandom(MathHelper.ToRadians(360));
 				SpawnDust<BarbaraDustNote>(Projectile.Center + position, Vector2.Zero, 0.25f, 1.2f, 0, 1, 15);
 			}
+
+			if (OwnerCharacter is CharacterBarbara barbara) barbara.skillActive = true;
 		}
 
         public override void Kill(int timeLeft)

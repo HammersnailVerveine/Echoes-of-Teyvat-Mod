@@ -1,4 +1,5 @@
-﻿using GenshinMod.Common.ModObjects;
+﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -64,6 +65,9 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 				Vector2 position2 = new Vector2(0f, Main.rand.NextFloat(Projectile.height / 2f - 5f, Projectile.height / 2f + 5f) * Projectile.scale * 0.75f).RotatedByRandom(MathHelper.ToRadians(360));
 				SpawnDust<BarbaraDustStarBig>(Projectile.Center + position2, Vector2.Zero, 0.25f, 1.2f, 15, 1);
 			}
+
+			foreach (GenshinCharacter character in OwnerGenshinPlayer.CharacterTeam)
+				character.Heal(Projectile.damage); // TEMP
 		}
 
         public override void PostDraw(Color lightColor)

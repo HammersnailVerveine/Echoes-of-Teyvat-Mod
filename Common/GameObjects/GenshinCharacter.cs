@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.ModObjects;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
@@ -21,6 +22,7 @@ namespace GenshinMod.Common.GameObjects
         public Texture2D TextureArms;
         public Texture2D TextureAbilitySkill;
         public Texture2D TextureAbilityBurst;
+        public Texture2D TextureIcon;
 
         // Stable variables
 
@@ -32,8 +34,8 @@ namespace GenshinMod.Common.GameObjects
         public string Name;
         public GenshinElement Element;
 
-        public int FlatHealth; // Max health no modifiers
-        public int FlatDefense; // Max defense no modifiers
+        public int FlatHealth = 100; // Max health no modifiers
+        public int FlatDefense = 100; // Max defense no modifiers
 
         // Dynamic variables
 
@@ -51,6 +53,8 @@ namespace GenshinMod.Common.GameObjects
 
         public List<ICDTracker> ICDTrackers;
 
+        public int HealthMax => (int)(FlatHealth * (1f + StatHealth)) + StatHealthFlat;
+
         public abstract void SetDefaults();
         public virtual void SafePreUpdate() { }
         public virtual void SafePostUpdate() { }
@@ -62,12 +66,14 @@ namespace GenshinMod.Common.GameObjects
         {
             string className = GetType().Name;
             className = className.Remove(0, 9);
-            TextureHead ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/" + className + "/Textures/" + className + "_Head", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            TextureBody ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/" + className + "/Textures/" + className + "_Body", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            TextureLegs ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/" + className + "/Textures/" + className + "_Legs", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            TextureArms ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/" + className + "/Textures/" + className + "_Arms", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            TextureAbilitySkill ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/" + className + "/Textures/" + className + "_Ability_Skill", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            TextureAbilityBurst ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/" + className + "/Textures/" + className + "_Ability_Burst", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            string location = "GenshinMod/Content/Characters/" + className + "/Textures/" + className;
+            TextureHead ??= ModContent.Request<Texture2D>(location + "_Head", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            TextureBody ??= ModContent.Request<Texture2D>(location + "_Body", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            TextureLegs ??= ModContent.Request<Texture2D>(location + "_Legs", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            TextureArms ??= ModContent.Request<Texture2D>(location + "_Arms", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            TextureIcon ??= ModContent.Request<Texture2D>(location + "_Icon", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            TextureAbilitySkill ??= ModContent.Request<Texture2D>(location + "_Ability_Skill", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            TextureAbilityBurst ??= ModContent.Request<Texture2D>(location + "_Ability_Burst", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             GenshinPlayer = modPlayer;
             Player = modPlayer.Player;
             ICDTrackers = new List<ICDTracker>();
@@ -181,6 +187,17 @@ namespace GenshinMod.Common.GameObjects
         public bool OnSwapOutGlobal()
         {
             return OnSwapOut();
+        }
+
+        public void Heal(int value, bool combatText = true)
+        {
+            if (value > HealthMax - Health) value = HealthMax - Health;
+            if (value > 0)
+            {
+                Health += value;
+                if (Health > HealthMax) Health = HealthMax;
+                if (IsCurrentCharacter) CombatText.NewText(Player.Hitbox, new Color(115, 200, 0), value);
+            }
         }
 
         public bool CanUseAbility => AbilityCurrent == null && TimerCanUse <= 0;
