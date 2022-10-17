@@ -122,6 +122,7 @@ namespace GenshinMod.Common.UI
             layers.RemoveAll(layer => layer.Name.Equals("Vanilla: Hotbar"));
             layers.RemoveAll(layer => layer.Name.Equals("Vanilla: Inventory"));
             layers.RemoveAll(layer => layer.Name.Equals("Vanilla: Resource Bars"));
+            layers.RemoveAll(layer => layer.Name.Equals("Vanilla: Map / Minimap"));
         }
 
         public override void UpdateUI(GameTime gameTime)

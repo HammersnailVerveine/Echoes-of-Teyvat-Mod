@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -46,6 +47,7 @@ namespace GenshinMod.Common.GameObjects
         public int StatElementalMastery = 0; // Elemental mastery (base = 0)
         public int StatDamageFlat = 0; // Bonus flat damage (base = 0)
         public int StatHealthFlat = 0; // Bonus flat health (base = 0)
+        public int TimerCanUse = 0;
 
         public List<ICDTracker> ICDTrackers;
 
@@ -53,6 +55,8 @@ namespace GenshinMod.Common.GameObjects
         public virtual void SafePreUpdate() { }
         public virtual void SafePostUpdate() { }
         public virtual void SafeResetEffects() { }
+        public virtual void OnSwapIn() { }
+        public virtual bool OnSwapOut() => true; // Return false to prevent swap out
 
         public GenshinCharacter Initialize(GenshinPlayer modPlayer)
         {
@@ -114,6 +118,7 @@ namespace GenshinMod.Common.GameObjects
             AbilityCharged.ResetEffects();
             AbilitySkill.ResetEffects();
             AbilityBurst.ResetEffects();
+            TimerCanUse --;
 
             for (int i = ICDTrackers.Count - 1; i >= 0; i--)
             {
@@ -160,7 +165,25 @@ namespace GenshinMod.Common.GameObjects
             return true;
         }
 
-        public bool CanUseAbility => AbilityCurrent == null;
+        public void OnSwapInGlobal()
+        {
+            OnSwapIn();
+            TimerCanUse = 10;
+
+            for (int i = 0; i < 10; i++)
+            {
+                Dust dust = Main.dust[Dust.NewDust(Player.position, Player.width, Player.height, DustID.YellowTorch, 0f, 0f)];
+                dust.noGravity = true;
+                dust.scale *= 2f;
+            }
+        }
+
+        public bool OnSwapOutGlobal()
+        {
+            return OnSwapOut();
+        }
+
+        public bool CanUseAbility => AbilityCurrent == null && TimerCanUse <= 0;
         public bool IsCurrentCharacter => GenshinPlayer.CharacterCurrent == this;
     }
 

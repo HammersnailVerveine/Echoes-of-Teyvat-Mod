@@ -17,5 +17,5 @@ namespace GenshinMod.Content.Characters.Klee
 			FlatHealth = 100;
 			Energy = 0;
 		}
-	}
+    }
 }

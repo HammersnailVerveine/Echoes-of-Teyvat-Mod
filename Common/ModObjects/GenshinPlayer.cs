@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -97,8 +98,11 @@ namespace GenshinMod.Common.ModObjects
             {
                 if (GenshinKeybindsLoader.AbilitySkill.JustPressed) CharacterCurrent.TryUseAbility(CharacterCurrent.AbilitySkill);
                 if (GenshinKeybindsLoader.AbilityBurst.JustPressed) CharacterCurrent.TryUseAbility(CharacterCurrent.AbilityBurst);
-                if (GenshinKeybindsLoader.Character1.JustPressed) CharacterCurrent = CharacterTeam[0];
-                if (GenshinKeybindsLoader.Character2.JustPressed) CharacterCurrent = CharacterTeam[1];
+                if (GenshinKeybindsLoader.Character1.JustPressed) TrySwapCharacter(0);
+                if (GenshinKeybindsLoader.Character2.JustPressed) TrySwapCharacter(1);
+                if (GenshinKeybindsLoader.Character3.JustPressed) TrySwapCharacter(2);
+                if (GenshinKeybindsLoader.Character4.JustPressed) TrySwapCharacter(3);
+                if (GenshinKeybindsLoader.Character5.JustPressed) TrySwapCharacter(4);
             }
         }
 
@@ -174,15 +178,29 @@ namespace GenshinMod.Common.ModObjects
             spriteBatch.Draw(textureArms, drawPosition, rectangleArms, Lighting.GetColor(coord), 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
         }
 
-        public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
-        {
-            //GiveTeamEnergy(CharacterElement.NONE, 1); // TEMP
-        }
-
         public void GiveTeamEnergy(GenshinElement element, float value)
         {
             foreach (GenshinCharacter character in CharacterTeam)
                 character.GainEnergy(element, character == CharacterCurrent ? value : value * 0.6f);   
+        }
+
+        public void TrySwapCharacter(int slot)
+        {
+            if (CharacterTeam.Count >= slot && CharacterCurrent.CanUseAbility)
+            {
+                if (CharacterCurrent != CharacterTeam[slot])
+                {
+                    if (CharacterCurrent.OnSwapOutGlobal())
+                    {
+                        CharacterCurrent = CharacterTeam[slot];
+                        CharacterCurrent.OnSwapInGlobal();
+                        SoundEngine.PlaySound(SoundID.MenuOpen);
+                        return;
+                    }
+                }
+            }
+            SoundEngine.PlaySound(SoundID.MenuClose);
+            return;
         }
     }
 }
