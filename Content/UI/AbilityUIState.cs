@@ -137,17 +137,17 @@ namespace GenshinMod.Content.UI
         {
 			switch (character.Element)
             {
-				case CharacterElement.GEO:
+				case GenshinElement.GEO:
 					return new Color(255, 167, 45);
-				case CharacterElement.ANEMO:
+				case GenshinElement.ANEMO:
 					return new Color(79, 255, 202);
-				case CharacterElement.CRYO:
+				case GenshinElement.CRYO:
 					return new Color(104, 209, 255);
-				case CharacterElement.DENDRO:
+				case GenshinElement.DENDRO:
 					return new Color(146, 255, 50);
-				case CharacterElement.ELECTRO:
+				case GenshinElement.ELECTRO:
 					return new Color(162, 96, 255);
-				case CharacterElement.HYDRO:
+				case GenshinElement.HYDRO:
 					return new Color(30, 139, 255);
 				default: // PYRO
 					return new Color(255, 102, 68);

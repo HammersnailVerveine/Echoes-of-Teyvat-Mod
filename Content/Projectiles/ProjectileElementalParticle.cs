@@ -80,46 +80,46 @@ namespace GenshinMod.Content.Projectiles
 			spriteBatch.Draw(texture, drawPosition, null, GlowColor * 0.5f, - Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.6f, SpriteEffects.None, 0f);
 		}
 
-		public CharacterElement GetElement()
+		public GenshinElement GetElement()
         {
 			switch (Projectile.ai[0])
             {
 				case 1f:
-					return CharacterElement.GEO;
+					return GenshinElement.GEO;
 				case 2f:
-					return CharacterElement.ANEMO;
+					return GenshinElement.ANEMO;
 				case 3f:
-					return CharacterElement.CRYO;
+					return GenshinElement.CRYO;
 				case 4f:
-					return CharacterElement.ELECTRO;
+					return GenshinElement.ELECTRO;
 				case 5f:
-					return CharacterElement.DENDRO;
+					return GenshinElement.DENDRO;
 				case 6f:
-					return CharacterElement.HYDRO;
+					return GenshinElement.HYDRO;
 				case 7f:
-					return CharacterElement.PYRO;
+					return GenshinElement.PYRO;
 				default:
-					return CharacterElement.NONE;
+					return GenshinElement.NONE;
             }
         }
 
-		public Color GetColor(CharacterElement element)
+		public Color GetColor(GenshinElement element)
 		{
 			switch (element)
 			{
-				case CharacterElement.GEO:
+				case GenshinElement.GEO:
 					return new Color(255, 167, 45);
-				case CharacterElement.ANEMO:
+				case GenshinElement.ANEMO:
 					return new Color(79, 255, 202);
-				case CharacterElement.CRYO:
+				case GenshinElement.CRYO:
 					return new Color(104, 209, 255);
-				case CharacterElement.DENDRO:
+				case GenshinElement.DENDRO:
 					return new Color(146, 255, 50);
-				case CharacterElement.ELECTRO:
+				case GenshinElement.ELECTRO:
 					return new Color(162, 96, 255);
-				case CharacterElement.HYDRO:
+				case GenshinElement.HYDRO:
 					return new Color(30, 139, 255);
-				case CharacterElement.PYRO:
+				case GenshinElement.PYRO:
 					return new Color(255, 116, 61);
 				default:
 					return new Color(215, 215, 255);

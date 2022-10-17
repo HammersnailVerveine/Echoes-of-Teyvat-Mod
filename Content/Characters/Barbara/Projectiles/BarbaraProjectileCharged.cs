@@ -31,7 +31,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
 			Main.projFrames[Projectile.type] = 3;
-			Element = Common.GameObjects.CharacterElement.HYDRO;
+			Element = Common.GameObjects.GenshinElement.HYDRO;
 			ElementApplication = ElementApplicationMedium;
 			IgnoreICD = true;
 		}

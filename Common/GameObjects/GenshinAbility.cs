@@ -36,7 +36,7 @@ namespace GenshinMod.Common.GameObjects
         public virtual IEntitySource GetSource() => Player.GetSource_Misc("GenshinMod Attack");
 
         public bool IsUsed() => UseTimeCurrent > 0;
-        public CharacterElement Element => Character.Element;
+        public GenshinElement Element => Character.Element;
         public Player Player => Character.Player;
 
         public GenshinAbility Initialize(GenshinCharacter character)

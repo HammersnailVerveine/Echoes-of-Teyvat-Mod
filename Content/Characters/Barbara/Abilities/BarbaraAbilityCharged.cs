@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Characters.Barbara.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,7 +48,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
                 for (int k = 0; k < Main.npc.Length; k++)
                 {
                     NPC npc = Main.npc[k];
-                    if (npc.active && !npc.dontTakeDamage && !npc.friendly && npc.lifeMax > 5)
+                    if (GenshinProjectile.CanHomeInto(npc))
                     {
                         if (position.Distance(npc.Center) < npc.width + 32f) // if the NPC is close to the projectile path, snaps to it.
                         {

@@ -29,7 +29,7 @@ namespace GenshinMod.Common.GameObjects
         public GenshinAbility AbilityBurst;
 
         public string Name;
-        public CharacterElement Element;
+        public GenshinElement Element;
 
         public int FlatHealth; // Max health no modifiers
         public int FlatDefense; // Max defense no modifiers
@@ -73,6 +73,11 @@ namespace GenshinMod.Common.GameObjects
 
         public void PreUpdate()
         {
+            foreach (CombatText ct in Main.combatText)
+            {
+                if (ct.color == CombatText.DamagedHostile || ct.color == CombatText.DamagedHostileCrit)
+                    ct.active = false;
+            }
             SafePreUpdate();
         }
 
@@ -127,9 +132,9 @@ namespace GenshinMod.Common.GameObjects
             }
         }
 
-        public void GainEnergy(CharacterElement element, float value)
+        public void GainEnergy(GenshinElement element, float value)
         {
-            if (element == CharacterElement.NONE) value *= 2;
+            if (element == GenshinElement.NONE) value *= 2;
             else if (element == Element) value *= 3;
 
             GainEnergyFlat(value);

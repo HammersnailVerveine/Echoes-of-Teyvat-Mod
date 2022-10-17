@@ -18,9 +18,10 @@ namespace GenshinMod.Common.ModObjects
         public bool ProjectileTrail = false; // Will the projectile leave a trail of afterimages ?
         public float ProjectileTrailOffset = 0f; // Offcenters the afterimages a bit. useless without projectileTrail activated. Looks terrible on most projectiles.
         public int ElementalParticles = 0; // Number of particles (value : 1) spawned on first hit
-        public CharacterElement Element = CharacterElement.NONE; // Projectile element
+        public GenshinElement Element = GenshinElement.NONE; // Projectile element
         public int ElementApplication = ElementApplicationWeak;
         public bool IgnoreICD = false;
+        public bool CanReact = true;
 
         public bool FirstHit = false; // Has the projectile hit a target yet ?
 
@@ -40,31 +41,11 @@ namespace GenshinMod.Common.ModObjects
         public GenshinCharacter OwnerCharacter => Projectile.GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter;
         public bool FirstFrame => timeSpent == 1;
         public Texture2D GetTexture() => ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        public static bool CanHomeInto(NPC npc) => npc.active && !npc.dontTakeDamage && !npc.friendly && npc.lifeMax > 5;
 
         public Vector2 VelocityImmobile => Projectile.velocity * 0.0000001f; // Returns an almost immobile velocity, so projectiles spawned from this have the corrent kb direction
 
-        public void Bounce(Vector2 oldVelocity, float speedMult = 1f, bool reducePenetrate = false)
-        {
-            if (reducePenetrate)
-            {
-                Projectile.penetrate--;
-                if (Projectile.penetrate < 0) Projectile.Kill();
-            }
-            if (Projectile.velocity.X != oldVelocity.X) Projectile.velocity.X = -oldVelocity.X * speedMult;
-            if (Projectile.velocity.Y != oldVelocity.Y) Projectile.velocity.Y = -oldVelocity.Y * speedMult;
-        }
-
-        public void ResetImmunity()
-        {
-            for (int l = 0; l < Main.npc.Length; l++)
-            {
-                NPC target = Main.npc[l];
-                if (Projectile.Hitbox.Intersects(target.Hitbox))
-                {
-                    target.immune[Projectile.owner] = 0;
-                }
-            }
-        }
+        // OVERRIDES
 
         public sealed override void AI()
         {
@@ -97,10 +78,14 @@ namespace GenshinMod.Common.ModObjects
             SafeOnHitNPC(target, damage, knockback, crit);
         }
 
+        /*
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             InflictElement(target, Element, ElementApplication);
         }
+        */
+
+        // UTILITY
 
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage, float knockback, float ai0 = 0, float ai1 = 0)
         {
@@ -133,7 +118,7 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public void SpawnElementalParticle(CharacterElement element, float value, int number = 1)
+        public void SpawnElementalParticle(GenshinElement element, float value, int number = 1)
         {
             int type = ModContent.ProjectileType<ProjectileElementalParticle>();
             for (int i = 0; i < number; i ++)
@@ -142,11 +127,38 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public void InflictElement(NPC npc, CharacterElement element, int duration)
+        /*
+        public void InflictElement(NPC npc, GenshinElement element, int duration)
         {
             if (IgnoreICD) npc.GetGlobalNPC<GenshinGlobalNPC>().InflictElement(element, duration);
             else if (OwnerCharacter.TryApplyElement(npc)) npc.GetGlobalNPC<GenshinGlobalNPC>().InflictElement(element, duration);
         }
+        */
+
+        public void Bounce(Vector2 oldVelocity, float speedMult = 1f, bool reducePenetrate = false)
+        {
+            if (reducePenetrate)
+            {
+                Projectile.penetrate--;
+                if (Projectile.penetrate < 0) Projectile.Kill();
+            }
+            if (Projectile.velocity.X != oldVelocity.X) Projectile.velocity.X = -oldVelocity.X * speedMult;
+            if (Projectile.velocity.Y != oldVelocity.Y) Projectile.velocity.Y = -oldVelocity.Y * speedMult;
+        }
+
+        public void ResetImmunity()
+        {
+            for (int l = 0; l < Main.npc.Length; l++)
+            {
+                NPC target = Main.npc[l];
+                if (Projectile.Hitbox.Intersects(target.Hitbox))
+                {
+                    target.immune[Projectile.owner] = 0;
+                }
+            }
+        }
+
+        // DRAW
 
         public sealed override bool PreDraw(ref Color lightColor)
         {

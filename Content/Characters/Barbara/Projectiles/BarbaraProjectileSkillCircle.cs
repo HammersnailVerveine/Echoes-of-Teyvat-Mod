@@ -29,7 +29,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.timeLeft = 901;
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
-			Element = Common.GameObjects.CharacterElement.HYDRO;
+			Element = Common.GameObjects.GenshinElement.HYDRO;
 		}
 
         public override void OnSpawn(IEntitySource source)

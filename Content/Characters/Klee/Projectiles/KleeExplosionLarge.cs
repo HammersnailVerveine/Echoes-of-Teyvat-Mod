@@ -23,7 +23,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.timeLeft = 20;
 			Projectile.penetrate = -1;
 			Main.projFrames[Projectile.type] = 9;
-			Element = Common.GameObjects.CharacterElement.PYRO;
+			Element = Common.GameObjects.GenshinElement.PYRO;
 			ElementApplication = ElementApplicationMedium;
 			IgnoreICD = true;
 		}

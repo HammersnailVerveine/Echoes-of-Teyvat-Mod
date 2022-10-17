@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -12,7 +13,7 @@ namespace GenshinMod.Common.GlobalObjets
         public static Texture2D[] ElementTexture;
 
         public bool HalfLifeParticle = false;
-        public CharacterElement Element = CharacterElement.NONE;
+        public GenshinElement Element = GenshinElement.NONE;
 
         public int ElementTimerGeo = 0;
         public int ElementTimerAnemo = 0;
@@ -72,7 +73,7 @@ namespace GenshinMod.Common.GlobalObjets
             if (!Main.LocalPlayer.dead) SpawnElementalParticle(npc, Element, 1f);
         }
 
-        public void SpawnElementalParticle(NPC npc, CharacterElement element, float value, int number = 1)
+        public void SpawnElementalParticle(NPC npc, GenshinElement element, float value, int number = 1)
         {
             int type = ModContent.ProjectileType<Content.Projectiles.ProjectileElementalParticle>();
             for (int i = 0; i < number; i++)
@@ -81,29 +82,29 @@ namespace GenshinMod.Common.GlobalObjets
             }
         }
 
-        public void InflictElement(CharacterElement Element, int duration)
+        public void InflictElement(GenshinElement Element, int duration)
         {
             switch (Element)
             {
-                case CharacterElement.GEO:
+                case GenshinElement.GEO:
                     if (duration > ElementTimerGeo) ElementTimerGeo = duration;
                     break;
-                case CharacterElement.ANEMO:
+                case GenshinElement.ANEMO:
                     if (duration > ElementTimerAnemo) ElementTimerAnemo = duration;
                     break;
-                case CharacterElement.CRYO:
+                case GenshinElement.CRYO:
                     if (duration > ElementTimerCryo) ElementTimerCryo = duration;
                     break;
-                case CharacterElement.ELECTRO:
+                case GenshinElement.ELECTRO:
                     if (duration > ElementTimerElectro) ElementTimerElectro = duration;
                     break;
-                case CharacterElement.DENDRO:
+                case GenshinElement.DENDRO:
                     if (duration > ElementTimerDendro) ElementTimerDendro = duration;
                     break;
-                case CharacterElement.HYDRO:
+                case GenshinElement.HYDRO:
                     if (duration > ElementTimerHydro) ElementTimerHydro = duration;
                     break;
-                case CharacterElement.PYRO:
+                case GenshinElement.PYRO:
                     if (duration > ElementTimerPyro) ElementTimerPyro = duration;
                     break;
                 default:
@@ -111,32 +112,27 @@ namespace GenshinMod.Common.GlobalObjets
             }
         }
 
-        public bool AffectedByElement(CharacterElement Element)
+        public bool AffectedByElement(GenshinElement Element)
         {
             switch (Element)
             {
-                case CharacterElement.GEO:
+                case GenshinElement.GEO:
                     return ElementTimerGeo > 0;
-                case CharacterElement.ANEMO:
+                case GenshinElement.ANEMO:
                     return ElementTimerAnemo > 0;
-                case CharacterElement.CRYO:
+                case GenshinElement.CRYO:
                     return ElementTimerCryo > 0;
-                case CharacterElement.ELECTRO:
+                case GenshinElement.ELECTRO:
                     return ElementTimerElectro > 0;
-                case CharacterElement.DENDRO:
+                case GenshinElement.DENDRO:
                     return ElementTimerDendro > 0;
-                case CharacterElement.HYDRO:
+                case GenshinElement.HYDRO:
                     return ElementTimerHydro > 0;
-                case CharacterElement.PYRO:
+                case GenshinElement.PYRO:
                     return ElementTimerPyro > 0;
                 default:
-                    if (AffectedByElement(CharacterElement.GEO)) return false;
-                    if (AffectedByElement(CharacterElement.ANEMO)) return false;
-                    if (AffectedByElement(CharacterElement.CRYO)) return false;
-                    if (AffectedByElement(CharacterElement.ELECTRO)) return false;
-                    if (AffectedByElement(CharacterElement.DENDRO)) return false;
-                    if (AffectedByElement(CharacterElement.HYDRO)) return false;
-                    if (AffectedByElement(CharacterElement.PYRO)) return false;
+                    foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
+                        if (element != GenshinElement.NONE) if (AffectedByElement(element)) return false;
                     return true;
             }
         }
@@ -164,24 +160,72 @@ namespace GenshinMod.Common.GlobalObjets
         public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             int nbElements = -1;
-            if (AffectedByElement(CharacterElement.GEO)) nbElements++;
-            if (AffectedByElement(CharacterElement.ANEMO)) nbElements++;
-            if (AffectedByElement(CharacterElement.CRYO)) nbElements++;
-            if (AffectedByElement(CharacterElement.ELECTRO)) nbElements++;
-            if (AffectedByElement(CharacterElement.DENDRO)) nbElements++;
-            if (AffectedByElement(CharacterElement.HYDRO)) nbElements++;
-            if (AffectedByElement(CharacterElement.PYRO)) nbElements++;
+            foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
+                if (element != GenshinElement.NONE) if (AffectedByElement(element)) nbElements++;
             int offSetY = -30;
-            int offSetX = -11;
+            int offSetX = 0;
             setOffset(ref offSetX, ref offSetY, ref nbElements);
 
-            if (AffectedByElement(CharacterElement.GEO)) DrawTexture(ElementTexture[0], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(CharacterElement.ANEMO)) DrawTexture(ElementTexture[1], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(CharacterElement.CRYO)) DrawTexture(ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(CharacterElement.ELECTRO)) DrawTexture(ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(CharacterElement.DENDRO)) DrawTexture(ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(CharacterElement.HYDRO)) DrawTexture(ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(CharacterElement.PYRO)) DrawTexture(ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.GEO)) DrawTexture(ElementTexture[0], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.ANEMO)) DrawTexture(ElementTexture[1], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.CRYO)) DrawTexture(ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.ELECTRO)) DrawTexture(ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.DENDRO)) DrawTexture(ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.HYDRO)) DrawTexture(ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.PYRO)) DrawTexture(ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+        }
+
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
+            {
+                GenshinElement element = genshinProjectile.Element;
+                if (element == GenshinElement.NONE || !genshinProjectile.CanReact)
+                {
+                    CombatText.NewText(npc.Hitbox, GenshinElementUtils.GetColor(element), damage, crit);
+                    return;
+                }
+
+                GenshinCharacter genshinCharacter = genshinProjectile.OwnerCharacter;
+
+                if (genshinProjectile.IgnoreICD || genshinCharacter.TryApplyElement(npc))
+                {
+                    int application = genshinProjectile.ElementApplication;
+                    int mastery = genshinCharacter.StatElementalMastery;
+
+                    if (element == GenshinElement.PYRO)
+                    {
+                        if (AffectedByElement(GenshinElement.HYDRO)) // Vaporize Weak
+                        {
+                            ElementTimerHydro -= (int)(application * 0.5);
+                            damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
+                            application = 0;
+
+                            Rectangle rectangle = npc.Hitbox;
+                            rectangle.Y -= 32;
+                            CombatText.NewText(rectangle, GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
+                        }
+                    }
+
+                    if (element == GenshinElement.HYDRO)
+                    {
+                        if (AffectedByElement(GenshinElement.PYRO)) // Vaporize Strong
+                        {
+                            ElementTimerPyro -= application * 2;
+                            damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
+                            //damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionDMGBonus));
+                            application = 0;
+
+                            Rectangle rectangle = npc.Hitbox;
+                            rectangle.Y -= 32;
+                            CombatText.NewText(rectangle, GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
+                        }
+                    }
+
+                    InflictElement(element, application);
+                }
+                CombatText.NewText(npc.Hitbox, GenshinElementUtils.GetColor(element), damage, crit);
+            }
         }
     }
 }

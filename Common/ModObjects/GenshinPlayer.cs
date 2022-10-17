@@ -179,7 +179,7 @@ namespace GenshinMod.Common.ModObjects
             //GiveTeamEnergy(CharacterElement.NONE, 1); // TEMP
         }
 
-        public void GiveTeamEnergy(CharacterElement element, float value)
+        public void GiveTeamEnergy(GenshinElement element, float value)
         {
             foreach (GenshinCharacter character in CharacterTeam)
                 character.GainEnergy(element, character == CharacterCurrent ? value : value * 0.6f);   

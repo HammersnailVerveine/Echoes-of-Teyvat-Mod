@@ -31,7 +31,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.tileCollide = false;
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 600;
-			Element = Common.GameObjects.CharacterElement.PYRO;
+			Element = Common.GameObjects.GenshinElement.PYRO;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -57,7 +57,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 				for (int k = 0; k < Main.npc.Length; k++) // Select target
 				{
 					NPC npc = Main.npc[k];
-					if (npc.active && !npc.dontTakeDamage && !npc.friendly && npc.lifeMax > 5)
+					if (CanHomeInto(npc))
 					{
 						if (Main.rand.NextBool(120))
 						{

@@ -8,7 +8,7 @@ namespace GenshinMod.Content.Characters.Barbara
         public override void SetDefaults()
 		{
 			Name = "Barbara";
-			Element = CharacterElement.HYDRO;
+			Element = GenshinElement.HYDRO;
 			AbilityNormal = new BarbaraAbilityNormal().Initialize(this);
 			AbilityCharged = new BarbaraAbilityCharged().Initialize(this);
 			AbilitySkill = new BarbaraAbilitySkill().Initialize(this);
