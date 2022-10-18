@@ -1,5 +1,8 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Content.Characters.Barbara.Abilities;
+using GenshinMod.Content.Characters.Barbara.Projectiles;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Barbara
 {
@@ -17,7 +20,6 @@ namespace GenshinMod.Content.Characters.Barbara
 			AbilityBurst = new BarbaraAbilityBurst().Initialize(this);
 
 			Health = 2;
-			Energy = 80;
 		}
 
         public override void SafePostUpdate()
@@ -25,9 +27,23 @@ namespace GenshinMod.Content.Characters.Barbara
 			if (GenshinPlayer.Timer % 600 == 0) GainEnergyFlat(1f);
         }
 
+        public override void SafePreUpdate()
+        {
+			int type = ModContent.ProjectileType<BarbaraProjectileSkillCircle>();
+			foreach (Projectile projectile in Main.projectile)
+			{
+				if (projectile.active && projectile.type == type && projectile.owner == Player.whoAmI)
+                {
+
+					skillActive = true;
+					return;
+				}
+			}
+			skillActive = false;
+		}
+
         public override void SafeResetEffects()
         {
-			skillActive = false;
 		}
     }
 }

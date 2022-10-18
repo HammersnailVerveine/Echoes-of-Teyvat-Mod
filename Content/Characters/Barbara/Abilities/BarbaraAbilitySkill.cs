@@ -17,7 +17,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             Damage = 12;
             KnockBack = 0f;
             UseTime = 40;
-            Velocity = 0.00f;
+            Velocity = Immobile;
             Cooldown = 60 * 32;
         }
 

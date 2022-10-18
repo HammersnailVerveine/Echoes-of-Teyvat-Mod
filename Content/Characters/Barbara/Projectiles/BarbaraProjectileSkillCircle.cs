@@ -64,8 +64,6 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 				Vector2 position = new Vector2(0f, Main.rand.NextFloat(Projectile.height / 2f - 5f, Projectile.height / 2f + 5f) * Projectile.scale).RotatedByRandom(MathHelper.ToRadians(360));
 				SpawnDust<BarbaraDustNote>(Projectile.Center + position, Vector2.Zero, 0.25f, 1.2f, 0, 1, 15);
 			}
-
-			if (OwnerCharacter is CharacterBarbara barbara) barbara.skillActive = true;
 		}
 
         public override void Kill(int timeLeft)

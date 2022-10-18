@@ -25,6 +25,9 @@ namespace GenshinMod.Common.GameObjects
         public int ChargesCurrent = 0; // Current number of available charges
         public GenshinCharacter Character; // Owner character (setup in Initialize())
 
+        public static float AlmostImmobile = 0.001f;
+        public static float Immobile = 0f;
+
         public abstract void SetDefaults();
         public abstract void OnUse();
         public virtual void OnUseUpdate() { }

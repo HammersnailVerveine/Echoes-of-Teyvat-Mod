@@ -202,7 +202,7 @@ namespace GenshinMod.Common.GlobalObjets
                             application = 0;
 
                             Rectangle rectangle = npc.Hitbox;
-                            rectangle.Y -= 32;
+                            rectangle.Y -= 48;
                             CombatText.NewText(rectangle, GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
                         }
                     }
@@ -217,7 +217,7 @@ namespace GenshinMod.Common.GlobalObjets
                             application = 0;
 
                             Rectangle rectangle = npc.Hitbox;
-                            rectangle.Y -= 32;
+                            rectangle.Y -= 48;
                             CombatText.NewText(rectangle, GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
                         }
                     }

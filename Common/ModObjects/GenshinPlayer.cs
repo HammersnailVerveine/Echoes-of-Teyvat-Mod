@@ -22,6 +22,15 @@ namespace GenshinMod.Common.ModObjects
         public int TimerUseRef = 0; // Used for animations
         public int LastUseDirection = 1; // Animation swing direction
         public int Timer = 0; // Increased by 1 every frame
+
+        public int StaminaBase = 100; // Maximum Base stamina
+        public int StaminaBonus = 140; // Bonus stamina (max = base + bonus) (140 max)
+        public float Stamina = 0; // current stamina
+        public float StaminaConsumption = 1f; // Multiplies stamina consumption
+        public int TimerStamina = 0; // Reset to 150 on stamina use
+
+        public int StaminaMax => StaminaBase + StaminaBonus;
+
         public bool IsUsing() => TimerUse > 0;
 
         public override void Initialize()
@@ -37,6 +46,8 @@ namespace GenshinMod.Common.ModObjects
             //PlayerInput.ScrollWheelDeltaForUI = 0;
             PlayerInput.ScrollWheelDelta = 0;
             //Player.statManaMax2 = 0;
+            Player.statLifeMax2 = 100000;
+            Player.statLife = Player.statLifeMax2;
 
             foreach (GenshinCharacter character in CharacterTeam)
                 character.PreUpdate();
@@ -71,6 +82,20 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
+        public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
+        {
+            crit = false;
+            damage = CharacterCurrent.ApplyDefense(damage);
+            CharacterCurrent.Damage(damage);
+        }
+
+        public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
+        {
+            crit = false;
+            damage = CharacterCurrent.ApplyDefense(damage);
+            CharacterCurrent.Damage(damage);
+        }
+
         public override void ResetEffects()
         {
             Timer++;
@@ -86,6 +111,13 @@ namespace GenshinMod.Common.ModObjects
             {
                 TimerUse--;
                 if (TimerUse <= 0) TimerUseRef = 0;
+            }
+
+            TimerStamina--;
+            if (Stamina < StaminaMax && TimerStamina <= 0)
+            {
+                Stamina += 25f / 60f; // Stamina regen = 25 per second
+                if (Stamina > StaminaMax) Stamina = StaminaMax;
             }
 
             foreach (GenshinCharacter character in CharacterTeam)
@@ -202,6 +234,19 @@ namespace GenshinMod.Common.ModObjects
             }
             //SoundEngine.PlaySound(SoundID.MenuClose);
             return;
+        }
+
+        public bool TryUseStamina(float value)
+        {
+            value = (int)(value * StaminaConsumption);
+            if (value <= 0) return true;
+            if (Stamina >= value)
+            {
+                Stamina -= value;
+                TimerStamina = 150; // delays stamina recovery by 2.5 sec;
+                return true;
+            }
+            return false;
         }
     }
 }

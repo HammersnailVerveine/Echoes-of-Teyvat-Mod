@@ -24,7 +24,7 @@ namespace GenshinMod.Common.GameObjects
         public Texture2D TextureAbilityBurst;
         public Texture2D TextureIcon;
 
-        // Stable variables
+        // Default variables
 
         public GenshinAbility AbilityNormal;
         public GenshinAbility AbilityCharged;
@@ -36,6 +36,7 @@ namespace GenshinMod.Common.GameObjects
 
         public int FlatHealth = 100; // Max health no modifiers
         public int FlatDefense = 100; // Max defense no modifiers
+        public CharacterWeapon Weapon; // Character Weapon Type
 
         // Dynamic variables
 
@@ -54,6 +55,9 @@ namespace GenshinMod.Common.GameObjects
         public List<ICDTracker> ICDTrackers;
 
         public int HealthMax => (int)(FlatHealth * (1f + StatHealth)) + StatHealthFlat;
+        public int EffectiveDefense => (int)(FlatDefense * (1f + StatDefense)) + StatHealthFlat;
+
+        public bool IsAlive => Health > 0; 
 
         public abstract void SetDefaults();
         public virtual void SafePreUpdate() { }
@@ -61,6 +65,8 @@ namespace GenshinMod.Common.GameObjects
         public virtual void SafeResetEffects() { }
         public virtual void OnSwapIn() { }
         public virtual bool OnSwapOut() => true; // Return false to prevent swap out
+        public virtual bool OnHeal(int value) => true; // Return false to prevent heal
+        public virtual bool OnDamage(int value) => true; // Return false to prevent damage
 
         public GenshinCharacter Initialize(GenshinPlayer modPlayer)
         {
@@ -135,7 +141,7 @@ namespace GenshinMod.Common.GameObjects
 
         public void TryUseAbility(GenshinAbility ability)
         {
-            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy)
+            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy && GenshinPlayer.TryUseStamina(ability.Stamina))
             {
                 Energy -= ability.Energy;
                 AbilityCurrent = ability;
@@ -191,14 +197,29 @@ namespace GenshinMod.Common.GameObjects
 
         public void Heal(int value, bool combatText = true)
         {
-            if (value > HealthMax - Health) value = HealthMax - Health;
-            if (value > 0)
+            if (OnHeal(value))
             {
-                Health += value;
-                if (Health > HealthMax) Health = HealthMax;
-                if (IsCurrentCharacter) CombatText.NewText(Player.Hitbox, new Color(115, 200, 0), value);
+                if (value > HealthMax - Health) value = HealthMax - Health;
+                if (value > 0)
+                {
+                    Health += value;
+                    if (Health > HealthMax) Health = HealthMax;
+                    if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(188, 255, 55), value);
+                }
             }
         }
+
+        public void Damage(int value)
+        {
+            if (OnDamage(value))
+            {
+                value = ApplyDefense(value);
+                Health -= value;
+                if (Health < 0) Health = 0;
+            }
+        }
+
+        public int ApplyDefense(int value) => value * (1 - (EffectiveDefense / (EffectiveDefense + 1000)));
 
         public bool CanUseAbility => AbilityCurrent == null && TimerCanUse <= 0;
         public bool IsCurrentCharacter => GenshinPlayer.CharacterCurrent == this;

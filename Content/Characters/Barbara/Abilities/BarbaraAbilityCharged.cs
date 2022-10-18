@@ -18,7 +18,8 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             Damage = 30;
             KnockBack = 4f;
             UseTime = 50;
-            Velocity = 0.01f;
+            Stamina = 50;
+            Velocity = AlmostImmobile;
         }
 
         public override void OnUse()
