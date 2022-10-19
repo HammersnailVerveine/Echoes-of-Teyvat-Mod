@@ -65,6 +65,7 @@ namespace GenshinMod.Content.UI
 				rectangle.Width += 2;
 				health += increment;
 			}
+			if (rectangle.Width > TextureHealthBar.Width) rectangle.Width = TextureHealthBar.Width;
 
 			spriteBatch.Draw(TextureHealthBar, healthPosition, rectangle, healthColor, 0f, TextureHealthBar.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
 
@@ -84,6 +85,7 @@ namespace GenshinMod.Content.UI
 				staminaRectangle.Width += 2;
 				stamina += staminaIncrement;
 			}
+			if (staminaRectangle.Width > TextureHealthBar.Width) staminaRectangle.Width = TextureHealthBar.Width;
 
 			spriteBatch.Draw(TextureHealthBar, staminaPosition, staminaRectangle, staminaColor, 0f, TextureHealthBar.Size() * 0.5f, 0.75f, SpriteEffects.None, 0f);
 		}
