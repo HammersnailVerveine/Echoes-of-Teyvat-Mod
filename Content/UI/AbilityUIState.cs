@@ -1,4 +1,5 @@
 using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Common.UI;
 using Microsoft.Xna.Framework;

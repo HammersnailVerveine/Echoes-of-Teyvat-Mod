@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.Loadables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -43,14 +44,14 @@ namespace GenshinMod.Common.ModObjects
 
         public override void PreUpdate()
         {
-            //PlayerInput.ScrollWheelDeltaForUI = 0;
-            PlayerInput.ScrollWheelDelta = 0;
-            //Player.statManaMax2 = 0;
-            Player.statLifeMax2 = 100000;
-            Player.statLife = Player.statLifeMax2;
-
             foreach (GenshinCharacter character in CharacterTeam)
                 character.PreUpdate();
+        }
+
+        public override void UpdateEquips()
+        {
+            foreach (GenshinCharacter character in CharacterTeam)
+                character.Update();
         }
 
         public override void PostUpdate()
@@ -84,20 +85,24 @@ namespace GenshinMod.Common.ModObjects
 
         public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
         {
+            CharacterCurrent.Damage(damage, crit);
             crit = false;
-            damage = CharacterCurrent.ApplyDefense(damage);
-            CharacterCurrent.Damage(damage);
+            damage = 1;
         }
 
         public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
         {
+            CharacterCurrent.Damage(damage, crit);
             crit = false;
-            damage = CharacterCurrent.ApplyDefense(damage);
-            CharacterCurrent.Damage(damage);
+            damage = 1;
         }
 
         public override void ResetEffects()
         {
+            PlayerInput.ScrollWheelDelta = 0;
+            Player.statLifeMax2 = 100000;
+            Player.statLife = Player.statLifeMax2;
+
             Timer++;
 
             if (Player.velocity.X != 0)
@@ -118,6 +123,13 @@ namespace GenshinMod.Common.ModObjects
             {
                 Stamina += 25f / 60f; // Stamina regen = 25 per second
                 if (Stamina > StaminaMax) Stamina = StaminaMax;
+            }
+
+            foreach (CombatText ct in Main.combatText)
+            {
+                if (ct.color == CombatText.DamagedHostile || ct.color == CombatText.DamagedHostileCrit
+                    || ct.color == CombatText.DamagedFriendly || ct.color == CombatText.DamagedFriendlyCrit)
+                    ct.active = false;
             }
 
             foreach (GenshinCharacter character in CharacterTeam)

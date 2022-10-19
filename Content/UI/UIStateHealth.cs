@@ -84,7 +84,7 @@ namespace GenshinMod.Content.UI
 				spriteBatch.Draw(TextureTeamHealth, healthPosition, null, healthBackgroundColor, 0f, TextureTeamHealth.Size() * 0.5f, scale, SpriteEffects.None, 0f);
 				Rectangle rectangle = new Rectangle(0, 0, 0, TextureTeamHealth.Height);
 
-				float increment = character.HealthMax / (TextureTeamHealth.Width * 0.5f);
+				float increment = character.EffectiveHealth / (TextureTeamHealth.Width * 0.5f);
 				float health = 0;
 				while (health < character.Health - increment * 2)
 				{

@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace GenshinMod.Common.GameObjects
+namespace GenshinMod.Common.GameObjects.Enums
 {
     public enum GenshinElement : int
     {

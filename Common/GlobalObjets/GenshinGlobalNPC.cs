@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -78,7 +79,7 @@ namespace GenshinMod.Common.GlobalObjets
             int type = ModContent.ProjectileType<Content.Projectiles.ProjectileElementalParticle>();
             for (int i = 0; i < number; i++)
             {
-                int proj = Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, Vector2.Zero, type, 0, 0f, Main.myPlayer, (float)element, value);
+                Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, Vector2.Zero, type, 0, 0f, Main.myPlayer, (float)element, value);
             }
         }
 
@@ -182,7 +183,7 @@ namespace GenshinMod.Common.GlobalObjets
                 GenshinElement element = genshinProjectile.Element;
                 if (element == GenshinElement.NONE || !genshinProjectile.CanReact)
                 {
-                    CombatText.NewText(npc.Hitbox, GenshinElementUtils.GetColor(element), damage, crit);
+                    CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
                     return;
                 }
 
@@ -201,7 +202,7 @@ namespace GenshinMod.Common.GlobalObjets
                             damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
                             application = 0;
 
-                            Rectangle rectangle = npc.Hitbox;
+                            Rectangle rectangle = ExtendedHitbox(npc);
                             rectangle.Y -= 48;
                             CombatText.NewText(rectangle, GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
                         }
@@ -216,7 +217,7 @@ namespace GenshinMod.Common.GlobalObjets
                             //damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionDMGBonus));
                             application = 0;
 
-                            Rectangle rectangle = npc.Hitbox;
+                            Rectangle rectangle = ExtendedHitbox(npc);
                             rectangle.Y -= 48;
                             CombatText.NewText(rectangle, GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
                         }
@@ -224,8 +225,19 @@ namespace GenshinMod.Common.GlobalObjets
 
                     InflictElement(element, application);
                 }
-                CombatText.NewText(npc.Hitbox, GenshinElementUtils.GetColor(element), damage, crit);
+                CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
             }
+        }
+
+
+        public Rectangle ExtendedHitbox(NPC npc)
+        {
+            Rectangle rect = npc.Hitbox;
+            rect.X -= (int)(npc.width / 2);
+            rect.Y -= (int)(npc.height / 2);
+            rect.Width += npc.width;
+            rect.Height += npc.height;
+            return rect;
         }
     }
 }

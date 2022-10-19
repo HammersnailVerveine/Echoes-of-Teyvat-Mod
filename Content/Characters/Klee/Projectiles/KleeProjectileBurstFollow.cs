@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.Audio;
 using GenshinMod.Common.ModObjects;
+using GenshinMod.Common.GameObjects.Enums;
 
 namespace GenshinMod.Content.Characters.Klee.Projectiles
 {
@@ -31,7 +32,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.tileCollide = false;
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 600;
-			Element = Common.GameObjects.GenshinElement.PYRO;
+			Element = GenshinElement.PYRO;
 		}
 
 		public override void OnSpawn(IEntitySource source)

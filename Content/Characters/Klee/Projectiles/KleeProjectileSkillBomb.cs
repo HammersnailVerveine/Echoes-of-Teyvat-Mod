@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.Audio;
 using GenshinMod.Common.ModObjects;
+using GenshinMod.Common.GameObjects.Enums;
 
 namespace GenshinMod.Content.Characters.Klee.Projectiles
 {
@@ -32,7 +33,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 900; // 15 sec
 			Main.projFrames[Projectile.type] = 8;
-			Element = Common.GameObjects.GenshinElement.PYRO;
+			Element = GenshinElement.PYRO;
 			CanReact = false;
 		}
 

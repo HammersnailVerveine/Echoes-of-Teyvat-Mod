@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.Audio;
 using GenshinMod.Common.ModObjects;
+using GenshinMod.Common.GameObjects.Enums;
 
 namespace GenshinMod.Content.Characters.Klee.Projectiles
 {
@@ -34,10 +35,9 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 300;
 			Projectile.penetrate = -1;
-			Element = Common.GameObjects.GenshinElement.PYRO;
+			Element = GenshinElement.PYRO;
 			ElementalParticles = 4;
 			ElementApplication = ElementApplicationMedium;
-			IgnoreICD = true;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -64,7 +64,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
 
 			int type2 = ModContent.ProjectileType<KleeProjectileSkillBomb>();
-			int damage = (int)(Projectile.damage / 15);
+			int damage = (int)(Projectile.damage / 3);
 			if (damage < 1) damage = 1;
 			for (int i = -3; i < 4 ; i ++)
             {

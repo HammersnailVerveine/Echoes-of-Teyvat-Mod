@@ -1,4 +1,5 @@
-﻿using GenshinMod.Common.ModObjects;
+﻿using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,7 +28,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 100;
 			Projectile.penetrate = -1;
-			Element = Common.GameObjects.GenshinElement.HYDRO;
+			Element = GenshinElement.HYDRO;
 		}
 
         public override Color? GetAlpha(Color lightColor)

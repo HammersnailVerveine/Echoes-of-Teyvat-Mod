@@ -1,4 +1,5 @@
-﻿using GenshinMod.Common.ModObjects;
+﻿using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -23,7 +24,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.timeLeft = 20;
 			Projectile.penetrate = -1;
 			Main.projFrames[Projectile.type] = 6;
-			Element = Common.GameObjects.GenshinElement.PYRO;
+			Element = GenshinElement.PYRO;
 		}
 
         public override Color? GetAlpha(Color lightColor)

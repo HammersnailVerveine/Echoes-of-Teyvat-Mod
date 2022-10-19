@@ -7,8 +7,8 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.Audio;
 using GenshinMod.Common.ModObjects;
-using GenshinMod.Common.GameObjects;
 using Microsoft.Xna.Framework.Graphics;
+using GenshinMod.Common.GameObjects.Enums;
 
 namespace GenshinMod.Content.Projectiles
 {

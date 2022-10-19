@@ -13,7 +13,6 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
     {
         public override void SetDefaults()
         {
-            Damage = 20;
             KnockBack = 5f;
             UseTime = 60;
             Velocity = 7f;
@@ -33,8 +32,9 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             SoundEngine.PlaySound(SoundID.Item1);
         }
 
-        public override void OnUseEnd()
+        public override int GetScaling()
         {
+            return (int)(0.9f * Character.EffectiveAttack * Level);
         }
     }
 }

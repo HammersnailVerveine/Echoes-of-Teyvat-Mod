@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GenshinMod.Common.GameObjects.Enums;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
@@ -11,7 +12,7 @@ namespace GenshinMod.Common.GameObjects
     public abstract class GenshinAbility
     {
         public string Name; // Ability Name
-        public int Damage = 0; // Ability base Damage
+        //public int Damage = 0; // Ability base Damage
         public int UseTime = 1; // Ability base UseTime
         public float KnockBack = 0f; // Ability base Knockback
         public float Velocity = 0f; // Ability base Projectile Veloctiy
@@ -33,11 +34,9 @@ namespace GenshinMod.Common.GameObjects
         public virtual void OnUseUpdate() { }
         public virtual void OnUseEnd() { }
         public virtual void SafeResetEffects() { }
-
+        public int Level => Character.GetAbilityLevel(this);
         public virtual bool CanUse() => ChargesCurrent > 0;
-
         public virtual IEntitySource GetSource() => Player.GetSource_Misc("GenshinMod Attack");
-
         public bool IsUsed() => UseTimeCurrent > 0;
         public GenshinElement Element => Character.Element;
         public Player Player => Character.Player;
@@ -82,12 +81,12 @@ namespace GenshinMod.Common.GameObjects
 
         public int SpawnProjectile(Vector2 velocity, int type, float ai0 = 0, float ai1 = 0)
         {
-            return SpawnProjectile(GetSource(), Character.Player.Center, velocity, type, Damage, KnockBack, Character.Player.whoAmI, ai0, ai1);
+            return SpawnProjectile(GetSource(), Character.Player.Center, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, ai0, ai1);
         }
 
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, float ai0 = 0, float ai1 = 0)
         {
-            return SpawnProjectile(GetSource(), position, velocity, type, Damage, KnockBack, Character.Player.whoAmI, ai0, ai1);
+            return SpawnProjectile(GetSource(), position, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, ai0, ai1);
         }
 
         public Vector2 VelocityToCursor() => VelocityToTarget(Main.MouseWorld);
@@ -99,5 +98,10 @@ namespace GenshinMod.Common.GameObjects
             velocity *= Velocity;
             return velocity;
         }
+
+        public abstract int GetScaling();
+        public virtual int GetScaling2() => 1;
+        public virtual int GetScaling3() => 1;
+        public virtual int GetScaling4() => 1;
     }
 }

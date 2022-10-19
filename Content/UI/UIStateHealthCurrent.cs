@@ -58,7 +58,7 @@ namespace GenshinMod.Content.UI
 			spriteBatch.Draw(TextureHealthBar, healthPosition, null, healthBackgroundColor, 0f, TextureHealthBar.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
 			Rectangle rectangle = new Rectangle(0, 0, 0, TextureHealthBar.Height);
 
-			float increment = character.HealthMax / (TextureHealthBar.Width * 0.5f);
+			float increment = character.EffectiveHealth / (TextureHealthBar.Width * 0.5f);
 			float health = 0;
 			while (health < character.Health)
 			{

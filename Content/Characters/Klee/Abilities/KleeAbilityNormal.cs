@@ -1,9 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Content.Characters.Klee.Projectiles;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,7 +10,6 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
     {
         public override void SetDefaults()
         {
-            Damage = 8;
             KnockBack = 5f;
             UseTime = 30;
             Velocity = 10f;
@@ -27,8 +22,14 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             SoundEngine.PlaySound(SoundID.Item1);
         }
 
-        public override void OnUseEnd()
+        public override int GetScaling()
         {
+            return (int)(0.2f * Character.EffectiveAttack * Level);
+        }
+
+        public override int GetScaling2()
+        {
+            return (int)(0.7f * Character.EffectiveAttack * Level);
         }
     }
 }

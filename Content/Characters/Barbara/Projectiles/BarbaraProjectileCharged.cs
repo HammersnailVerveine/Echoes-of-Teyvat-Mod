@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -32,7 +33,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
 			Main.projFrames[Projectile.type] = 3;
-			Element = Common.GameObjects.GenshinElement.HYDRO;
+			Element = GenshinElement.HYDRO;
 			ElementApplication = ElementApplicationMedium;
 			IgnoreICD = true;
 		}
@@ -99,7 +100,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 				if (barbara.skillActive)
 				{
 					foreach (GenshinCharacter character in OwnerGenshinPlayer.CharacterTeam)
-						character.Heal((int)(damage * 0.5f)); // TEMP
+						character.Heal(barbara.AbilitySkill.GetScaling2() * 4);
 				}
 			}
 		}

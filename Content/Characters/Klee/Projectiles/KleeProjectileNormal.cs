@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.Audio;
 using GenshinMod.Common.ModObjects;
+using GenshinMod.Common.GameObjects.Enums;
 
 namespace GenshinMod.Content.Characters.Klee.Projectiles
 {
@@ -32,7 +33,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 180;
 			Main.projFrames[Projectile.type] = 2;
-			Element = Common.GameObjects.GenshinElement.PYRO;
+			Element = GenshinElement.PYRO;
 			CanReact = false;
 		}
 
@@ -63,9 +64,12 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 		}
 
         public override void Kill(int timeLeft)
-        {
-			int type = ModContent.ProjectileType<KleeExplosionMedium>();
-			SpawnProjectile(Projectile.Center, VelocityImmobile, type, Projectile.damage, Projectile.knockBack);
+		{
+			if (OwnerCharacter is CharacterKlee klee)
+			{
+				int type = ModContent.ProjectileType<KleeExplosionMedium>();
+				SpawnProjectile(Projectile.Center, VelocityImmobile, type, klee.AbilityNormal.GetScaling2(), Projectile.knockBack);
+			}
 
 			SpawnDust<KleeSparkleDust>(1f, 1f, 30, 8);
 			SpawnDust(DustID.Smoke, 1f, 1f, 15, 4);

@@ -1,4 +1,6 @@
-﻿using GenshinMod.Common.ModObjects;
+﻿using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.ModObjects;
+using GenshinMod.Common.ModObjects.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -34,32 +36,49 @@ namespace GenshinMod.Common.GameObjects
         public string Name;
         public GenshinElement Element;
 
-        public int FlatHealth = 100; // Max health no modifiers
-        public int FlatDefense = 100; // Max defense no modifiers
-        public CharacterWeapon Weapon; // Character Weapon Type
+        public int BaseHealth = 100; // Max health no modifiers
+        public int BaseDefense = 100; // Max defense no modifiers
+        public int BaseAttack = 100; // Max attack no modifiers
+        public WeaponType WeaponType; // Character Weapon Type
+
+        // Equipment Variables
+
+        public GenshinWeapon Weapon;
+
+        // Levels (1 - 10)
+
+        public int Level = 1; // Character level
+        public int LevelAbilityNormal = 1;
+        public int LevelAbilitySkill = 1;
+        public int LevelAbilityBurst = 1;
 
         // Dynamic variables
 
         public int Health = 100; // Current health
         public float Energy = 0f; // Current energy
+        public int TimerCanUse = 0;
 
-        public float StatDamage = 1f; // Damage % (base = 100%)
+        // Reset variables
+
         public float StatEnergyRecharge = 1f; // Energy Recharge % (base = 100%)
+        public float StatAttack = 0f; // Bonus Attack% (base = 0%)
         public float StatHealth = 0f; // Health bonus % (of FlatHealth, base = 0%)
         public float StatDefense = 0f; // Defense bonus % (of FlatDefense, base = 0%)
         public int StatElementalMastery = 0; // Elemental mastery (base = 0)
-        public int StatDamageFlat = 0; // Bonus flat damage (base = 0)
+        public int StatAttackFlat = 0; // Bonus flat damage (base = 0)
         public int StatHealthFlat = 0; // Bonus flat health (base = 0)
-        public int TimerCanUse = 0;
+        public int StatDefenseFlat = 0; // Bonus flat defense (base = 0)
 
         public List<ICDTracker> ICDTrackers;
 
-        public int HealthMax => (int)(FlatHealth * (1f + StatHealth)) + StatHealthFlat;
-        public int EffectiveDefense => (int)(FlatDefense * (1f + StatDefense)) + StatHealthFlat;
+        public int EffectiveHealth => (int)(BaseHealth * (1f + StatHealth)) + StatHealthFlat;
+        public float EffectiveDefense => (float)(((float)BaseDefense * (1f + StatDefense)) + StatDefenseFlat);
+        public float EffectiveAttack => (float)(((float)(BaseAttack + Weapon.EffectiveAttack) * (1f + StatAttack)) + StatAttackFlat);
 
         public bool IsAlive => Health > 0; 
 
         public abstract void SetDefaults();
+        public virtual void SafeUpdate() { }
         public virtual void SafePreUpdate() { }
         public virtual void SafePostUpdate() { }
         public virtual void SafeResetEffects() { }
@@ -83,23 +102,36 @@ namespace GenshinMod.Common.GameObjects
             GenshinPlayer = modPlayer;
             Player = modPlayer.Player;
             ICDTrackers = new List<ICDTracker>();
+            
             SetDefaults();
+
+            if (Weapon == null) TryEquipWeapon(GenshinWeapon.GetWeakestWeapon(WeaponType));
+            Health = EffectiveHealth;
             return this;
         }
 
         public void PreUpdate()
         {
-            foreach (CombatText ct in Main.combatText)
-            {
-                if (ct.color == CombatText.DamagedHostile || ct.color == CombatText.DamagedHostileCrit)
-                    ct.active = false;
-            }
             SafePreUpdate();
+            Weapon.WeaponUpdate();
         }
 
-        public void PostUpdate()
+        public void Update() // Use to setup character stats. No active effects
+        {
+            SafePreUpdate();
+            Weapon.WeaponUpdate();
+
+            if (IsCurrentCharacter)
+            {
+                Weapon.WeaponUpdateActive();
+            }
+        }
+
+        public void PostUpdate() // Active effects here. Stats are setup every frame in PreUpdate
         {
             SafePostUpdate();
+            Weapon.WeaponPostUpdate();
+
             if (AbilityCurrent != null)
             {
                 AbilityCurrent.OnUseUpdate();
@@ -110,8 +142,12 @@ namespace GenshinMod.Common.GameObjects
                     AbilityCurrent = null;
                 }
             }
+
             else if (IsCurrentCharacter)
             {
+                Weapon.WeaponPostUpdateActive();
+                Weapon.WeaponPostUpdateActiveWeaponType();
+
                 if (Main.mouseLeft && Main.mouseLeftRelease && !GenshinPlayer.IsUsing())
                 {
                     TryUseAbility(AbilityNormal);
@@ -130,7 +166,17 @@ namespace GenshinMod.Common.GameObjects
             AbilityCharged.ResetEffects();
             AbilitySkill.ResetEffects();
             AbilityBurst.ResetEffects();
+            Weapon.WeaponResetEffects();
             TimerCanUse --;
+
+            StatEnergyRecharge = 1f;
+            StatAttack = 0f;
+            StatHealth = 0f;
+            StatDefense = 0f;
+            StatElementalMastery = 0;
+            StatAttackFlat = 0;
+            StatHealthFlat = 0;
+            StatDefenseFlat = 0;
 
             for (int i = ICDTrackers.Count - 1; i >= 0; i--)
             {
@@ -180,6 +226,7 @@ namespace GenshinMod.Common.GameObjects
         public void OnSwapInGlobal()
         {
             OnSwapIn();
+            Weapon.WeaponOnSwapIn();
             TimerCanUse = 10;
 
             for (int i = 0; i < 10; i++)
@@ -192,37 +239,59 @@ namespace GenshinMod.Common.GameObjects
 
         public bool OnSwapOutGlobal()
         {
-            return OnSwapOut();
+            if (OnSwapOut())
+            {
+                Weapon.WeaponOnSwapOut();
+                Weapon.KillProjectile();
+                return true;
+            }
+            return false;
         }
 
         public void Heal(int value, bool combatText = true)
         {
             if (OnHeal(value))
             {
-                if (value > HealthMax - Health) value = HealthMax - Health;
+                if (value > EffectiveHealth - Health) value = EffectiveHealth - Health;
                 if (value > 0)
                 {
                     Health += value;
-                    if (Health > HealthMax) Health = HealthMax;
+                    if (Health > EffectiveHealth) Health = EffectiveHealth;
                     if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(188, 255, 55), value);
                 }
             }
         }
 
-        public void Damage(int value)
+        public void Damage(int value, bool crit = false, bool combatText = true)
         {
             if (OnDamage(value))
             {
+                Player.HealEffect((int)value);
                 value = ApplyDefense(value);
-                Health -= value;
                 if (Health < 0) Health = 0;
+                if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
             }
         }
 
-        public int ApplyDefense(int value) => value * (1 - (EffectiveDefense / (EffectiveDefense + 1000)));
+        public int GetAbilityLevel(GenshinAbility ability)
+        {
+            if (ability == AbilityNormal || ability == AbilityCharged) return LevelAbilityNormal;
+            if (ability == AbilitySkill) return LevelAbilitySkill;
+            if (ability == AbilityBurst) return LevelAbilityBurst;
+            return 1;
+        }
+
+        public int ApplyDefense(int value, int sourceLevel = 10) => (int)(value * (1f - (EffectiveDefense / (EffectiveDefense + 500f + sourceLevel * 100f))));
 
         public bool CanUseAbility => AbilityCurrent == null && TimerCanUse <= 0;
         public bool IsCurrentCharacter => GenshinPlayer.CharacterCurrent == this;
+
+        public void TryEquipWeapon(GenshinWeapon weapon)
+        {
+            if (weapon.WeaponType == WeaponType) ForceEquipWeapon(weapon);
+        }
+
+        public void ForceEquipWeapon(GenshinWeapon weapon) => weapon.Equip(this);
     }
 
     public class ICDTracker

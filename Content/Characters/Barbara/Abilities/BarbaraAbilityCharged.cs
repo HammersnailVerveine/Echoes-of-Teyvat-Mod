@@ -15,7 +15,6 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
     {
         public override void SetDefaults()
         {
-            Damage = 30;
             KnockBack = 4f;
             UseTime = 50;
             Stamina = 50;
@@ -63,8 +62,9 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             SpawnProjectile(position, VelocityToCursor(), type);
         }
 
-        public override void OnUseEnd()
+        public override int GetScaling() // Continuous Regeneration
         {
+            return (int)(1.5f * Character.EffectiveAttack * Level);
         }
     }
 }

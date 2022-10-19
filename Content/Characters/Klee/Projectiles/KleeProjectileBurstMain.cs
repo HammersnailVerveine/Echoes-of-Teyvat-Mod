@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using GenshinMod.Common.ModObjects;
+using GenshinMod.Common.GameObjects.Enums;
 
 namespace GenshinMod.Content.Characters.Klee.Projectiles
 {
@@ -31,7 +32,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 45;
 			Projectile.scale = 1f;
-			Element = Common.GameObjects.GenshinElement.PYRO;
+			Element = GenshinElement.PYRO;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -58,9 +59,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 				velocity *= 5f;
 				Vector2 position = Projectile.Center + velocity * 2;
 				int type = ModContent.ProjectileType<KleeProjectileBurst>();
-				int damage = (int)(Projectile.damage / 5);
-				if (damage < 1) damage = 1;
-				SpawnProjectile(position, velocity, type, damage, Projectile.knockBack);
+				SpawnProjectile(position, velocity, type, Projectile.damage, Projectile.knockBack);
 
 				SpawnDust<KleeSparkleDust>(1f, 1f, 30, 5);
 				SpawnDust<KleeSparkleDustBig>(1f, 1f, 10);
