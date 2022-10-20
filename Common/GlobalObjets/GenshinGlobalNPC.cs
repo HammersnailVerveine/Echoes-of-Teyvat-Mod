@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace GenshinMod.Common.GlobalObjets
@@ -23,6 +25,12 @@ namespace GenshinMod.Common.GlobalObjets
         public int ElementTimerDendro = 0;
         public int ElementTimerHydro = 0;
         public int ElementTimerPyro = 0;
+
+        public bool ReactionFrozen;
+        public Vector2 ReactionFrozenPosition;
+        public int ReactionFrozenDirection;
+
+        public static bool CanBefrozen(NPC npc) => npc.knockBackResist > 0f; //|| npc.type == NPCID.TargetDummy;
 
         public override bool InstancePerEntity => true;
         public override void Load()
@@ -67,6 +75,8 @@ namespace GenshinMod.Common.GlobalObjets
                 HalfLifeParticle = true;
                 if (!Main.LocalPlayer.dead) SpawnElementalParticle(npc, Element, 1f);
             }
+
+            ProcessReactions(npc);
         }
 
         public override void OnKill(NPC npc)
@@ -163,6 +173,7 @@ namespace GenshinMod.Common.GlobalObjets
             int nbElements = -1;
             foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
                 if (element != GenshinElement.NONE) if (AffectedByElement(element)) nbElements++;
+            if (AffectedByElement(GenshinElement.HYDRO) && ReactionFrozen) nbElements--;
             int offSetY = -30;
             int offSetX = 0;
             setOffset(ref offSetX, ref offSetY, ref nbElements);
@@ -172,8 +183,19 @@ namespace GenshinMod.Common.GlobalObjets
             if (AffectedByElement(GenshinElement.CRYO)) DrawTexture(ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
             if (AffectedByElement(GenshinElement.ELECTRO)) DrawTexture(ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
             if (AffectedByElement(GenshinElement.DENDRO)) DrawTexture(ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(GenshinElement.HYDRO)) DrawTexture(ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.HYDRO) && !ReactionFrozen) DrawTexture(ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
             if (AffectedByElement(GenshinElement.PYRO)) DrawTexture(ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+
+            if (ReactionFrozen)
+            {
+                Texture2D texture = TextureAssets.Npc[npc.type].Value;
+                Vector2 position = npc.Center - Main.screenPosition;
+                Rectangle rect = npc.frame;
+                rect.Height -= 2;
+                position.Y -= 6;
+                SpriteEffects effects = npc.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                spriteBatch.Draw(texture, position, rect, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.85f, 0f, rect.Size() * 0.5f, 1.2f, effects, 0f);
+            }
         }
 
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -199,35 +221,95 @@ namespace GenshinMod.Common.GlobalObjets
                 {
                     int application = genshinProjectile.ElementApplication;
                     float mastery = genshinCharacter.StatElementalMastery;
+                    bool reacted = false; // Individual attacks can only cause 1 reaction
 
                     if (element == GenshinElement.PYRO)
                     {
-                        if (AffectedByElement(GenshinElement.HYDRO)) // Vaporize Weak
+
+                        if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Melt Strong
+                        {
+                            ElementTimerCryo -= application * 2;
+                            damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
+                            //damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionDMGBonus));
+                            application = 0;
+
+                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.MELT), "Melt");
+                            reacted = true;
+                        }
+
+                        if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Vaporize Weak
                         {
                             ElementTimerHydro -= (int)(application * 0.5);
                             damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
                             application = 0;
 
-                            Rectangle rectangle = ExtendedHitbox(npc);
-                            rectangle.Y -= 48;
-                            CombatText.NewText(rectangle, GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
+                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
+                            reacted = true;
                         }
                     }
 
                     if (element == GenshinElement.HYDRO)
                     {
-                        if (AffectedByElement(GenshinElement.PYRO)) // Vaporize Strong
+                        if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Vaporize Strong
                         {
                             ElementTimerPyro -= application * 2;
                             damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
                             //damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionDMGBonus));
                             application = 0;
+                            
+                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
+                            reacted = true;
+                        }
 
-                            Rectangle rectangle = ExtendedHitbox(npc);
-                            rectangle.Y -= 48;
-                            CombatText.NewText(rectangle, GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
+                        if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Frozen
+                        {
+                            if (!ReactionFrozen && CanBefrozen(npc))
+                            {
+                                float FactorFrozen = 1f; // affects freeze duration (multiplies element timer loss), not affercted by EM.
+                                int minValue = (int)(MathHelper.Min(application, ElementTimerCryo));
+                                ElementTimerCryo = (int)((MathHelper.Max(ElementTimerHydro - minValue, 0) + minValue * 2) * FactorFrozen);
+                                application = (int)((MathHelper.Max(application - minValue, 0) + minValue * 2) * FactorFrozen);
+                                ReactionFrozen = true;
+                                ReactionFrozenDirection = npc.direction;
+                                ReactionFrozenPosition = npc.position;
+                                CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.FROZEN), "Frozen");
+                                reacted = true;
+                            }
                         }
                     }
+
+                    if (element == GenshinElement.CRYO)
+                    {
+                        Main.LocalPlayer.HealEffect(1);
+                        if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Melt Weak
+                        {
+                            ElementTimerPyro -= (int)(application * 0.5);
+                            damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
+                            application = 0;
+
+                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.MELT), "Melt");
+                            reacted = true;
+                        }
+
+                        if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Frozen
+                        {
+                            Main.LocalPlayer.HealEffect(2);
+                            if (!ReactionFrozen && CanBefrozen(npc))
+                            {
+                                Main.LocalPlayer.HealEffect(3);
+                                float FactorFrozen = 1f; // affects freeze duration (multiplies element timer loss), not affercted by EM.
+                                int minValue = (int)(MathHelper.Min(application, ElementTimerHydro));
+                                ElementTimerHydro = (int)((MathHelper.Max(ElementTimerHydro - minValue, 0) + minValue * 2) * FactorFrozen);
+                                application = (int)((MathHelper.Max(application - minValue, 0) + minValue * 2) * FactorFrozen);
+                                ReactionFrozen = true;
+                                ReactionFrozenDirection = npc.direction;
+                                ReactionFrozenPosition = npc.position;
+                                CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.FROZEN), "Frozen");
+                                reacted = true;
+                            }
+                        }
+                    }
+
 
                     InflictElement(element, application);
                 }
@@ -235,8 +317,19 @@ namespace GenshinMod.Common.GlobalObjets
             }
         }
 
+        public void ProcessReactions(NPC npc)
+        {
+            if (ReactionFrozen) // Frozen
+            {
+                npc.velocity *= 0f;
+                npc.direction = ReactionFrozenDirection;
+                npc.position = ReactionFrozenPosition;
+                if (ElementTimerHydro <= 0 || ElementTimerCryo <= 0) ReactionFrozen = false;
+            }
+        }
 
-        public Rectangle ExtendedHitbox(NPC npc)
+
+        public static Rectangle ExtendedHitbox(NPC npc)
         {
             Rectangle rect = npc.Hitbox;
             rect.X -= (int)(npc.width / 2);
@@ -244,6 +337,13 @@ namespace GenshinMod.Common.GlobalObjets
             rect.Width += npc.width;
             rect.Height += npc.height;
             return rect;
+        }
+
+        public static Rectangle ReactionHitbox(NPC npc)
+        {
+            Rectangle rectangle = ExtendedHitbox(npc);
+            rectangle.Y -= 48;
+            return rectangle;
         }
     }
 }
