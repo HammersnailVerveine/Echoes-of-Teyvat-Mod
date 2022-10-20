@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 {
-	public class CatalystAnchor : GenshinProjectile
+	public class WeaponAnchor : GenshinProjectile
 	{
 		public Texture2D WeaponTexture { get; set; }
 		public GenshinWeapon Weapon { get; set; }
@@ -48,15 +48,23 @@ namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 				return;
 			}
 
+			bool isCatalyst = Weapon is WeaponCatalyst;
+			Vector2 targetPosition = owner.Center - new Vector2((isCatalyst ? 32f : 24f) * owner.direction, (isCatalyst ? 16f : 12f));
+			Vector2 direction = targetPosition - Projectile.Center;
+			float speed = isCatalyst ? 12f : 6f;
+			Projectile.velocity = direction / speed;
+			Projectile.timeLeft = 30;
+			Projectile.spriteDirection = owner.direction;
+
 			Projectile.rotation = Projectile.velocity.X * 0.035f;
 			Projectile.rotation = Projectile.rotation > 0.35f ? 0.35f : Projectile.rotation;
 			Projectile.rotation = Projectile.rotation < -0.35f ? -0.35f : Projectile.rotation;
-			Projectile.spriteDirection = owner.direction;
 
-			Vector2 targetPosition = owner.Center - new Vector2(32f * owner.direction, 16f);
-			Vector2 direction = targetPosition - Projectile.Center;
-			Projectile.velocity = direction / 12f;
-			Projectile.timeLeft = 30;
+			float len = Projectile.velocity.Length();
+			if (len < 1.5f)
+			{
+				Projectile.rotation += (float)(Math.Sin(timeSpent * 0.04f) / 15f) * (1.5f - len);
+			}
 		}
 
 		public override void Kill(int timeLeft)

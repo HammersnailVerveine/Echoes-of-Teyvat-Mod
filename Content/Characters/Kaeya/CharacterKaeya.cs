@@ -10,7 +10,7 @@ namespace GenshinMod.Content.Characters.Kaeya
 		{
 			Name = "Kaeya";
 			Element = GenshinElement.CRYO;
-			WeaponType = WeaponType.CATALYST;
+			WeaponType = WeaponType.SWORD;
 			AbilityNormal = new KleeAbilityNormal().Initialize(this);
 			AbilityCharged = new KleeAbilityCharged().Initialize(this);
 			AbilitySkill = new KleeAbilitySkill().Initialize(this);

@@ -87,7 +87,7 @@ namespace GenshinMod.Common.ModObjects.Weapons
                 case WeaponType.CLAYMORE:
                     return null;
                 case WeaponType.SWORD:
-                    return null;
+                    return GetWeapon(ModContent.ItemType<Content.Weapons.Sword.SwordDullBlade>());
             }
             return null;
         }
