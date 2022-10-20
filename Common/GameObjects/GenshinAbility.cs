@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace GenshinMod.Common.GameObjects
         public int CooldownCurrent = 0; // Current Cooldown (0 = ready)
         public int ChargesCurrent = 0; // Current number of available charges
         public GenshinCharacter Character; // Owner character (setup in Initialize())
+
+        public AbilityType AbilityType = AbilityType.NONE; // Bonus damage multiplier depending on ability type
 
         public static float AlmostImmobile = 0.001f;
         public static float Immobile = 0f;
@@ -72,21 +75,37 @@ namespace GenshinMod.Common.GameObjects
             OnUse();
         }
 
-        public int SpawnProjectile(IEntitySource source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, int owner, float ai0 = 0, float ai1 = 0)
+        public int SpawnProjectileSpecific(IEntitySource source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, int owner, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)
         {
             int proj = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, owner, ai0, ai1);
-            Main.projectile[proj].GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter = this.Character;
+            Projectile projectile = Main.projectile[proj];
+            projectile.GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter = this.Character;
+            if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
+            {
+                genshinProjectile.Element = element;
+                genshinProjectile.AbilityType = damageType;
+            }
             return proj;
         }
 
-        public int SpawnProjectile(Vector2 velocity, int type, float ai0 = 0, float ai1 = 0)
+        public int SpawnProjectileSpecific(Vector2 velocity, int type, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)
         {
-            return SpawnProjectile(GetSource(), Character.Player.Center, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, ai0, ai1);
+            return SpawnProjectileSpecific(GetSource(), Character.Player.Center, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, element, damageType, ai0, ai1);
+        }
+
+        public int SpawnProjectileSpecific(Vector2 position, Vector2 velocity, int type, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)
+        {
+            return SpawnProjectileSpecific(GetSource(), position, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, element, damageType, ai0, ai1);
         }
 
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, float ai0 = 0, float ai1 = 0)
         {
-            return SpawnProjectile(GetSource(), position, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, ai0, ai1);
+            return SpawnProjectileSpecific(GetSource(), position, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, Element, AbilityType, ai0, ai1);
+        }
+
+        public int SpawnProjectile(Vector2 velocity, int type, float ai0 = 0, float ai1 = 0)
+        {
+            return SpawnProjectileSpecific(GetSource(), Character.Player.Center, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, Element, AbilityType, ai0, ai1);
         }
 
         public Vector2 VelocityToCursor() => VelocityToTarget(Main.MouseWorld);
@@ -103,5 +122,13 @@ namespace GenshinMod.Common.GameObjects
         public virtual int GetScaling2() => 1;
         public virtual int GetScaling3() => 1;
         public virtual int GetScaling4() => 1;
+    }
+    public enum AbilityType : int
+    {
+        NONE = 0,
+        NORMAL = 1,
+        CHARGED = 2,
+        SKILL = 3,
+        BURST = 4
     }
 }

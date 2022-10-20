@@ -20,7 +20,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			lightColor *= 2f;
+			lightColor *= 2f * (1f - (Projectile.alpha / 255f));
 			return lightColor;
 		}
 
@@ -31,8 +31,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.friendly = false;
 			Projectile.tileCollide = false;
 			Projectile.aiStyle = 0;
-			Projectile.timeLeft = 600;
-			Element = GenshinElement.PYRO;
+			Projectile.timeLeft = 601;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -53,14 +52,14 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 
 			if (IsLocalOwner)
 			{
-				float range = 320f;
-				NPC enemyTarget = null;
-				for (int k = 0; k < Main.npc.Length; k++) // Select target
+				if (timeSpent % 95 == 0)
 				{
-					NPC npc = Main.npc[k];
-					if (CanHomeInto(npc))
+					float range = 320f;
+					NPC enemyTarget = null;
+					for (int k = 0; k < Main.npc.Length; k++) // Select target
 					{
-						if (Main.rand.NextBool(120))
+						NPC npc = Main.npc[k];
+						if (CanHomeInto(npc))
 						{
 							Vector2 newMove = Main.npc[k].Center - Projectile.Center;
 							float distanceTo = newMove.Length();
@@ -71,17 +70,23 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 							}
 						}
 					}
-				}
 
-				if (enemyTarget != null) // There is a target
-				{
-					int type = ModContent.ProjectileType<KleeProjectileBurstMain>();
-					Vector2 position = Projectile.Center - new Vector2(Main.rand.NextFloat(40f, 80f)).RotatedByRandom(MathHelper.ToRadians(135));
-					SpawnProjectile(position, VelocityImmobile, type, Projectile.damage, Projectile.knockBack, enemyTarget.whoAmI);
-                }
+					for (int i = 0; i < 4; i++)
+					{
+						if (enemyTarget != null) // There is a target
+						{
+							int type = ModContent.ProjectileType<KleeProjectileBurstMain>();
+							Vector2 position = Projectile.Center - new Vector2(Main.rand.NextFloat(40f, 80f)).RotatedByRandom(MathHelper.ToRadians(135));
+							SpawnProjectile(position, VelocityImmobile, type, Projectile.damage, Projectile.knockBack, enemyTarget.whoAmI);
+						}
+
+					}
+				}
 			}
 
-			SpawnDust<KleeSparkleDust>(1f, 1f, 10, 1, 5);
+			if (timeSpent > 540) Projectile.alpha += 4;
+
+				SpawnDust<KleeSparkleDust>(1f, 1f, 10, 1, 5);
 			SpawnDust<KleeSparkleDustBig>(1f, 1f, 10, 1, 20);
 			SpawnDust<KleeSparkleDustBigRed>(1f, 1f, 10, 1, 20);
 		}

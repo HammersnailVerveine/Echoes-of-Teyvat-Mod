@@ -24,7 +24,6 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.timeLeft = 20;
 			Projectile.penetrate = -1;
 			Main.projFrames[Projectile.type] = 6;
-			Element = GenshinElement.PYRO;
 		}
 
         public override Color? GetAlpha(Color lightColor)

@@ -19,14 +19,14 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             Velocity = 10f;
 			Stamina = 50;
             Cooldown = 120;
+            AbilityType = AbilityType.CHARGED;
         }
 
         public override void OnUse()
         {
             Vector2 velocity = new Vector2(0f, -10f);
-            Vector2 position = Player.Center;
             int type = ModContent.ProjectileType<KleeProjectileChargedMain>();
-            SpawnProjectile(position, velocity, type);
+            SpawnProjectile(velocity, type);
             SoundEngine.PlaySound(SoundID.Item1);
         }
 

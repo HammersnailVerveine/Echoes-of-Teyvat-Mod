@@ -32,7 +32,6 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 30;
 			ProjectileTrail = true;
-			Element = GenshinElement.PYRO;
 			CanReact = false;
 		}
 
@@ -57,11 +56,8 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 
         public override void Kill(int timeLeft)
 		{
-			if (OwnerCharacter is CharacterKlee klee)
-			{
-				int type = ModContent.ProjectileType<KleeExplosionLarge>();
-				SpawnProjectile(Projectile.Center, VelocityImmobile, type, klee.AbilityCharged.GetScaling2(), Projectile.knockBack);
-			}
+			int type = ModContent.ProjectileType<KleeExplosionLarge>();
+			SpawnProjectile(Projectile.Center, VelocityImmobile, type, OwnerCharacter.AbilityCharged.GetScaling2(), Projectile.knockBack);
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
 
 			SpawnDust<KleeSparkleDust>(1f, 1f, 50, 15);

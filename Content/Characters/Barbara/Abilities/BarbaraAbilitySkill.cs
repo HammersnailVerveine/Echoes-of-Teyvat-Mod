@@ -18,6 +18,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             UseTime = 40;
             Velocity = Immobile;
             Cooldown = 60 * 32;
+            AbilityType = AbilityType.SKILL;
         }
 
         public override void OnUse()

@@ -20,6 +20,7 @@ namespace GenshinMod.Common.ModObjects
         public float ProjectileTrailOffset = 0f; // Offcenters the afterimages a bit. useless without projectileTrail activated. Looks terrible on most projectiles.
         public int ElementalParticles = 0; // Number of particles (value : 1) spawned on first hit
         public GenshinElement Element = GenshinElement.NONE; // Projectile element
+        public AbilityType AbilityType = AbilityType.NONE; // Bonus damage type for multipliers
         public int ElementApplication = ElementApplicationWeak;
         public bool IgnoreICD = false;
         public bool CanReact = true;
@@ -89,11 +90,21 @@ namespace GenshinMod.Common.ModObjects
 
         // UTILITY
 
-        public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage, float knockback, float ai0 = 0, float ai1 = 0)
+        public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage, float knockback, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)
         {
             int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), position, velocity, type, damage, knockback, Projectile.owner, ai0, ai1);
-            Main.projectile[proj].GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter = OwnerCharacter;
+            Projectile projectile = Main.projectile[proj];
+            projectile.GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter = OwnerCharacter;
+            if (projectile.ModProjectile is GenshinProjectile genshinProjectile) {
+                genshinProjectile.Element = element;
+                genshinProjectile.AbilityType = damageType;
+            }
             return proj;
+        }
+
+        public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage, float knockback, float ai0 = 0, float ai1 = 0)
+        {
+            return SpawnProjectile(position, velocity, type, damage, knockback, Element, AbilityType, ai0, ai1);
         }
 
         public void SpawnDust<T>(float velocity = 0f, float scale = 1f, int offSet = 10, int quantity = 1, int chanceDenominator = 1) where T : ModDust => SpawnDust(ModContent.DustType<T>(), velocity, scale, offSet, quantity, chanceDenominator);

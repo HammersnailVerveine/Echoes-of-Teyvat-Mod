@@ -18,6 +18,7 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             Velocity = 7f;
             Cooldown = 900;
             Energy = 60;
+            AbilityType = AbilityType.BURST;
         }
 
         public override void OnUse()
@@ -35,7 +36,7 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
 
         public override int GetScaling2()
         {
-            return (int)(0.04f * Character.EffectiveAttack * Level);
+            return (int)(0.4f * Character.EffectiveAttack * Level);
         }
     }
 }

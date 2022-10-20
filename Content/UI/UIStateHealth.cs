@@ -30,19 +30,19 @@ namespace GenshinMod.Content.UI
 			Width.Set(0f, 0f);
 			Height.Set(0f, 0f);
 			Left.Set(Main.screenWidth - 48f, 0f);
-			Top.Set(Main.screenHeight * 0.25f, 0f);
+			Top.Set(Main.screenHeight * 0.2f, 0f);
 		}
 
 		public override void OnUIScaleChanged()
 		{
 			Left.Set(Main.screenWidth - 48f, 0f);
-			Top.Set(Main.screenHeight * 0.25f, 0f);
+			Top.Set(Main.screenHeight * 0.2f, 0f);
 		}
 
 		public override void OnResolutionChanged(int width, int height)
 		{
 			Left.Set(Main.screenWidth - 48f, 0f);
-			Top.Set(Main.screenHeight * 0.25f, 0f);
+			Top.Set(Main.screenHeight * 0.2f, 0f);
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

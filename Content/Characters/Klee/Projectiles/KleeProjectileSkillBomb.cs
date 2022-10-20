@@ -33,7 +33,6 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 900; // 15 sec
 			Main.projFrames[Projectile.type] = 8;
-			Element = GenshinElement.PYRO;
 			CanReact = false;
 		}
 
@@ -49,7 +48,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.velocity.Y += 0.10f;
 			Projectile.velocity.X *= 0.975f;
 
-			Projectile.friendly = timeSpent > 60;
+			Projectile.friendly = timeSpent > 60 + Projectile.ai[0];
 
 			if (timeSpent % 6 == 0)
 			{

@@ -180,19 +180,25 @@ namespace GenshinMod.Common.GlobalObjets
         {
             if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
             {
+                GenshinCharacter genshinCharacter = genshinProjectile.OwnerCharacter;
+                if (genshinCharacter == null) return;
                 GenshinElement element = genshinProjectile.Element;
+
+                damage = genshinCharacter.ApplyDamageMult(damage, element, genshinProjectile.AbilityType);
+
                 if (element == GenshinElement.NONE || !genshinProjectile.CanReact)
                 {
                     CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
+                    //CombatText.NewText(ExtendedHitbox(npc), Color.PaleVioletRed, genshinProjectile.AbilityType.ToString()); // test
                     return;
                 }
+                //CombatText.NewText(ExtendedHitbox(npc), Color.SlateBlue, genshinProjectile.AbilityType.ToString()); // test
 
-                GenshinCharacter genshinCharacter = genshinProjectile.OwnerCharacter;
 
                 if (genshinProjectile.IgnoreICD || genshinCharacter.TryApplyElement(npc))
                 {
                     int application = genshinProjectile.ElementApplication;
-                    int mastery = genshinCharacter.StatElementalMastery;
+                    float mastery = genshinCharacter.StatElementalMastery;
 
                     if (element == GenshinElement.PYRO)
                     {

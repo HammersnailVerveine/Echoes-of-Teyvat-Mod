@@ -37,8 +37,11 @@ namespace GenshinMod.Common.ModObjects
         public override void Initialize()
         {
             CharacterTeam = new List<GenshinCharacter>();
+            // TEMP
             CharacterTeam.Add(new Content.Characters.Klee.CharacterKlee().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Barbara.CharacterBarbara().Initialize(this));
+            CharacterTeam.Add(new Content.Characters.Kaeya.CharacterKaeya().Initialize(this));
+            // TEMP
             CharacterCurrent = CharacterTeam[0];
         }
 
@@ -100,7 +103,7 @@ namespace GenshinMod.Common.ModObjects
         public override void ResetEffects()
         {
             PlayerInput.ScrollWheelDelta = 0;
-            Player.statLifeMax2 = 100000;
+            Player.statLifeMax2 = 1000;
             Player.statLife = Player.statLifeMax2;
 
             Timer++;
@@ -231,7 +234,7 @@ namespace GenshinMod.Common.ModObjects
         public void TrySwapCharacter(int slot)
         {
             SoundEngine.PlaySound(SoundID.MenuTick);
-            if (CharacterTeam.Count >= slot && CharacterCurrent.CanUseAbility)
+            if (CharacterTeam.Count > slot && CharacterCurrent.CanUseAbility)
             {
                 if (CharacterCurrent != CharacterTeam[slot])
                 {

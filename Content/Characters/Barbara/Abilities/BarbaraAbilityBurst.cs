@@ -18,6 +18,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             Velocity = Immobile;
             Cooldown = 1200;
             Energy = 80;
+            AbilityType = AbilityType.BURST;
         }
 
         public override void OnUse()

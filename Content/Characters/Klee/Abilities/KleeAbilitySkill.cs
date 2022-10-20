@@ -18,6 +18,7 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             Velocity = 7f;
             Cooldown = 20 * 60;
             ChargesMax = 2;
+            AbilityType = AbilityType.SKILL;
         }
 
         public override void OnUse()

@@ -66,7 +66,6 @@ namespace GenshinMod.Content.UI
 				health += increment;
 			}
 			if (rectangle.Width > TextureHealthBar.Width) rectangle.Width = TextureHealthBar.Width;
-
 			spriteBatch.Draw(TextureHealthBar, healthPosition, rectangle, healthColor, 0f, TextureHealthBar.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
 
 

@@ -13,6 +13,7 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             KnockBack = 5f;
             UseTime = 30;
             Velocity = 10f;
+            AbilityType = AbilityType.NORMAL;
         }
 
         public override void OnUse()

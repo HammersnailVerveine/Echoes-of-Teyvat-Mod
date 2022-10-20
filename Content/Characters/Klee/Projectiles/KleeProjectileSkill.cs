@@ -35,7 +35,6 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 300;
 			Projectile.penetrate = -1;
-			Element = GenshinElement.PYRO;
 			ElementalParticles = 4;
 			ElementApplication = ElementApplicationMedium;
 		}
@@ -71,7 +70,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 				Vector2 velocity = new Vector2(0f, -1f).RotatedBy(i * 20).RotatedByRandom(2);
 				velocity.Y = -1.75f;
 				velocity.X *= 1.2f;
-				SpawnProjectile(Projectile.Center + new Vector2(0f, 8f), velocity, type2, damage, 0f);
+				SpawnProjectile(Projectile.Center + new Vector2(0f, 8f), velocity, type2, damage, 0f, i);
 			}
 
 			SpawnDust<KleeSparkleDust>(1f, 1f, 50, 15);

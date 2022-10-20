@@ -19,6 +19,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             UseTime = 50;
             Stamina = 50;
             Velocity = AlmostImmobile;
+            AbilityType = AbilityType.CHARGED;
         }
 
         public override void OnUse()

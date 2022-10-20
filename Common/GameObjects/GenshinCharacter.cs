@@ -64,10 +64,24 @@ namespace GenshinMod.Common.GameObjects
         public float StatAttack = 0f; // Bonus Attack% (base = 0%)
         public float StatHealth = 0f; // Health bonus % (of FlatHealth, base = 0%)
         public float StatDefense = 0f; // Defense bonus % (of FlatDefense, base = 0%)
-        public int StatElementalMastery = 0; // Elemental mastery (base = 0)
+        public float StatElementalMastery = 0f; // Elemental mastery (base = 0)
         public int StatAttackFlat = 0; // Bonus flat damage (base = 0)
         public int StatHealthFlat = 0; // Bonus flat health (base = 0)
         public int StatDefenseFlat = 0; // Bonus flat defense (base = 0)
+
+        public float StatDamage = 0f; // Bonus Damage% (base = 0%)
+        public float StatDamagePhysical = 0f; // Bonus Physical Damage% (base = 0%)
+        public float StatDamageGeo = 0f; // Bonus Geo Damage% (base = 0%)
+        public float StatDamageAnemo = 0f; // Bonus Anemo Damage% (base = 0%)
+        public float StatDamageCryo = 0f; // Bonus Cryo Damage% (base = 0%)
+        public float StatDamageElectro = 0f; // Bonus Electro Damage% (base = 0%)
+        public float StatDamageDendro = 0f; // Bonus Dencro Damage% (base = 0%)
+        public float StatDamageHydro = 0f; // Bonus Hydro Damage% (base = 0%)
+        public float StatDamagePyro = 0f; // Bonus Pyro Damage% (base = 0%)
+        public float StatDamageNA = 0f; // Bonus NA Damage% (base = 0%)
+        public float StatDamageCA = 0f; // Bonus CA Damage% (base = 0%)
+        public float StatDamageSkill = 0f; // Bonus Skill Damage% (base = 0%)
+        public float StatDamageBurst = 0f; // Bonus Burst Damage% (base = 0%)
 
         public List<ICDTracker> ICDTrackers;
 
@@ -173,10 +187,23 @@ namespace GenshinMod.Common.GameObjects
             StatAttack = 0f;
             StatHealth = 0f;
             StatDefense = 0f;
-            StatElementalMastery = 0;
+            StatElementalMastery = 0f;
             StatAttackFlat = 0;
             StatHealthFlat = 0;
             StatDefenseFlat = 0;
+            StatDamage = 0f;
+            StatDamagePhysical = 0f;
+            StatDamageGeo = 0f;
+            StatDamageAnemo = 0f;
+            StatDamageCryo = 0f;
+            StatDamageElectro = 0f;
+            StatDamageDendro = 0f;
+            StatDamageHydro = 0f;
+            StatDamagePyro = 0f;
+            StatDamageNA = 0f;
+            StatDamageCA = 0f;
+            StatDamageSkill = 0f;
+            StatDamageBurst = 0f;
 
             for (int i = ICDTrackers.Count - 1; i >= 0; i--)
             {
@@ -292,6 +319,62 @@ namespace GenshinMod.Common.GameObjects
         }
 
         public void ForceEquipWeapon(GenshinWeapon weapon) => weapon.Equip(this);
+
+        public int ApplyDamageMult(int damage, GenshinElement element, AbilityType abilityType)
+        {
+            float mult = 1f;
+
+            mult += StatDamage;
+
+            switch (element)
+            {
+                case GenshinElement.GEO:
+                    mult += StatDamageGeo;
+                    break;
+                case GenshinElement.ANEMO:
+                    mult += StatDamageAnemo;
+                    break;
+                case GenshinElement.CRYO:
+                    mult += StatDamageCryo;
+                    break;
+                case GenshinElement.ELECTRO:
+                    mult += StatDamageElectro;
+                    break;
+                case GenshinElement.DENDRO:
+                    mult += StatDamageDendro;
+                    break;
+                case GenshinElement.HYDRO:
+                    mult += StatDamageHydro;
+                    break;
+                case GenshinElement.PYRO:
+                    mult += StatDamagePyro;
+                    break;
+                default:
+                    break;
+            }
+
+            switch(abilityType)
+            {
+                case AbilityType.NORMAL:
+                    mult += StatDamageNA;
+                    break;
+                case AbilityType.CHARGED:
+                    mult += StatDamageCA;
+                    break;
+                case AbilityType.SKILL:
+                    mult += StatDamageSkill;
+                    break;
+                case AbilityType.BURST:
+                    mult += StatDamageBurst;
+                    break;
+                default:
+                    break;
+            }
+
+            damage = (int)(damage * mult);
+
+            return damage;
+        }
     }
 
     public class ICDTracker
