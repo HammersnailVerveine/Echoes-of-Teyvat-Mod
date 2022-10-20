@@ -93,36 +93,6 @@ namespace GenshinMod.Common.GlobalObjets
             }
         }
 
-        public void InflictElement(GenshinElement Element, int duration)
-        {
-            switch (Element)
-            {
-                case GenshinElement.GEO:
-                    if (duration > ElementTimerGeo) ElementTimerGeo = duration;
-                    break;
-                case GenshinElement.ANEMO:
-                    if (duration > ElementTimerAnemo) ElementTimerAnemo = duration;
-                    break;
-                case GenshinElement.CRYO:
-                    if (duration > ElementTimerCryo) ElementTimerCryo = duration;
-                    break;
-                case GenshinElement.ELECTRO:
-                    if (duration > ElementTimerElectro) ElementTimerElectro = duration;
-                    break;
-                case GenshinElement.DENDRO:
-                    if (duration > ElementTimerDendro) ElementTimerDendro = duration;
-                    break;
-                case GenshinElement.HYDRO:
-                    if (duration > ElementTimerHydro) ElementTimerHydro = duration;
-                    break;
-                case GenshinElement.PYRO:
-                    if (duration > ElementTimerPyro) ElementTimerPyro = duration;
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public bool AffectedByElement(GenshinElement Element)
         {
             switch (Element)
@@ -218,101 +188,105 @@ namespace GenshinMod.Common.GlobalObjets
                 }
                 //CombatText.NewText(ExtendedHitbox(npc), Color.SlateBlue, genshinProjectile.AbilityType.ToString()); // test
 
+                ApplyElement(npc, genshinProjectile, genshinCharacter, element, ref damage);
 
-                if (genshinProjectile.IgnoreICD || genshinCharacter.TryApplyElement(npc))
-                {
-                    int application = genshinProjectile.ElementApplication;
-                    float mastery = genshinCharacter.StatElementalMastery;
-                    bool reacted = false; // Individual attacks can only cause 1 reaction
-
-                    if (element == GenshinElement.PYRO)
-                    {
-
-                        if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Melt Strong
-                        {
-                            ElementTimerCryo -= application * 2;
-                            damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
-                            //damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionDMGBonus));
-                            application = 0;
-
-                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.MELT), "Melt");
-                            reacted = true;
-                        }
-
-                        if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Vaporize Weak
-                        {
-                            ElementTimerHydro -= (int)(application * 0.5);
-                            damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
-                            application = 0;
-
-                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
-                            reacted = true;
-                        }
-                    }
-
-                    if (element == GenshinElement.HYDRO)
-                    {
-                        if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Vaporize Strong
-                        {
-                            ElementTimerPyro -= application * 2;
-                            damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
-                            //damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionDMGBonus));
-                            application = 0;
-                            
-                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
-                            reacted = true;
-                        }
-
-                        if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Frozen
-                        {
-                            if (!ReactionFrozen && CanBefrozen(npc))
-                            {
-                                float FactorFrozen = 1f; // affects freeze duration (multiplies element timer loss), not affercted by EM.
-                                int minValue = (int)(MathHelper.Min(application, ElementTimerCryo));
-                                ElementTimerCryo = (int)((MathHelper.Max(ElementTimerHydro - minValue, 0) + minValue * 2) * FactorFrozen);
-                                application = (int)((MathHelper.Max(application - minValue, 0) + minValue * 2) * FactorFrozen);
-                                ReactionFrozen = true;
-                                ReactionFrozenDirection = npc.direction;
-                                ReactionFrozenPosition = npc.position;
-                                CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.FROZEN), "Frozen");
-                                reacted = true;
-                            }
-                        }
-                    }
-
-                    if (element == GenshinElement.CRYO)
-                    {
-                        if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Melt Weak
-                        {
-                            ElementTimerPyro -= (int)(application * 0.5);
-                            damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
-                            application = 0;
-
-                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.MELT), "Melt");
-                            reacted = true;
-                        }
-
-                        if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Frozen
-                        {
-                            if (!ReactionFrozen && CanBefrozen(npc))
-                            {
-                                float FactorFrozen = 1f; // affects freeze duration (multiplies element timer loss), not affercted by EM.
-                                int minValue = (int)(MathHelper.Min(application, ElementTimerHydro));
-                                ElementTimerHydro = (int)((MathHelper.Max(ElementTimerHydro - minValue, 0) + minValue * 2) * FactorFrozen);
-                                application = (int)((MathHelper.Max(application - minValue, 0) + minValue * 2) * FactorFrozen);
-                                ReactionFrozen = true;
-                                ReactionFrozenDirection = npc.direction;
-                                ReactionFrozenPosition = npc.position;
-                                CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.FROZEN), "Frozen");
-                                reacted = true;
-                            }
-                        }
-                    }
-
-
-                    InflictElement(element, application);
-                }
                 if (damage > 0) CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
+            }
+        }
+
+        public void ApplyElement(NPC npc, GenshinProjectile genshinProjectile, GenshinCharacter genshinCharacter, GenshinElement element, ref int damage)
+        {
+            if (genshinProjectile.IgnoreICD || genshinCharacter.TryApplyElement(npc))
+            {
+                int application = genshinProjectile.ElementApplication;
+                float mastery = genshinCharacter.StatElementalMastery;
+                bool reacted = false; // Individual attacks can only cause 1 reaction
+
+                if (element == GenshinElement.PYRO)
+                {
+
+                    if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Melt Strong
+                    {
+                        ElementTimerCryo -= application * 2;
+                        damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
+                        //damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionDMGBonus));
+                        application = 0;
+
+                        CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.MELT), "Melt");
+                        reacted = true;
+                    }
+
+                    if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Vaporize Weak
+                    {
+                        ElementTimerHydro -= (int)(application * 0.5);
+                        damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
+                        application = 0;
+
+                        CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
+                        reacted = true;
+                    }
+                }
+
+                if (element == GenshinElement.HYDRO)
+                {
+                    if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Vaporize Strong
+                    {
+                        ElementTimerPyro -= application * 2;
+                        damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
+                        //damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionDMGBonus));
+                        application = 0;
+
+                        CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
+                        reacted = true;
+                    }
+
+                    if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Frozen
+                    {
+                        if (!ReactionFrozen && CanBefrozen(npc))
+                        {
+                            float FactorFrozen = 1f; // affects freeze duration (multiplies element timer loss), not affercted by EM.
+                            int minValue = (int)(MathHelper.Min(application, ElementTimerCryo));
+                            ElementTimerCryo = (int)((MathHelper.Max(ElementTimerHydro - minValue, 0) + minValue * 2) * FactorFrozen);
+                            application = (int)((MathHelper.Max(application - minValue, 0) + minValue * 2) * FactorFrozen);
+                            ReactionFrozen = true;
+                            ReactionFrozenDirection = npc.direction;
+                            ReactionFrozenPosition = npc.position;
+                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.FROZEN), "Frozen");
+                            reacted = true;
+                        }
+                    }
+                }
+
+                if (element == GenshinElement.CRYO)
+                {
+                    if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Melt Weak
+                    {
+                        ElementTimerPyro -= (int)(application * 0.5);
+                        damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1)));
+                        application = 0;
+
+                        CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.MELT), "Melt");
+                        reacted = true;
+                    }
+
+                    if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Frozen
+                    {
+                        if (!ReactionFrozen && CanBefrozen(npc))
+                        {
+                            float FactorFrozen = 1f; // affects freeze duration (multiplies element timer loss), not affercted by EM.
+                            int minValue = (int)(MathHelper.Min(application, ElementTimerHydro));
+                            ElementTimerHydro = (int)((MathHelper.Max(ElementTimerHydro - minValue, 0) + minValue * 2) * FactorFrozen);
+                            application = (int)((MathHelper.Max(application - minValue, 0) + minValue * 2) * FactorFrozen);
+                            ReactionFrozen = true;
+                            ReactionFrozenDirection = npc.direction;
+                            ReactionFrozenPosition = npc.position;
+                            CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.FROZEN), "Frozen");
+                            reacted = true;
+                        }
+                    }
+                }
+
+                InflictElement(element, application);
             }
         }
 
@@ -324,6 +298,36 @@ namespace GenshinMod.Common.GlobalObjets
                 npc.direction = ReactionFrozenDirection;
                 npc.position = ReactionFrozenPosition;
                 if (ElementTimerHydro <= 0 || ElementTimerCryo <= 0) ReactionFrozen = false;
+            }
+        }
+
+        public void InflictElement(GenshinElement Element, int duration)
+        {
+            switch (Element)
+            {
+                case GenshinElement.GEO:
+                    if (duration > ElementTimerGeo) ElementTimerGeo = duration;
+                    break;
+                case GenshinElement.ANEMO:
+                    if (duration > ElementTimerAnemo) ElementTimerAnemo = duration;
+                    break;
+                case GenshinElement.CRYO:
+                    if (duration > ElementTimerCryo) ElementTimerCryo = duration;
+                    break;
+                case GenshinElement.ELECTRO:
+                    if (duration > ElementTimerElectro) ElementTimerElectro = duration;
+                    break;
+                case GenshinElement.DENDRO:
+                    if (duration > ElementTimerDendro) ElementTimerDendro = duration;
+                    break;
+                case GenshinElement.HYDRO:
+                    if (duration > ElementTimerHydro) ElementTimerHydro = duration;
+                    break;
+                case GenshinElement.PYRO:
+                    if (duration > ElementTimerPyro) ElementTimerPyro = duration;
+                    break;
+                default:
+                    break;
             }
         }
 

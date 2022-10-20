@@ -38,6 +38,7 @@ namespace GenshinMod.Common.GameObjects
         public virtual void OnUseEnd() { }
         public virtual void SafeResetEffects() { }
         public int Level => Character.GetAbilityLevel(this);
+        public float LevelScaling => 1f + (Level - 1f) * 0.09f;
         public virtual bool CanUse() => ChargesCurrent > 0;
         public virtual IEntitySource GetSource() => Player.GetSource_Misc("GenshinMod Attack");
         public bool IsUsed() => UseTimeCurrent > 0;

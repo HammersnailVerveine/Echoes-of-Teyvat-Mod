@@ -28,16 +28,19 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             SpawnProjectile(Vector2.Zero, type);
         }
 
-        public override int GetScaling() // Continuous Regeneration
+        public override int GetScaling() // Droplets damage
         {
-            int level = Level;
-            return (int)(0.03f * Character.EffectiveHealth * level + 30 * level);
+            return (int)(0.58f * Character.EffectiveAttack * LevelScaling);
         }
 
         public override int GetScaling2() // NA Hit (CA = 4NA)
         {
-            int level = Level;
-            return (int)(0.006f * Character.EffectiveHealth * level + 6 * level);
+            return (int)(0.006f * Character.EffectiveHealth * LevelScaling + 6 * LevelScaling);
+        }
+
+        public override int GetScaling3() // Continuous Regeneration
+        {
+            return (int)(0.03f * Character.EffectiveHealth * LevelScaling + 30 * LevelScaling);
         }
     }
 }

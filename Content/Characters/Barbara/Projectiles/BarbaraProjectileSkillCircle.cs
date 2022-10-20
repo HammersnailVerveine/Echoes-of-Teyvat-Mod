@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -51,9 +52,14 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			if (timeSpent % 180 == 0)
             {
 				OwnerCharacter.Heal(Projectile.damage);
-
 				SpawnDust<BarbaraDustStar>(0.2f, 1f, 10, 12);
 				pulse = -10;
+
+				foreach (NPC npc in Main.npc)
+                {
+					if (npc.Hitbox.Intersects(Projectile.Hitbox))
+						npc.GetGlobalNPC<GenshinGlobalNPC>().ApplyElement(npc, this, OwnerCharacter, Element, ref Projectile.damage);
+                }
 			}
 
 			

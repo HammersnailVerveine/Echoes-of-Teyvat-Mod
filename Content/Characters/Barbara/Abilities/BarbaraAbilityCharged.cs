@@ -65,7 +65,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
 
         public override int GetScaling() // Continuous Regeneration
         {
-            return (int)(1.5f * Character.EffectiveAttack * Level);
+            return (int)(1.5f * Character.EffectiveAttack * LevelScaling);
         }
     }
 }

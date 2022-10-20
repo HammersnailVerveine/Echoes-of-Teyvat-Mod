@@ -21,18 +21,14 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 34;
+			Projectile.width = 116;
 			Projectile.height = 116;
 			Projectile.friendly = false;
 			Projectile.tileCollide = false;
 			Projectile.aiStyle = 0;
 			Projectile.timeLeft = 100;
 			Projectile.penetrate = -1;
-		}
-
-        public override Color? GetAlpha(Color lightColor)
-        {
-			return Color.White * 0.4f * Projectile.scale;
+			Projectile.alpha = 255;
 		}
 
         public override void OnSpawn(IEntitySource source)
@@ -48,12 +44,14 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			{
 				Projectile.rotation -= 0.05f;
 				Projectile.scale *= 0.975f;
+				Projectile.friendly = false;
 			}
 
 			if (timeSpent == 60)
             {
 				int type = ModContent.ProjectileType<BarbaraProjectileSkillCircle>();
-				SpawnProjectile(Owner.Center, VelocityImmobile, type, Projectile.damage, 0f, 0f);
+				SpawnProjectile(Owner.Center, VelocityImmobile, type, OwnerCharacter.AbilitySkill.GetScaling3(), 0f, 0f);
+				Projectile.friendly = true;
 			}
 
 			if (Main.rand.NextBool(3)) // Dust special case
@@ -85,6 +83,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Color color = Color.White * 0.4f * Projectile.scale;
 			spriteBatch.Draw(texture, drawPosition, null, color, Projectile.rotation + (MathHelper.TwoPi / 3), texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
 			spriteBatch.Draw(texture, drawPosition, null, color, Projectile.rotation + (MathHelper.TwoPi / 3) * 2, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
+			spriteBatch.Draw(texture, drawPosition, null, color, Projectile.rotation, texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
 		}
 	}
 }

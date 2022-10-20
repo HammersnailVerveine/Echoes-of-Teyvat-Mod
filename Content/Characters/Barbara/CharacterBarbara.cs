@@ -40,7 +40,6 @@ namespace GenshinMod.Content.Characters.Barbara
 			{
 				if (projectile.active && projectile.type == type && projectile.owner == Player.whoAmI)
 				{
-
 					skillActive = true;
 					return;
 				}
