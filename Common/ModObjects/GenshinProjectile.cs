@@ -24,6 +24,7 @@ namespace GenshinMod.Common.ModObjects
         public int ElementApplication = ElementApplicationWeak;
         public bool IgnoreICD = false;
         public bool CanReact = true;
+        public bool CanDealDamage = true;
 
         public bool FirstHit = false; // Has the projectile hit a target yet ?
 
@@ -31,6 +32,7 @@ namespace GenshinMod.Common.ModObjects
         public virtual void SafePostAI() { }
         public virtual void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit) { }
         public virtual void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit) { }
+        public virtual void SafeModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
 
         public static int ElementApplicationWeak => 570; // 9.5 sec
@@ -79,6 +81,12 @@ namespace GenshinMod.Common.ModObjects
                 OnFirstHitNPC(target, damage, knockback, crit);
             }
             SafeOnHitNPC(target, damage, knockback, crit);
+        }
+
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (!CanDealDamage) damage = 0;
+            SafeModifyHitNPC(target, ref damage, ref knockback, ref crit, ref hitDirection);
         }
 
         /*

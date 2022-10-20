@@ -25,11 +25,6 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
 
         public override int GetScaling()
         {
-            return (int)(0.2f * Character.EffectiveAttack * Level);
-        }
-
-        public override int GetScaling2()
-        {
             return (int)(0.7f * Character.EffectiveAttack * Level);
         }
     }

@@ -194,7 +194,9 @@ namespace GenshinMod.Common.GlobalObjets
                 rect.Height -= 2;
                 position.Y -= 6;
                 SpriteEffects effects = npc.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                spriteBatch.Draw(texture, position, rect, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.85f, 0f, rect.Size() * 0.5f, 1.2f, effects, 0f);
+                spriteBatch.Draw(texture, position, rect, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, npc.rotation + 0.05f * npc.direction, rect.Size() * 0.5f, 1.2f, effects, 0f);
+                spriteBatch.Draw(texture, position, rect, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, npc.rotation - 0.05f * npc.direction, rect.Size() * 0.5f, 1.2f, effects, 0f);
+                spriteBatch.Draw(texture, position, rect, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.9f, npc.rotation, rect.Size() * 0.5f, 1f, effects, 0f);
             }
         }
 
@@ -210,7 +212,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                 if (element == GenshinElement.NONE || !genshinProjectile.CanReact)
                 {
-                    CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
+                    if (damage > 0) CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
                     //CombatText.NewText(ExtendedHitbox(npc), Color.PaleVioletRed, genshinProjectile.AbilityType.ToString()); // test
                     return;
                 }
@@ -280,7 +282,6 @@ namespace GenshinMod.Common.GlobalObjets
 
                     if (element == GenshinElement.CRYO)
                     {
-                        Main.LocalPlayer.HealEffect(1);
                         if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Melt Weak
                         {
                             ElementTimerPyro -= (int)(application * 0.5);
@@ -293,10 +294,8 @@ namespace GenshinMod.Common.GlobalObjets
 
                         if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Frozen
                         {
-                            Main.LocalPlayer.HealEffect(2);
                             if (!ReactionFrozen && CanBefrozen(npc))
                             {
-                                Main.LocalPlayer.HealEffect(3);
                                 float FactorFrozen = 1f; // affects freeze duration (multiplies element timer loss), not affercted by EM.
                                 int minValue = (int)(MathHelper.Min(application, ElementTimerHydro));
                                 ElementTimerHydro = (int)((MathHelper.Max(ElementTimerHydro - minValue, 0) + minValue * 2) * FactorFrozen);
@@ -313,7 +312,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                     InflictElement(element, application);
                 }
-                CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
+                if (damage > 0) CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
             }
         }
 

@@ -34,6 +34,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.timeLeft = 180;
 			Main.projFrames[Projectile.type] = 2;
 			CanReact = false;
+			CanDealDamage = false;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -65,7 +66,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
         public override void Kill(int timeLeft)
 		{
 			int type = ModContent.ProjectileType<KleeExplosionMedium>();
-			SpawnProjectile(Projectile.Center, VelocityImmobile, type, OwnerCharacter.AbilityNormal.GetScaling2(), Projectile.knockBack);
+			SpawnProjectile(Projectile.Center, VelocityImmobile, type, Projectile.damage, Projectile.knockBack);
 
 			SpawnDust<KleeSparkleDust>(1f, 1f, 30, 8);
 			SpawnDust(DustID.Smoke, 1f, 1f, 15, 4);
