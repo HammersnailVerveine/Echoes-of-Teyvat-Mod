@@ -14,12 +14,11 @@ using System.Collections.Generic;
 
 namespace GenshinMod.Content.Projectiles
 {
-    public class ProjectileSwordNormal : GenshinProjectile
+    public class ProjectileSwordCharged : GenshinProjectile
 	{
 		public Texture2D WeaponTexture;
 		public GenshinWeapon Weapon;
 		public float acceleration = 0.8f;
-		//public float acceleration = 1f;
 
 		public List<Vector2> OldPosition;
 		public List<float> OldRotation;
@@ -37,7 +36,7 @@ namespace GenshinMod.Content.Projectiles
 			Projectile.friendly = true;
 			Projectile.tileCollide = false;
 			Projectile.aiStyle = 0;
-            Projectile.timeLeft = 30;
+            Projectile.timeLeft = 70;
 			Projectile.scale = 1f;
             ProjectileTrail = true;
 			Projectile.alpha = 255;
@@ -64,15 +63,16 @@ namespace GenshinMod.Content.Projectiles
 			Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
 
 			Projectile.ai[0] += Projectile.ai[1] * acceleration;
-			if (timeSpent > 17) acceleration *= 0.7f;
-			if (timeSpent < 4) acceleration *= 2.35f;
+			if (timeSpent > 42) acceleration *= 0.8f;
+			if (timeSpent < 6) acceleration *= 1.85f;
+			
 
 			// Afterimages
-			if (timeSpent < 30)
+			if (timeSpent < 50)
 			{
 				OldPosition.Add(Projectile.Center);
 				OldRotation.Add(Projectile.rotation); 
-				if (OldPosition.Count > 8)
+				if (OldPosition.Count > 10)
 				{
 					OldPosition.RemoveAt(0);
 					OldRotation.RemoveAt(0);
@@ -83,6 +83,8 @@ namespace GenshinMod.Content.Projectiles
 				OldPosition.RemoveAt(0);
 				OldRotation.RemoveAt(0);
 			}
+
+			if (timeSpent == 30) HitNPC.Clear();
 		}
 
         public override void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit)

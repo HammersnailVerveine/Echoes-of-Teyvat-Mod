@@ -17,9 +17,10 @@ namespace GenshinMod.Content.Characters.Kaeya
 			Element = GenshinElement.CRYO;
 			WeaponType = WeaponType.SWORD;
 			AbilityNormal = new KaeyaAbilityNormal().Initialize(this);
-			AbilityCharged = new KleeAbilityCharged().Initialize(this);
+			AbilityCharged = new KaeyaAbilityCharged().Initialize(this);
 			AbilitySkill = new KleeAbilitySkill().Initialize(this);
 			AbilityBurst = new KleeAbilityBurst().Initialize(this);
+			Autoswing = true;
 
 			BaseAttack = 63;
 			BaseDefense = 124;

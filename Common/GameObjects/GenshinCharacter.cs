@@ -40,6 +40,7 @@ namespace GenshinMod.Common.GameObjects
         public int BaseDefense = 100; // Max defense no modifiers
         public int BaseAttack = 100; // Max attack no modifiers
         public WeaponType WeaponType; // Character Weapon Type
+        public bool Autoswing = false; // NA autoswing
 
         // Equipment Variables
 
@@ -163,11 +164,11 @@ namespace GenshinMod.Common.GameObjects
                 Weapon.WeaponPostUpdateActive();
                 if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
 
-                if (Main.mouseLeft && Main.mouseLeftRelease && !GenshinPlayer.IsUsing())
+                if (Main.mouseLeft && (Main.mouseLeftRelease || Autoswing) && !GenshinPlayer.IsUsing())
                 {
                     TryUseAbility(AbilityNormal);
                 }
-                if (Main.mouseRight && Main.mouseRightRelease && !GenshinPlayer.IsUsing())
+                if (Main.mouseRight && (Main.mouseRightRelease || Autoswing) && !GenshinPlayer.IsUsing())
                 {
                     TryUseAbility(AbilityCharged);
                 }

@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Kaeya.Abilities
 {
-    public class KaeyaAbilityNormal : AbilitySwordNormal
+    public class KaeyaAbilityCharged : AbilitySwordCharged
     {
     }
 }
