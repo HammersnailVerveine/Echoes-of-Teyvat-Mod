@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.DataStructures;
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.ModObjects.Weapons.Projectiles;
 
 namespace GenshinMod.Common.ModObjects.Weapons
 {
@@ -91,8 +92,18 @@ namespace GenshinMod.Common.ModObjects.Weapons
             }
             return null;
         }
+        public virtual void KillProjectile()
+        {
+            var anchorType = ModContent.ProjectileType<WeaponAnchor>();
 
-        public virtual void KillProjectile() { }
+            if (Player.ownedProjectileCounts[anchorType] > 0)
+            {
+                var proj = Main.projectile.First(i => i.active && i.owner == Player.whoAmI && i.type == anchorType);
+                if (proj != null && proj.ModProjectile is WeaponAnchor anchor)
+                    anchor.Kill(proj.timeLeft);
+            }
+        }
+
         public virtual void WeaponResetEffects() { }
         public virtual void WeaponOnSwapIn() { }
         public virtual void WeaponOnSwapOut() { }
@@ -100,7 +111,7 @@ namespace GenshinMod.Common.ModObjects.Weapons
         public virtual void WeaponUpdate() { } // Called during Character PreUpdate
         public virtual void WeaponPostUpdateActive() { } // Called during Active Character PostUpdate
         public virtual void WeaponUpdateActive() { } // Called during Active Character PreUpdate
-        public virtual void WeaponPostUpdateActiveWeaponType() { } // Called during Active Character PostUpdate
+        public virtual void SpawnVanityWeapon() { } // Called during Active Character PostUpdate
         public virtual void SafeSetStaticDefaults() { }
         public virtual void SafeSetDefaults() { }
         public virtual void SafeSetDefaultsWeaponType() { }

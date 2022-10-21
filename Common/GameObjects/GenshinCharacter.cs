@@ -57,6 +57,7 @@ namespace GenshinMod.Common.GameObjects
         public int Health = 100; // Current health
         public float Energy = 0f; // Current energy
         public int TimerCanUse = 0;
+        public int TimerVanityWeapon = 0; // Vanity (floating) weapon can only appear if <= 0
 
         // Reset variables
 
@@ -160,7 +161,7 @@ namespace GenshinMod.Common.GameObjects
             else if (IsCurrentCharacter)
             {
                 Weapon.WeaponPostUpdateActive();
-                Weapon.WeaponPostUpdateActiveWeaponType();
+                if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
 
                 if (Main.mouseLeft && Main.mouseLeftRelease && !GenshinPlayer.IsUsing())
                 {
@@ -182,6 +183,7 @@ namespace GenshinMod.Common.GameObjects
             AbilityBurst.ResetEffects();
             Weapon.WeaponResetEffects();
             TimerCanUse --;
+            TimerVanityWeapon--;
 
             StatEnergyRecharge = 1f;
             StatAttack = 0f;
@@ -318,6 +320,12 @@ namespace GenshinMod.Common.GameObjects
             if (weapon.WeaponType == WeaponType) ForceEquipWeapon(weapon);
         }
 
+        public void RemoveVanityWeapon(int time)
+        {
+            TimerVanityWeapon = time;
+            Weapon.KillProjectile();
+        }
+
         public void ForceEquipWeapon(GenshinWeapon weapon) => weapon.Equip(this);
 
         public int ApplyDamageMult(int damage, GenshinElement element, AbilityType abilityType)
@@ -328,6 +336,9 @@ namespace GenshinMod.Common.GameObjects
 
             switch (element)
             {
+                case GenshinElement.NONE:
+                    mult += StatDamagePhysical;
+                    break;
                 case GenshinElement.GEO:
                     mult += StatDamageGeo;
                     break;

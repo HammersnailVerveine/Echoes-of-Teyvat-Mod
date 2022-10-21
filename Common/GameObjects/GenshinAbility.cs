@@ -44,6 +44,7 @@ namespace GenshinMod.Common.GameObjects
         public bool IsUsed() => UseTimeCurrent > 0;
         public GenshinElement Element => Character.Element;
         public Player Player => Character.Player;
+        public GenshinPlayer GenshinPlayer => Character.GenshinPlayer;
 
         public GenshinAbility Initialize(GenshinCharacter character)
         {
@@ -80,9 +81,9 @@ namespace GenshinMod.Common.GameObjects
         {
             int proj = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, owner, ai0, ai1);
             Projectile projectile = Main.projectile[proj];
-            projectile.GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter = this.Character;
             if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
             {
+                genshinProjectile.OwnerCharacter = Character;
                 genshinProjectile.Element = element;
                 genshinProjectile.AbilityType = damageType;
             }
@@ -107,6 +108,11 @@ namespace GenshinMod.Common.GameObjects
         public int SpawnProjectile(Vector2 velocity, int type, float ai0 = 0, float ai1 = 0)
         {
             return SpawnProjectileSpecific(GetSource(), Character.Player.Center, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, Element, AbilityType, ai0, ai1);
+        }
+
+        public int SpawnProjectile(Vector2 velocity, int type, GenshinElement element, float ai0 = 0, float ai1 = 0)
+        {
+            return SpawnProjectileSpecific(GetSource(), Character.Player.Center, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, element, AbilityType, ai0, ai1);
         }
 
         public Vector2 VelocityToCursor() => VelocityToTarget(Main.MouseWorld);

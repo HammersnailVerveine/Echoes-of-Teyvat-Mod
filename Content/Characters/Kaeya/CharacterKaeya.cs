@@ -1,5 +1,10 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Content.Characters.Kaeya.Abilities;
+
+
+
+
 using GenshinMod.Content.Characters.Klee.Abilities;
 
 namespace GenshinMod.Content.Characters.Kaeya
@@ -11,7 +16,7 @@ namespace GenshinMod.Content.Characters.Kaeya
 			Name = "Kaeya";
 			Element = GenshinElement.CRYO;
 			WeaponType = WeaponType.SWORD;
-			AbilityNormal = new KleeAbilityNormal().Initialize(this);
+			AbilityNormal = new KaeyaAbilityNormal().Initialize(this);
 			AbilityCharged = new KleeAbilityCharged().Initialize(this);
 			AbilitySkill = new KleeAbilitySkill().Initialize(this);
 			AbilityBurst = new KleeAbilityBurst().Initialize(this);

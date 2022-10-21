@@ -25,6 +25,7 @@ namespace GenshinMod.Common.ModObjects
         public bool IgnoreICD = false;
         public bool CanReact = true;
         public bool CanDealDamage = true;
+        public GenshinCharacter OwnerCharacter;
 
         public bool FirstHit = false; // Has the projectile hit a target yet ?
 
@@ -39,11 +40,12 @@ namespace GenshinMod.Common.ModObjects
         public static int ElementApplicationMedium => 900; // 15 sec
         public static int ElementApplicationStrong => 1200; // 20 sec
 
+        public static float TileLength => 16f;
+
         public int timeSpent = 0;
         public bool IsLocalOwner => Projectile.owner == Main.myPlayer;
         public Player Owner => Main.player[Projectile.owner];
         public GenshinPlayer OwnerGenshinPlayer => Owner.GetModPlayer<GenshinPlayer>();
-        public GenshinCharacter OwnerCharacter => Projectile.GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter;
         public bool FirstFrame => timeSpent == 1;
         public Texture2D GetTexture() => ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public static bool CanHomeInto(NPC npc) => npc.active && !npc.dontTakeDamage && !npc.friendly && npc.lifeMax > 5;
@@ -102,8 +104,8 @@ namespace GenshinMod.Common.ModObjects
         {
             int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), position, velocity, type, damage, knockback, Projectile.owner, ai0, ai1);
             Projectile projectile = Main.projectile[proj];
-            projectile.GetGlobalProjectile<GenshinGlobalProjectile>().OwnerCharacter = OwnerCharacter;
             if (projectile.ModProjectile is GenshinProjectile genshinProjectile) {
+                genshinProjectile.OwnerCharacter = OwnerCharacter;
                 genshinProjectile.Element = element;
                 genshinProjectile.AbilityType = damageType;
             }
@@ -144,7 +146,7 @@ namespace GenshinMod.Common.ModObjects
             int type = ModContent.ProjectileType<ProjectileElementalParticle>();
             for (int i = 0; i < number; i ++)
             {
-                int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, type, 0, 0f, Projectile.owner, (float)element, value);
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, type, 0, 0f, Projectile.owner, (float)element, value);
             }
         }
 

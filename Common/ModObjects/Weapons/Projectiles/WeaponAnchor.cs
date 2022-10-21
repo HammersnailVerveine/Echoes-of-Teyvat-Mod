@@ -73,6 +73,7 @@ namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 			{
 				Main.dust[Dust.NewDust(Projectile.Center, 0, 0, DustID.Smoke)].velocity *= 0.25f;
 			}
+			Projectile.active = false;
 		}
 
 		public override bool? CanCutTiles() => false;
@@ -98,8 +99,8 @@ namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 			item.SetDefaults(type);
 			if (item.ModItem is GenshinWeapon weapon)
 			{
-				this.WeaponTexture = ModContent.Request<Texture2D>(weapon.CombatTexture).Value;
-				this.Weapon = weapon;
+				WeaponTexture = ModContent.Request<Texture2D>(weapon.CombatTexture).Value;
+				Weapon = weapon;
 			}
 			else Projectile.Kill();
 		}

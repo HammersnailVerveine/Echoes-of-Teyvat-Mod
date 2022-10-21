@@ -22,6 +22,7 @@ namespace GenshinMod.Common.ModObjects
         public int TimerUse = 0; // Used for animations (swing)
         public int TimerUseRef = 0; // Used for animations
         public int LastUseDirection = 1; // Animation swing direction
+        public bool ReverseUseArmDirection = false;
         public int Timer = 0; // Increased by 1 every frame
 
         public int StaminaBase = 100; // Maximum Base stamina
@@ -118,7 +119,11 @@ namespace GenshinMod.Common.ModObjects
             if (TimerUse > 0)
             {
                 TimerUse--;
-                if (TimerUse <= 0) TimerUseRef = 0;
+                if (TimerUse <= 0)
+                {
+                    TimerUseRef = 0;
+                    ReverseUseArmDirection = false;
+                }
             }
 
             TimerStamina--;
@@ -194,7 +199,7 @@ namespace GenshinMod.Common.ModObjects
                 {
                     useFrame--;
                 }
-                useFrame = 1 + (3 - useFrame);
+                useFrame = 1 + (ReverseUseArmDirection ? useFrame : (3 - useFrame));
             }
 
             Texture2D textureLegs = CharacterCurrent.TextureLegs;

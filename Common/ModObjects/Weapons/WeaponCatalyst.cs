@@ -18,13 +18,14 @@ namespace GenshinMod.Common.ModObjects.Weapons
 			WeaponType = WeaponType.CATALYST;
 		}
 
-		public sealed override void WeaponPostUpdateActiveWeaponType()
+		public sealed override void SpawnVanityWeapon()
 		{
-			int catalystType = ModContent.ProjectileType<WeaponAnchor>();
+			int anchorType = ModContent.ProjectileType<WeaponAnchor>();
 
-			if (Player.ownedProjectileCounts[catalystType] == 0)
+			if (Player.ownedProjectileCounts[anchorType] == 0)
 			{
-				var index = Projectile.NewProjectile(null, Player.Center, Vector2.Zero, catalystType, 0, 0f, Player.whoAmI);
+				Vector2 position = Player.Center - new Vector2(32f * Player.direction, 16f);
+				var index = Projectile.NewProjectile(null, position, Vector2.Zero, anchorType, 0, 0f, Player.whoAmI);
 
 				var proj = Main.projectile[index];
 				if (!(proj.ModProjectile is WeaponAnchor catalyst)) proj.Kill();
@@ -32,21 +33,12 @@ namespace GenshinMod.Common.ModObjects.Weapons
 			}
 			else
 			{
-				var proj = Main.projectile.First(i => i.active && i.owner == Player.whoAmI && i.type == catalystType);
-				if (proj != null && proj.ModProjectile is WeaponAnchor catalyst)
+				var proj = Main.projectile.First(i => i.active && i.owner == Player.whoAmI && i.type == anchorType);
+				if (proj != null && proj.ModProjectile is WeaponAnchor anchor)
 				{
-					if (catalyst.Weapon != Character.Weapon) catalyst.OnChangeEquipedItem(this);
+					if (anchor.Weapon != Character.Weapon) anchor.OnChangeEquipedItem(this);
 				}
 			}
-		}
-
-		public override void KillProjectile()
-		{
-			var anchorType = ModContent.ProjectileType<WeaponAnchor>();
-
-			var proj = Main.projectile.First(i => i.active && i.owner == Player.whoAmI && i.type == anchorType);
-			if (proj != null && proj.ModProjectile is WeaponAnchor catalyst)
-				catalyst.Kill(proj.timeLeft);
 		}
 	}
 }
