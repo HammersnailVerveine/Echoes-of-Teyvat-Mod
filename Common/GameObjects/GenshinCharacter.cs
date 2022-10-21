@@ -293,8 +293,8 @@ namespace GenshinMod.Common.GameObjects
         {
             if (OnDamage(value))
             {
-                Player.HealEffect((int)value);
                 value = ApplyDefense(value);
+                Health -= value;
                 if (Health < 0) Health = 0;
                 if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
             }
@@ -308,7 +308,7 @@ namespace GenshinMod.Common.GameObjects
             return 1;
         }
 
-        public int ApplyDefense(int value, int sourceLevel = 10) => (int)(value * (1f - (EffectiveDefense / (EffectiveDefense + 500f + sourceLevel * 100f))));
+        public int ApplyDefense(int value, int sourceLevel = 10) => (int)(value * (1f - (EffectiveDefense / (EffectiveDefense + 500f + sourceLevel * 50f))));
 
         public bool CanUseAbility => AbilityCurrent == null && TimerCanUse <= 0;
         public bool IsCurrentCharacter => GenshinPlayer.CharacterCurrent == this;
