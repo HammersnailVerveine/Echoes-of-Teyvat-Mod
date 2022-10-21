@@ -23,8 +23,8 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 80;
-			Projectile.height = 80;
+			Projectile.width = 160;
+			Projectile.height = 160;
 			Projectile.friendly = false;
 			Projectile.tileCollide = false;
 			Projectile.aiStyle = 0;

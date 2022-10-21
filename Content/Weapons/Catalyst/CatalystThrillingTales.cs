@@ -36,6 +36,7 @@ namespace GenshinMod.Content.Weapons.Catalyst
 		{
 			if (BuffReady && genshinPlayer.CharacterCurrent != Character)
 			{
+				BuffReady = false;
 				BuffedCharacter = genshinPlayer.CharacterCurrent;
 				TimerBuffCooldown = 60 * 20;
 				TimerBuffActive = 60 * 10;
