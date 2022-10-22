@@ -48,6 +48,8 @@ namespace GenshinMod.Common.ModObjects
         public static float SwordRotation => MathHelper.ToRadians(45f);
         public static float TileLength => 16f;
 
+        public Vector2 PlayerCenterRelative => Owner.Center - Projectile.Size * 0.5f;
+
         public Vector2 VelocityImmobile => Projectile.velocity * 0.0000001f; // Returns an almost immobile velocity, so projectiles spawned from this have the corrent kb direction
 
         // OVERRIDES

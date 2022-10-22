@@ -14,7 +14,7 @@ namespace GenshinMod.Content.Characters.Kaeya
 			AbilityNormal = new KaeyaAbilityNormal().Initialize(this);
 			AbilityCharged = new KaeyaAbilityCharged().Initialize(this);
 			AbilitySkill = new KaeyaAbilitySkill().Initialize(this);
-			AbilityBurst = new KaeyaAbilityNormal().Initialize(this);
+			AbilityBurst = new KaeyaAbilityBurst().Initialize(this);
 			Autoswing = true;
 
 			BaseAttack = 63;

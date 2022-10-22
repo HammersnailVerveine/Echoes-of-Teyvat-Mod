@@ -52,8 +52,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
 			if (timeSpent % 180 == 0)
             {
-				foreach (GenshinCharacter character in OwnerGenshinPlayer.CharacterTeam)
-					character.Heal(Projectile.damage);
+				OwnerGenshinPlayer.CharacterCurrent.Heal(Projectile.damage);
 
 				SpawnDust<BarbaraDustStar>(0.2f, 1f, 10, 12);
 				pulse = -10;

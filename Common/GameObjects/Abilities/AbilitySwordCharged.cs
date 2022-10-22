@@ -17,7 +17,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Abilities
             KnockBack = 1f;
             UseTime = 70;
             Velocity = AlmostImmobile;
-            AbilityType = AbilityType.NORMAL;
+            AbilityType = AbilityType.CHARGED;
 			Stamina = 25;
         }
 
