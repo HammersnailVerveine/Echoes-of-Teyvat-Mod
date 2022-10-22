@@ -31,7 +31,6 @@ namespace GenshinMod.Common.GlobalObjets
         public int ReactionFrozenDirection;
 
         public static bool CanBefrozen(NPC npc) => npc.knockBackResist > 0f; //|| npc.type == NPCID.TargetDummy;
-
         public override bool InstancePerEntity => true;
         public override void Load()
         {
@@ -182,7 +181,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                 if (element == GenshinElement.NONE || !genshinProjectile.CanReact)
                 {
-                    if (damage > 0) CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
+                    if (damage > 0) CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
                     //CombatText.NewText(ExtendedHitbox(npc), Color.PaleVioletRed, genshinProjectile.AbilityType.ToString()); // test
                     return;
                 }
@@ -190,7 +189,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                 ApplyElement(npc, genshinProjectile, genshinCharacter, element, ref damage);
 
-                if (damage > 0) CombatText.NewText(ExtendedHitbox(npc), GenshinElementUtils.GetColor(element), damage, crit);
+                if (damage > 0) CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
             }
         }
 
@@ -332,7 +331,18 @@ namespace GenshinMod.Common.GlobalObjets
         }
 
 
-        public static Rectangle ExtendedHitbox(NPC npc)
+        public static Rectangle ExtendedHitboxFlat(NPC npc)
+        {
+            Rectangle rect = npc.Hitbox;
+            rect.X -= 32;
+            rect.Y -= 32;
+            rect.Width += 64;
+            rect.Height += 64;
+            return rect;
+        }
+        
+
+        public static Rectangle ExtendedHitboxMult(NPC npc)
         {
             Rectangle rect = npc.Hitbox;
             rect.X -= (int)(npc.width / 2);
@@ -344,7 +354,7 @@ namespace GenshinMod.Common.GlobalObjets
 
         public static Rectangle ReactionHitbox(NPC npc)
         {
-            Rectangle rectangle = ExtendedHitbox(npc);
+            Rectangle rectangle = ExtendedHitboxFlat(npc);
             rectangle.Y -= 48;
             return rectangle;
         }

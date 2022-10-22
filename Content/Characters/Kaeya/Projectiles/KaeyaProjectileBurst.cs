@@ -107,12 +107,12 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-			spriteBatch.Draw(TextureProjectile, drawPosition, null, lightColor * 0.75f, Projectile.rotation, TextureProjectile.Size() * 0.5f, Projectile.scale * 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureProjectile, drawPosition, null, Color.White * 0.5f, Projectile.rotation, TextureProjectile.Size() * 0.5f, Projectile.scale * 1f, SpriteEffects.None, 0f);
 
 			for (int i = 0; i < OldPosition.Count; i++)
 			{
 				Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-				spriteBatch.Draw(TextureProjectile, drawPosition2, null, lightColor * 0.035f * i, Projectile.rotation, TextureProjectile.Size() * 0.5f, 0.2f + 0.0425f * i, SpriteEffects.None, 0f);
+				spriteBatch.Draw(TextureProjectile, drawPosition2, null, Color.White * 0.02f * i, Projectile.rotation, TextureProjectile.Size() * 0.5f, 0.2f + 0.0425f * i, SpriteEffects.None, 0f);
 			}
 		}
 	}
