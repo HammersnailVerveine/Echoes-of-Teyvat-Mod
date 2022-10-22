@@ -259,6 +259,7 @@ namespace GenshinMod.Common.GameObjects
             OnSwapIn();
             Weapon.WeaponOnSwapIn();
             TimerCanUse = 10;
+            TimerVanityWeapon = 30;
 
             int type = ModContent.DustType<SwapDust>();
             for (int i = 0; i < 10; i++)

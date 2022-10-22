@@ -35,7 +35,6 @@ namespace GenshinMod.Common.ModObjects
         public virtual void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit) { }
         public virtual void SafeModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
-
         public bool IsLocalOwner => Projectile.owner == Main.myPlayer;
         public Player Owner => Main.player[Projectile.owner];
         public GenshinPlayer OwnerGenshinPlayer => Owner.GetModPlayer<GenshinPlayer>();
