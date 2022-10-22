@@ -14,7 +14,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Abilities
         public override void SetDefaults()
         {
             KnockBack = 5f;
-            UseTime = 60;
+            UseTime = 30;
             Velocity = AlmostImmobile;
             Cooldown = 6 * 60;
             AbilityType = AbilityType.SKILL;
@@ -25,7 +25,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Abilities
             Vector2 target = Main.MouseWorld;
             Vector2 velocity = target - Player.Center;
             velocity.Normalize();
-            Vector2 position = Player.Center + velocity * 48f;
+            Vector2 position = Player.Center + velocity * 64f;
             velocity *= Velocity;
 
             int type = ModContent.ProjectileType<KaeyaProjectileSkill>();

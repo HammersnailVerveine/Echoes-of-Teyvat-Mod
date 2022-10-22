@@ -37,14 +37,13 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
 			Projectile.penetrate = -1;
 			IgnoreICD = true;
 			ElementApplication = ElementApplicationMedium;
+			ElementalParticles = 3;
 		}
 
 		public override void OnSpawn(IEntitySource source)
         {
 			TextureWeapon = GetWeaponTexture();
 			TextureProjectile = GetTexture();
-
-			//Projectile.direction = Projectile.spriteDirection;
 
 			Projectile.rotation = Projectile.velocity.ToRotation();
 
@@ -86,7 +85,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
 				multAlpha *= 1.2f;
 				if (multAlpha > 1f) multAlpha = 1f;
 			}
-			else multAlpha *= 0.95f;
+			else multAlpha *= 0.935f;
 		}
 
         public override void Kill(int timeLeft)
