@@ -1,4 +1,5 @@
-﻿using GenshinMod.Common.GameObjects.Enums;
+﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Dusts;
@@ -51,7 +52,9 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
 			if (timeSpent % 180 == 0)
             {
-				OwnerCharacter.Heal(Projectile.damage);
+				foreach (GenshinCharacter character in OwnerGenshinPlayer.CharacterTeam)
+					character.Heal(Projectile.damage);
+
 				SpawnDust<BarbaraDustStar>(0.2f, 1f, 10, 12);
 				pulse = -10;
 

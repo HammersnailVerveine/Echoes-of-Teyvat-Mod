@@ -81,9 +81,10 @@ namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 
 		public override bool SafePreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
+			float lightmult = timeSpent > 30 ? 1f : 1f * (timeSpent / 30f);
 			var position = Projectile.Center - Main.screenPosition + Vector2.UnitY * Projectile.gfxOffY;
 			var effect = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-			spriteBatch.Draw(WeaponTexture, position, null, lightColor, Projectile.rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+			spriteBatch.Draw(WeaponTexture, position, null, lightColor * lightmult, Projectile.rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 			return false;
 		}
 

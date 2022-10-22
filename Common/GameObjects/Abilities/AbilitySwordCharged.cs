@@ -34,7 +34,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Abilities
 
             SoundEngine.PlaySound(SoundID.Item1);
 
-            Character.RemoveVanityWeapon(UseTime * 5);
+            Character.RemoveVanityWeapon();
             if (mult * (direction.X > 0 ? 1 : -1) < 0f) GenshinPlayer.ReverseUseArmDirection = true;
         }
 		

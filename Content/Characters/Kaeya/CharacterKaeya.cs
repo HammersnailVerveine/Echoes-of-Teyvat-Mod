@@ -2,11 +2,6 @@
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Characters.Kaeya.Abilities;
 
-
-
-
-using GenshinMod.Content.Characters.Klee.Abilities;
-
 namespace GenshinMod.Content.Characters.Kaeya
 {
     public class CharacterKaeya : GenshinCharacter
@@ -18,8 +13,8 @@ namespace GenshinMod.Content.Characters.Kaeya
 			WeaponType = WeaponType.SWORD;
 			AbilityNormal = new KaeyaAbilityNormal().Initialize(this);
 			AbilityCharged = new KaeyaAbilityCharged().Initialize(this);
-			AbilitySkill = new KleeAbilitySkill().Initialize(this);
-			AbilityBurst = new KleeAbilityBurst().Initialize(this);
+			AbilitySkill = new KaeyaAbilitySkill().Initialize(this);
+			AbilityBurst = new KaeyaAbilityNormal().Initialize(this);
 			Autoswing = true;
 
 			BaseAttack = 63;

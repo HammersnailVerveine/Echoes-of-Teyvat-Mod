@@ -32,7 +32,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Abilities
             SpawnProjectile(VelocityToCursor(), type, GenshinElement.NONE, angle, mult);
 
             SoundEngine.PlaySound(SoundID.Item1);
-            Character.RemoveVanityWeapon(UseTime * 5);
+            Character.RemoveVanityWeapon();
             if (mult * (direction.X > 0 ? 1 : -1) < 0f) GenshinPlayer.ReverseUseArmDirection = true;
         }
         public override int GetScaling()

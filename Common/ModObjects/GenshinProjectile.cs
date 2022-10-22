@@ -26,8 +26,8 @@ namespace GenshinMod.Common.ModObjects
         public bool CanReact = true;
         public bool CanDealDamage = true;
         public GenshinCharacter OwnerCharacter;
-
         public bool FirstHit = false; // Has the projectile hit a target yet ?
+        public int timeSpent = 0;
 
         public virtual void SafeAI() { }
         public virtual void SafePostAI() { }
@@ -36,19 +36,18 @@ namespace GenshinMod.Common.ModObjects
         public virtual void SafeModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
 
-        public static int ElementApplicationWeak => 570; // 9.5 sec
-        public static int ElementApplicationMedium => 900; // 15 sec
-        public static int ElementApplicationStrong => 1200; // 20 sec
-
-        public static float TileLength => 16f;
-
-        public int timeSpent = 0;
         public bool IsLocalOwner => Projectile.owner == Main.myPlayer;
         public Player Owner => Main.player[Projectile.owner];
         public GenshinPlayer OwnerGenshinPlayer => Owner.GetModPlayer<GenshinPlayer>();
         public bool FirstFrame => timeSpent == 1;
         public Texture2D GetTexture() => ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        public Texture2D GetWeaponTexture() => ModContent.Request<Texture2D>(OwnerGenshinPlayer.CharacterCurrent.Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public static bool CanHomeInto(NPC npc) => npc.active && !npc.dontTakeDamage && !npc.friendly && npc.lifeMax > 5;
+        public static int ElementApplicationWeak => 570; // 9.5 sec
+        public static int ElementApplicationMedium => 900; // 15 sec
+        public static int ElementApplicationStrong => 1200; // 20 sec
+        public static float SwordRotation => MathHelper.ToRadians(45f);
+        public static float TileLength => 16f;
 
         public Vector2 VelocityImmobile => Projectile.velocity * 0.0000001f; // Returns an almost immobile velocity, so projectiles spawned from this have the corrent kb direction
 
@@ -126,6 +125,7 @@ namespace GenshinMod.Common.ModObjects
             {
                 Dust dust = Main.dust[Dust.NewDust(Projectile.position - new Vector2(offSet, offSet), Projectile.width + offSet * 2, Projectile.height + offSet * 2, type)];
                 dust.velocity = new Vector2(Main.rand.NextFloat(-velocity, velocity), Main.rand.NextFloat(-velocity, velocity));
+                dust.scale = scale;
             }
         }
 
@@ -138,6 +138,7 @@ namespace GenshinMod.Common.ModObjects
             {
                 Dust dust = Main.dust[Dust.NewDust(position - new Vector2(offSet, offSet), offSet * 2, offSet * 2, type)];
                 dust.velocity = new Vector2(Main.rand.NextFloat(-velocity, velocity), Main.rand.NextFloat(-velocity, velocity)) + direction;
+                dust.scale = scale;
             }
         }
 

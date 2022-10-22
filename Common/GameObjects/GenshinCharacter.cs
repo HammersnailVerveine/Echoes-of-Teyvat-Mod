@@ -1,6 +1,7 @@
 ﻿using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Common.ModObjects.Weapons;
+using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -259,12 +260,9 @@ namespace GenshinMod.Common.GameObjects
             Weapon.WeaponOnSwapIn();
             TimerCanUse = 10;
 
+            int type = ModContent.DustType<SwapDust>();
             for (int i = 0; i < 10; i++)
-            {
-                Dust dust = Main.dust[Dust.NewDust(Player.position, Player.width, Player.height, DustID.YellowTorch, 0f, 0f)];
-                dust.noGravity = true;
-                dust.scale *= 2f;
-            }
+                Dust.NewDust(Player.position, Player.width, Player.height, type, 0f, 0f);
         }
 
         public bool OnSwapOutGlobal()
@@ -321,7 +319,7 @@ namespace GenshinMod.Common.GameObjects
             if (weapon.WeaponType == WeaponType) ForceEquipWeapon(weapon);
         }
 
-        public void RemoveVanityWeapon(int time)
+        public void RemoveVanityWeapon(int time = 150)
         {
             TimerVanityWeapon = time;
             Weapon.KillProjectile();
