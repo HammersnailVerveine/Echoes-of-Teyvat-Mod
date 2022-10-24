@@ -214,5 +214,15 @@ namespace GenshinMod.Common.ModObjects
             }
             Projectile.oldPos[0] = Projectile.position;
         }
+
+        public void FirstFrameHit()
+        {
+            if (FirstFrame)
+            {
+                ResetImmunity();
+                Projectile.friendly = true;
+            }
+            else Projectile.friendly = false;
+        }
     }
 }

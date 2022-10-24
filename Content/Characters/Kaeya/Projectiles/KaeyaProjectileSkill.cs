@@ -67,12 +67,14 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
 
         public override void SafeAI()
 		{
-			if (!FirstFrame && Projectile.friendly) {
+			if (FirstFrame) ResetImmunity();
+			else if (Projectile.friendly) {
 				Projectile.friendly = false;
 				Vector2 velocity = Projectile.velocity;
 				velocity.Normalize();
 				Projectile.position = Owner.Center - Projectile.Size * 0.5f + velocity * 32f;
 			}
+				
 
 			if (multScale < 1f)
             {
