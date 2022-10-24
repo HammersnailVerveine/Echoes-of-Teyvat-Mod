@@ -86,11 +86,31 @@ namespace GenshinMod.Common.GameObjects
         public float StatDamageSkill = 0f; // Bonus Skill Damage% (base = 0%)
         public float StatDamageBurst = 0f; // Bonus Burst Damage% (base = 0%)
 
+
+        public float StatDamageReaction = 0f; // Bonus Reaction Damage (base = 0%)
+        public float StatDamageReactionVaporize = 0f; // Bonus Vaporize Reaction Damage (base = 0%)
+        public float StatDamageReactionOverloaded = 0f; // Bonus Overloaded Reaction Damage (base = 0%)
+        public float StatDamageReactionMelt = 0f; // Bonus Melt Reaction Damage (base = 0%)
+        public float StatDamageReactionElectrocharged = 0f; // Bonus Electrocharged Reaction Damage (base = 0%)
+        public float StatDamageReactionSuperconduct = 0f; // Bonus Superconduct Reaction Damage (base = 0%)
+        public float StatDamageReactionSwirl = 0f; // Bonus Swirl Reaction Damage (base = 0%)
+        public float StatDamageReactionBurning = 0f; // Bonus Burning Reaction Damage (base = 0%)
+        public float StatDamageReactionBloom = 0f; // Bonus Bloom Reaction Damage (base = 0%)
+        public float StatDamageReactionHyperbloom = 0f; // Bonus Hyperbloom Reaction Damage (base = 0%)
+        public float StatDamageReactionBurgeon = 0f; // Bonus Burgeon Reaction Damage (base = 0%)
+        public float StatDamageReactionQuicken = 0f; // Bonus Quicken Reaction Damage (base = 0%)
+        public float StatDamageReactionAggravate = 0f; // Bonus Aggravate Reaction Damage (base = 0%)
+        public float StatDamageReactionSpread = 0f; // Bonus Spread Reaction Damage (base = 0%)
+        public float StatDamageReactionShatter = 0f; // Bonus Shatter Reaction Damage (base = 0%)
+        public float StatDamageReactionFrozen = 0f; // Bonus Frozen Duration (base = 0%)
+        public float StatDamageReactionCrystallize = 0f; // Bonus Crystallize Reaction Shield Value (base = 0%)
+
         public List<ICDTracker> ICDTrackers;
 
         public int EffectiveHealth => (int)(BaseHealth * (1f + StatHealth)) + StatHealthFlat;
         public float EffectiveDefense => (float)(((float)BaseDefense * (1f + StatDefense)) + StatDefenseFlat);
         public float EffectiveAttack => (float)(((float)(BaseAttack + Weapon.EffectiveAttack) * (1f + StatAttack)) + StatAttackFlat);
+        public float ReactionTransformativeDamage => 16.05f * Level * 10f;
 
         public bool IsAlive => Health > 0; 
 
@@ -208,6 +228,23 @@ namespace GenshinMod.Common.GameObjects
             StatDamageCA = 0f;
             StatDamageSkill = 0f;
             StatDamageBurst = 0f;
+            StatDamageReaction = 0f;
+            StatDamageReactionVaporize = 0f;
+            StatDamageReactionOverloaded = 0f;
+            StatDamageReactionMelt = 0f;
+            StatDamageReactionElectrocharged = 0f;
+            StatDamageReactionSuperconduct = 0f;
+            StatDamageReactionSwirl = 0f;
+            StatDamageReactionBurning = 0f;
+            StatDamageReactionBloom = 0f;
+            StatDamageReactionHyperbloom = 0f;
+            StatDamageReactionBurgeon = 0f;
+            StatDamageReactionQuicken = 0f;
+            StatDamageReactionAggravate = 0f;
+            StatDamageReactionSpread = 0f;
+            StatDamageReactionShatter = 0f;
+            StatDamageReactionFrozen = 0f;
+            StatDamageReactionCrystallize = 0f;
 
             for (int i = ICDTrackers.Count - 1; i >= 0; i--)
             {
@@ -385,6 +422,69 @@ namespace GenshinMod.Common.GameObjects
             damage = (int)(damage * mult);
 
             return damage;
+        }
+
+        public float GetReactionBonus(GenshinReaction reaction)
+        {
+            float bonus = 0;
+            bonus += StatDamageReaction;
+
+
+            switch (reaction)
+            {
+                case GenshinReaction.VAPORIZE:
+                    bonus += StatDamageReactionVaporize;
+                    break;
+                case GenshinReaction.OVERLOADED:
+                    bonus += StatDamageReactionOverloaded;
+                    break;
+                case GenshinReaction.MELT:
+                    bonus += StatDamageReactionMelt;
+                    break;
+                case GenshinReaction.ELECTROCHARGED:
+                    bonus += StatDamageReactionElectrocharged;
+                    break;
+                case GenshinReaction.FROZEN:
+                    bonus += StatDamageReactionFrozen;
+                    break;
+                case GenshinReaction.SUPERCONDUCT:
+                    bonus += StatDamageReactionSuperconduct;
+                    break;
+                case GenshinReaction.SWIRL:
+                    bonus += StatDamageReactionSwirl;
+                    break;
+                case GenshinReaction.CRYSTALLIZE:
+                    bonus += StatDamageReactionCrystallize;
+                    break;
+                case GenshinReaction.BURNING:
+                    bonus += StatDamageReactionBurning;
+                    break;
+                case GenshinReaction.BLOOM:
+                    bonus += StatDamageReactionBloom;
+                    break;
+                case GenshinReaction.HYPERBLOOM:
+                    bonus += StatDamageReactionHyperbloom;
+                    break;
+                case GenshinReaction.BURGEON:
+                    bonus += StatDamageReactionBurgeon;
+                    break;
+                case GenshinReaction.QUICKEN:
+                    bonus += StatDamageReactionQuicken;
+                    break;
+                case GenshinReaction.AGGRAVATE:
+                    bonus += StatDamageReactionAggravate;
+                    break;
+                case GenshinReaction.SPREAD:
+                    bonus += StatDamageReactionSpread;
+                    break;
+                case GenshinReaction.SHATTER:
+                    bonus += StatDamageReactionShatter;
+                    break;
+                default: // NONE
+                    break;
+            }
+
+            return bonus;
         }
     }
 
