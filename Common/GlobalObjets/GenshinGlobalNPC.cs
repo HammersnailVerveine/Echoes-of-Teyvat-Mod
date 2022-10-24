@@ -4,6 +4,7 @@ using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -219,11 +220,12 @@ namespace GenshinMod.Common.GlobalObjets
             offSetY -= 24;
         }
 
-        public void DrawTexture(Texture2D texture, SpriteBatch spriteBatch, NPC npc, int nbElements,ref int offSetX, ref int offSetY)
+        public void DrawTexture(Texture2D texture, SpriteBatch spriteBatch, NPC npc, int nbElements,ref int offSetX, ref int offSetY, int timeLeft)
         {
+            float colorMult = timeLeft > 120 ? 1f : (float)Math.Abs(Math.Sin((timeLeft * 0.5f)/Math.PI/4f));
             Vector2 position = new Vector2(npc.Center.X + offSetX - Main.screenPosition.X, npc.Center.Y + offSetY - Main.screenPosition.Y);
-            spriteBatch.Draw(texture, position, null, Color.White, 0f, texture.Size() * 0.5f, 0.875f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texture, position, null, Color.White * 0.5f, 0f, texture.Size() * 0.5f, 1.025f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, position, null, Color.White * colorMult, 0f, texture.Size() * 0.5f, 0.875f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, position, null, Color.White * 0.5f * colorMult, 0f, texture.Size() * 0.5f, 1.025f, SpriteEffects.None, 0f);
             offSetX += 24;
             if (offSetX > 24) setOffset(ref offSetX, ref offSetY, ref nbElements);
         }
@@ -238,13 +240,13 @@ namespace GenshinMod.Common.GlobalObjets
             int offSetX = 0;
             setOffset(ref offSetX, ref offSetY, ref nbElements);
 
-            if (AffectedByElement(GenshinElement.GEO)) DrawTexture(ElementTexture[0], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(GenshinElement.ANEMO)) DrawTexture(ElementTexture[1], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(GenshinElement.CRYO)) DrawTexture(ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(GenshinElement.ELECTRO)) DrawTexture(ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(GenshinElement.DENDRO)) DrawTexture(ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(GenshinElement.HYDRO) && !ReactionFrozen) DrawTexture(ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
-            if (AffectedByElement(GenshinElement.PYRO)) DrawTexture(ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY);
+            if (AffectedByElement(GenshinElement.GEO)) DrawTexture(ElementTexture[0], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementGeo);
+            if (AffectedByElement(GenshinElement.ANEMO)) DrawTexture(ElementTexture[1], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementAnemo);
+            if (AffectedByElement(GenshinElement.CRYO)) DrawTexture(ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementCryo);
+            if (AffectedByElement(GenshinElement.ELECTRO)) DrawTexture(ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementElectro);
+            if (AffectedByElement(GenshinElement.DENDRO)) DrawTexture(ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementDendro);
+            if (AffectedByElement(GenshinElement.HYDRO) && !ReactionFrozen) DrawTexture(ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementHydro);
+            if (AffectedByElement(GenshinElement.PYRO)) DrawTexture(ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementPyro);
 
             if (ReactionFrozen)
             {
