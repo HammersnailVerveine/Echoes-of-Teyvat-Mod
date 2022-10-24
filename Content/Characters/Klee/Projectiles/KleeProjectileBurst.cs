@@ -43,7 +43,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 
         public override void SafeAI()
 		{
-			Projectile.tileCollide = timeSpent > 6;
+			Projectile.tileCollide = TimeSpent > 6;
 			Projectile.velocity *= 1.1f;
 			Projectile.rotation = Projectile.velocity.ToRotation();
 			Projectile.direction = Projectile.spriteDirection;

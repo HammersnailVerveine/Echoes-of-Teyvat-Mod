@@ -64,11 +64,11 @@ namespace GenshinMod.Content.Projectiles
 			Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
 
 			Projectile.ai[0] += Projectile.ai[1] * acceleration;
-			if (timeSpent > 17) acceleration *= 0.7f;
-			if (timeSpent < 4) acceleration *= 2.35f;
+			if (TimeSpent > 17) acceleration *= 0.7f;
+			if (TimeSpent < 4) acceleration *= 2.35f;
 
 			// Afterimages
-			if (timeSpent < 30)
+			if (TimeSpent < 30)
 			{
 				OldPosition.Add(Projectile.Center);
 				OldRotation.Add(Projectile.rotation); 

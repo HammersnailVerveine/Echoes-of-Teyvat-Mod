@@ -35,6 +35,8 @@ namespace GenshinMod.Common.GameObjects.Enums
     }
     public static class GenshinElementUtils
     {
+        public static Color ColorImmune => new Color(168, 168, 168);
+
         public static Color GetColor(GenshinElement element)
         {
             switch (element)

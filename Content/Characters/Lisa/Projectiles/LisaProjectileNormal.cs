@@ -54,8 +54,8 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
         public override void SafeAI()
 		{
 			FirstFrameHit();
-			if (timeSpent % 7 == 0) CalculateNodes();
-			if (timeSpent > 10f) lightmult *= 0.9f;
+			if (TimeSpent % 7 == 0) CalculateNodes();
+			if (TimeSpent > 10f) lightmult *= 0.9f;
 		}
 
         public override void Kill(int timeLeft)

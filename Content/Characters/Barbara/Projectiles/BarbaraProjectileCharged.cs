@@ -68,13 +68,13 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Lighting.AddLight(Projectile.Center, 0.2f, 0.2f, 0.4f);
 			Projectile.rotation += 0.115f * Projectile.spriteDirection;
 
-			if (timeSpent == 30)
+			if (TimeSpent == 30)
 			{
 				SoundEngine.PlaySound(SoundID.SplashWeak, Projectile.Center);
 				Projectile.friendly = true;
 				ResetImmunity();
 			}
-			else if (timeSpent < 30)
+			else if (TimeSpent < 30)
             {
 				Projectile.scale *= 0.9f;
 				SpawnDust<BarbaraDustBubble>(0.5f, 1f, 0, 1, 5);
@@ -106,12 +106,12 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
 		public override void PostDraw(Color lightColor)
 		{
-			if (timeSpent > 10)
+			if (TimeSpent > 10)
 			{
 				SpriteBatch spriteBatch = Main.spriteBatch;
 				Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 				float mult = 0.6f;
-				if (timeSpent < 30) mult *= 0.4f;
+				if (TimeSpent < 30) mult *= 0.4f;
 				Color color = Color.White * (1.65f - (Projectile.scale > 0.55f ? 1.65f : Projectile.scale * 3f)) * mult;
 				Color color2 = Color.White * (1.445f - (Projectile.scale > 0.85f ? 1.445f : Projectile.scale * 1.7f)) * mult;
 				Color color3 = Color.White * (1.3f - (Projectile.scale > 1.4f ? 1.3f : Projectile.scale)) * mult;

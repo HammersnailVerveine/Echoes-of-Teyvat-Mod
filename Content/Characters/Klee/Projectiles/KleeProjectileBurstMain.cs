@@ -43,14 +43,14 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
         public override void SafeAI()
 		{
 			Lighting.AddLight(Projectile.Center, 0.1f, 0.1f, 0.1f);
-			if (timeSpent < 15) Projectile.scale += (1f / 15);
+			if (TimeSpent < 15) Projectile.scale += (1f / 15);
 
-			if (timeSpent < 30)
+			if (TimeSpent < 30)
 			{
 				Vector2 direction = enemyTarget.Center - Projectile.Center;
 				Projectile.rotation = direction.ToRotation();
 			}
-			else if (timeSpent == 30)
+			else if (TimeSpent == 30)
 			{
 				Vector2 target = enemyTarget.Center;
 				Vector2 velocity = (target - Projectile.Center);

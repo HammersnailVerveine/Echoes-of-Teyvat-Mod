@@ -43,7 +43,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 		{
 			Projectile.friendly = FirstFrame;
 			Lighting.AddLight(Projectile.Center, 0.5f, 0.5f, 0.5f);
-			if (timeSpent % 2 == 0)
+			if (TimeSpent % 2 == 0)
 			{
 				Projectile.frame++;
 				if (Projectile.frame > 9)

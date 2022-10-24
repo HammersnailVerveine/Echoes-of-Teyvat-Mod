@@ -27,7 +27,8 @@ namespace GenshinMod.Common.ModObjects
         public bool CanDealDamage = true;
         public GenshinCharacter OwnerCharacter;
         public bool FirstHit = false; // Has the projectile hit a target yet ?
-        public int timeSpent = 0;
+        public int TimeSpent = 0;
+        public float DefenseIgnore = 0f; // % of enemy defense ignored.
 
         public virtual void SafeAI() { }
         public virtual void SafePostAI() { }
@@ -38,7 +39,7 @@ namespace GenshinMod.Common.ModObjects
         public bool IsLocalOwner => Projectile.owner == Main.myPlayer;
         public Player Owner => Main.player[Projectile.owner];
         public GenshinPlayer OwnerGenshinPlayer => Owner.GetModPlayer<GenshinPlayer>();
-        public bool FirstFrame => timeSpent == 1;
+        public bool FirstFrame => TimeSpent == 1;
         public Texture2D GetTexture() => ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public Texture2D GetWeaponTexture() => ModContent.Request<Texture2D>(OwnerGenshinPlayer.CharacterCurrent.Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public static bool CanHomeInto(NPC npc) => npc.active && !npc.dontTakeDamage && !npc.friendly && npc.lifeMax > 5;
@@ -56,7 +57,7 @@ namespace GenshinMod.Common.ModObjects
 
         public sealed override void AI()
         {
-            timeSpent++;
+            TimeSpent++;
             SafeAI();
         }
 

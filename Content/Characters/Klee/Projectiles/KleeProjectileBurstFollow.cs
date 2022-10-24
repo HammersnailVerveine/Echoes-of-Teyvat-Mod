@@ -52,7 +52,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 
 			if (IsLocalOwner)
 			{
-				if (timeSpent % 95 == 0)
+				if (TimeSpent % 95 == 0)
 				{
 					float range = 320f;
 					NPC enemyTarget = null;
@@ -84,7 +84,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 				}
 			}
 
-			if (timeSpent > 540) Projectile.alpha += 4;
+			if (TimeSpent > 540) Projectile.alpha += 4;
 
 				SpawnDust<KleeSparkleDust>(1f, 1f, 10, 1, 5);
 			SpawnDust<KleeSparkleDustBig>(1f, 1f, 10, 1, 20);

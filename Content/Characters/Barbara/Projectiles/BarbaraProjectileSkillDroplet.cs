@@ -40,14 +40,14 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 		{
 			Projectile.position = Owner.Center - new Vector2(Projectile.width / 2, Projectile.height / 2);
 			Projectile.rotation -= 0.1f;
-			if (timeSpent > 60)
+			if (TimeSpent > 60)
 			{
 				Projectile.rotation -= 0.05f;
 				Projectile.scale *= 0.975f;
 				Projectile.friendly = false;
 			}
 
-			if (timeSpent == 60)
+			if (TimeSpent == 60)
             {
 				int type = ModContent.ProjectileType<BarbaraProjectileSkillCircle>();
 				SpawnProjectile(Owner.Center, VelocityImmobile, type, OwnerCharacter.AbilitySkill.GetScaling3(), 0f, 0f);

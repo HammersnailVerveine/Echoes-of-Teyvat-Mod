@@ -82,7 +82,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
 				if (multScale > 1f) multScale = 1f;
 			}
 
-			if (timeSpent < 10)
+			if (TimeSpent < 10)
 			{
 				multAlpha *= 1.2f;
 				if (multAlpha > 1f) multAlpha = 1f;

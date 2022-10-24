@@ -44,10 +44,10 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 		{
 			Projectile.velocity *= 0.9f;
 			Lighting.AddLight(Projectile.Center, 0.3f, 0.3f, 0.3f);
-			Projectile.tileCollide = timeSpent > 2;
-			if (timeSpent < 30) Projectile.scale += (1f / 30);
+			Projectile.tileCollide = TimeSpent > 2;
+			if (TimeSpent < 30) Projectile.scale += (1f / 30);
 
-			if (timeSpent < 60)
+			if (TimeSpent < 60)
 			{
 				if (IsLocalOwner)
 				{
@@ -62,9 +62,9 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 				}
 				else Projectile.rotation = Projectile.ai[0]; // Rotation sync on other clients
 				Projectile.direction = Projectile.spriteDirection;
-				if (timeSpent > 55) Projectile.scale += (1f / 15);
+				if (TimeSpent > 55) Projectile.scale += (1f / 15);
 			}
-			else if (timeSpent == 60)
+			else if (TimeSpent == 60)
 			{
 				Vector2 target = Main.MouseWorld;
 				Vector2 velocity = (target - Projectile.Center);

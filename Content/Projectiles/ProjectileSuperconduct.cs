@@ -8,7 +8,7 @@ using Terraria.DataStructures;
 
 namespace GenshinMod.Content.Projectiles
 {
-    public class ProjectileOverloaded : GenshinProjectile
+    public class ProjectileSuperconduct : GenshinProjectile
 	{
 		public Texture2D TextureProjectile;
 		float alpha = 1f;
@@ -48,7 +48,7 @@ namespace GenshinMod.Content.Projectiles
 					Projectile.Kill();
 			}
 
-			if (TimeSpent > 6) alpha -= (1 / 20f) * 2;
+			alpha -= (1 / 20f);
 		}
 
 		public override void PostDraw(Color lightColor)
@@ -59,10 +59,10 @@ namespace GenshinMod.Content.Projectiles
 			Rectangle rectangle = TextureProjectile.Bounds;
 			rectangle.Height /= Main.projFrames[Projectile.type];
 			rectangle.Y += Projectile.frame * rectangle.Height;
-			Color color = GenshinElementUtils.GetColor(GenshinElement.PYRO) * alpha * 0.6f;
-			Color color3 = new Color(255, 255, 155) * alpha * 0.7f;
-			Color color2 = GenshinElementUtils.GetColor(GenshinElement.ELECTRO) * alpha * 0.8f;
-			Color color4 = new Color(255, 200, 255) * alpha;
+			Color color = GenshinElementUtils.GetColor(GenshinElement.CRYO) * alpha * 0.4f;
+			Color color3 = new Color(255, 255, 255) * alpha * 0.5f;
+			Color color2 = GenshinElementUtils.GetColor(GenshinElement.ELECTRO) * alpha * 0.3f;
+			Color color4 = new Color(255, 200, 255) * alpha * 0.4f;
 
 			spriteBatch.Draw(TextureProjectile, drawPosition, rectangle, color, rotation, rectangle.Size() * 0.5f, Projectile.scale * 2.2f * (TimeSpent / 10f), SpriteEffects.None, 0f);
 			spriteBatch.Draw(TextureProjectile, drawPosition, rectangle, color3, rotation, rectangle.Size() * 0.5f, Projectile.scale * 2f * (TimeSpent / 10f), SpriteEffects.None, 0f);

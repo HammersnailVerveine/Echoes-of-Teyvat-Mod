@@ -48,9 +48,9 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.velocity.Y += 0.10f;
 			Projectile.velocity.X *= 0.975f;
 
-			Projectile.friendly = timeSpent > 60 + Projectile.ai[0];
+			Projectile.friendly = TimeSpent > 60 + Projectile.ai[0];
 
-			if (timeSpent % 6 == 0)
+			if (TimeSpent % 6 == 0)
 			{
 				Projectile.frame++;
 				if (Projectile.frame > 7) Projectile.frame = 0;

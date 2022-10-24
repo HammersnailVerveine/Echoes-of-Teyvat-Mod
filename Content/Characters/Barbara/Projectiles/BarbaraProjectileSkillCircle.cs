@@ -50,7 +50,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.scale *= 0.99f;
 			if (Projectile.scale < 1f) Projectile.scale = 1f;
 
-			if (timeSpent % 180 == 0)
+			if (TimeSpent % 180 == 0)
             {
 				OwnerGenshinPlayer.CharacterCurrent.Heal(Projectile.damage);
 

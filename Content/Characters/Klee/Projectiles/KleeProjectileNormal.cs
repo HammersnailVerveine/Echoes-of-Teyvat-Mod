@@ -50,7 +50,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 
         public override void SafeAI()
 		{
-			if (timeSpent > 8)
+			if (TimeSpent > 8)
 			{
 				Projectile.velocity.Y += 0.25f;
 				Projectile.velocity.X *= 0.97f;

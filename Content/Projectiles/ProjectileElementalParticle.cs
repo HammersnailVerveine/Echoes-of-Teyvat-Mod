@@ -46,7 +46,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafeAI()
 		{
-			if (timeSpent > 30)
+			if (TimeSpent > 30)
 			{
 				Player player = Main.LocalPlayer;
 				if (!player.dead)
@@ -61,7 +61,7 @@ namespace GenshinMod.Content.Projectiles
 					direction.Normalize();
 					direction *= 1.2f;
 					Projectile.velocity += direction;
-					if (Projectile.velocity.Length() > (timeSpent > 210 ? 10f : 7f))
+					if (Projectile.velocity.Length() > (TimeSpent > 210 ? 10f : 7f))
 					{
 						Projectile.velocity.Normalize();
 						Projectile.velocity *= 5f;

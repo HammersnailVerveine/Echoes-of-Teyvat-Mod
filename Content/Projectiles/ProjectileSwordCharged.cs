@@ -63,12 +63,12 @@ namespace GenshinMod.Content.Projectiles
 			Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
 
 			Projectile.ai[0] += Projectile.ai[1] * acceleration;
-			if (timeSpent > 42) acceleration *= 0.8f;
-			if (timeSpent < 6) acceleration *= 1.85f;
+			if (TimeSpent > 42) acceleration *= 0.8f;
+			if (TimeSpent < 6) acceleration *= 1.85f;
 			
 
 			// Afterimages
-			if (timeSpent < 50)
+			if (TimeSpent < 50)
 			{
 				OldPosition.Add(Projectile.Center);
 				OldRotation.Add(Projectile.rotation); 
@@ -84,7 +84,7 @@ namespace GenshinMod.Content.Projectiles
 				OldRotation.RemoveAt(0);
 			}
 
-			if (timeSpent == 30) HitNPC.Clear();
+			if (TimeSpent == 30) HitNPC.Clear();
 		}
 
         public override void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit)
