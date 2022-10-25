@@ -55,7 +55,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 		{
 			FirstFrameHit();
 			if (TimeSpent % 7 == 0) CalculateNodes();
-			if (TimeSpent > 10f) lightmult *= 0.9f;
+			if (TimeSpent > 10) lightmult *= 0.9f;
 		}
 
         public override void Kill(int timeLeft)

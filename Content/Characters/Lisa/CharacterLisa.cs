@@ -14,7 +14,7 @@ namespace GenshinMod.Content.Characters.Lisa
 			Element = GenshinElement.ELECTRO;
 			WeaponType = WeaponType.CATALYST;
 			AbilityNormal = new LisaAbilityNormal().Initialize(this);
-			AbilityCharged = new LisaAbilityNormal().Initialize(this);
+			AbilityCharged = new LisaAbilityCharged().Initialize(this);
 			AbilitySkill = new LisaAbilityNormal().Initialize(this);
 			AbilityBurst = new LisaAbilityNormal().Initialize(this);
 
