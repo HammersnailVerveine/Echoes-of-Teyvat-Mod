@@ -38,8 +38,9 @@ namespace GenshinMod.Common.GlobalObjets
         public int ReactionElectrochargedPlayer = 0;
         public int ReactionElectrochargedDamage = 0;
 
-        public int TimerReactionOverloaded = 0;
-        public int TimerReactionSuperconduct = 0;
+        public int TimerReactionOverloaded = 0; // overloaded damage ICD
+        public int TimerReactionSuperconduct = 0; // superconduct damage ICD
+        public int TimerReactionElectrocharged = 0; // electrocharged damage ICD
 
         public float ResistanceBaseGeo = 0.1f; // 0f = 100% damage taken, 1f = immune
         public float ResistanceBaseAnemo = 0.1f;
@@ -99,6 +100,7 @@ namespace GenshinMod.Common.GlobalObjets
             TimerElementPyro--;
             TimerReactionOverloaded--;
             TimerReactionSuperconduct--;
+            TimerReactionElectrocharged--;
             ReactionElectrocharged--;
 
             ReductionDefense = 0f;
@@ -325,7 +327,7 @@ namespace GenshinMod.Common.GlobalObjets
                                     GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
                                     if (genshinNPC.TimerReactionOverloaded <= 0)
                                     {
-                                        int targetDamage = ApplyResistance(reactionDamage, GenshinElement.PYRO);
+                                        int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                         if (targetDamage > 0)
                                         {
                                             player.ApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false);
@@ -426,7 +428,7 @@ namespace GenshinMod.Common.GlobalObjets
                                     GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
                                     if (genshinNPC.TimerReactionSuperconduct <= 0)
                                     {
-                                        int targetDamage = ApplyResistance(reactionDamage, GenshinElement.CRYO);
+                                        int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.CRYO);
                                         if (targetDamage > 0)
                                         {
                                             player.ApplyDamageToNPC(target, targetDamage, 0.5f, -player.direction, false);
@@ -483,7 +485,7 @@ namespace GenshinMod.Common.GlobalObjets
                                     GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
                                     if (genshinNPC.TimerReactionOverloaded <= 0)
                                     {
-                                        int targetDamage = ApplyResistance(reactionDamage, GenshinElement.PYRO);
+                                        int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                         if (targetDamage > 0)
                                         {
                                             player.ApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false);
@@ -519,7 +521,7 @@ namespace GenshinMod.Common.GlobalObjets
                                     GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
                                     if (genshinNPC.TimerReactionSuperconduct <= 0)
                                     {
-                                        int targetDamage = ApplyResistance(reactionDamage, GenshinElement.CRYO);
+                                        int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.CRYO);
                                         if (targetDamage > 0)
                                         {
                                             player.ApplyDamageToNPC(target, targetDamage, 0.5f, -player.direction, false);
@@ -575,13 +577,35 @@ namespace GenshinMod.Common.GlobalObjets
                 if (AffectedByElement(GenshinElement.HYDRO) && AffectedByElement(GenshinElement.ELECTRO))
                 {
                     Player player = Main.player[ReactionElectrochargedPlayer];
-                    int damage = ApplyResistance(ReactionElectrochargedDamage, GenshinElement.ELECTRO);
-                    player.ApplyDamageToNPC(npc, damage, 0f, player.direction, false);
-                    ReactionElectrocharged = 60;
-                    TimerElementHydro -= 240;
-                    TimerElementElectro -= 240;
                     SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap, npc.Center);
-                    CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), damage);
+
+                    foreach (NPC target in Main.npc)
+                    {
+                        if (GenshinProjectile.CanHomeInto(target))
+                        {
+                            if (npc.Center.Distance(target.Center) < 128f)
+                            {
+                                GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
+                                if (genshinNPC.AffectedByElement(GenshinElement.HYDRO))
+                                {
+                                    if (genshinNPC.TimerReactionElectrocharged <= 0)
+                                    {
+                                        int targetDamage = genshinNPC.ApplyResistance(ReactionElectrochargedDamage, GenshinElement.ELECTRO);
+                                        if (targetDamage > 0)
+                                        {
+                                            player.ApplyDamageToNPC(target, targetDamage, 0f, player.direction, false);
+                                            CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), targetDamage);
+                                        }
+                                        else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
+                                    }
+                                    genshinNPC.TimerReactionElectrocharged = 30;
+                                    genshinNPC.ReactionElectrocharged = 60;
+                                    genshinNPC.TimerElementHydro -= 240;
+                                    genshinNPC.TimerElementElectro -= 240;
+                                }
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -645,7 +669,8 @@ namespace GenshinMod.Common.GlobalObjets
         public static Rectangle ReactionHitbox(NPC npc)
         {
             Rectangle rectangle = ExtendedHitboxFlat(npc);
-            rectangle.Y -= 48;
+            rectangle.Y -= 80;
+            rectangle.Height = 32;
             return rectangle;
         }
     }
