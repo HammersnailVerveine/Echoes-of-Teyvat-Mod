@@ -131,9 +131,9 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public void SpawnDust<T>(Vector2 position, Vector2 direction, float velocity = 0f, float scale = 1f, int offSet = 10, int quantity = 1, int chanceDenominator = 1) where T : ModDust => SpawnDust(ModContent.DustType<T>(), position, direction, velocity, scale, offSet, quantity, chanceDenominator);
+        public static void SpawnDust<T>(Vector2 position, Vector2 direction, float velocity = 0f, float scale = 1f, int offSet = 10, int quantity = 1, int chanceDenominator = 1) where T : ModDust => SpawnDust(ModContent.DustType<T>(), position, direction, velocity, scale, offSet, quantity, chanceDenominator);
 
-        public void SpawnDust(int type, Vector2 position, Vector2 direction, float velocity = 0f, float scale = 1f, int offSet = 10, int quantity = 1, int chanceDenominator = 1)
+        public static void SpawnDust(int type, Vector2 position, Vector2 direction, float velocity = 0f, float scale = 1f, int offSet = 10, int quantity = 1, int chanceDenominator = 1)
         {
             if (!Main.rand.NextBool(chanceDenominator)) return;
             for (int i = 0; i < quantity; i++)

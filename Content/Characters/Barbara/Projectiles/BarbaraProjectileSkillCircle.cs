@@ -59,7 +59,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
 				foreach (NPC npc in Main.npc)
                 {
-					if (npc.Hitbox.Intersects(Projectile.Hitbox))
+					if (npc.Hitbox.Intersects(Projectile.Hitbox) && CanHomeInto(npc))
 						npc.GetGlobalNPC<GenshinGlobalNPC>().ApplyElement(npc, this, OwnerCharacter, Element, ref Projectile.damage);
                 }
 			}

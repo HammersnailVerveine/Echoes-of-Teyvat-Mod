@@ -39,6 +39,8 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 			Projectile.alpha = 255;
 			Projectile.penetrate = -1;
 			Projectile.tileCollide = false;
+			ElementApplication = ElementApplicationMedium;
+			IgnoreICD = true;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -104,6 +106,10 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 				Positions.Add(newPosition);
 				SpawnDust<LisaDustRound>(newPosition, Vector2.Zero, 1f, 1f, 10, 1, 2);
 			}
+		}
+		public override void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit)
+		{
+			if (OwnerCharacter is CharacterLisa lisa) lisa.TryApplyStackLisa(target);
 		}
 
 		public override void PostDraw(Color lightColor)

@@ -20,13 +20,14 @@ namespace GenshinMod.Common.ModObjects
         public List<GenshinCharacter> CharacterTeam; // Current team of 4 characters
         public int TimerMovement = 0; // Used for animations
         public int TimerUse = 0; // Used for animations (swing)
+        public bool IsHolding = false;
         public int TimerUseRef = 0; // Used for animations
         public int LastUseDirection = 1; // Animation swing direction
         public bool ReverseUseArmDirection = false;
         public int Timer = 0; // Increased by 1 every frame
 
         public int StaminaBase = 100; // Maximum Base stamina
-        public int StaminaBonus = 140; // Bonus stamina (max = base + bonus) (140 max)
+        public int StaminaBonus = 0; // Bonus stamina (max = base + bonus) (140 max)
         public float Stamina = 0; // current stamina
         public float StaminaConsumption = 1f; // Multiplies stamina consumption
         public int TimerStamina = 0; // Reset to 150 on stamina use
@@ -109,9 +110,11 @@ namespace GenshinMod.Common.ModObjects
 
         public override void ResetEffects()
         {
-            PlayerInput.ScrollWheelDelta = 0;
+            //PlayerInput.ScrollWheelDelta = 0;
+            PlayerInput.ScrollWheelDeltaForUI = 0;
             Player.statLifeMax2 = 1000;
             Player.statLife = Player.statLifeMax2;
+            IsHolding = false;
 
             Timer++;
 
@@ -197,6 +200,7 @@ namespace GenshinMod.Common.ModObjects
             Vector2 drawPosition = (Player.position + new Vector2(Player.width * 0.5f, Player.gfxOffY + 20 + 530)).Floor();
             drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
             Point coord = new Point((int)(Player.position.X / 16), (int)(Player.position.Y / 16));
+            Color lightColor = Lighting.GetColor(coord);
             SpriteEffects effect = (IsUsing() ? LastUseDirection : Player.direction) == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             int movementFrame = 0;
@@ -232,6 +236,7 @@ namespace GenshinMod.Common.ModObjects
                 }
                 useFrame = 1 + (ReverseUseArmDirection ? useFrame : (3 - useFrame));
             }
+            if (IsHolding) useFrame = 2;
 
             Texture2D textureLegs = CharacterCurrent.TextureLegs;
             Rectangle rectangleLegs = textureLegs.Bounds;
@@ -255,10 +260,13 @@ namespace GenshinMod.Common.ModObjects
             rectangleArms.Height /= 20;
             rectangleArms.Y += rectangleArms.Height * movementFrame;
 
-            spriteBatch.Draw(textureLegs, drawPosition, rectangleLegs, Lighting.GetColor(coord), 0f, textureLegs.Size() * 0.5f, 1f, effect, 0f);
-            spriteBatch.Draw(textureBody, drawPosition, rectangleBody, Lighting.GetColor(coord), 0f, textureBody.Size() * 0.5f, 1f, effect, 0f);
-            spriteBatch.Draw(textureHead, drawPosition, rectangleHead, Lighting.GetColor(coord), 0f, textureHead.Size() * 0.5f, 1f, effect, 0f);
-            spriteBatch.Draw(textureArms, drawPosition, rectangleArms, Lighting.GetColor(coord), 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
+            spriteBatch.Draw(textureLegs, drawPosition, rectangleLegs, lightColor, 0f, textureLegs.Size() * 0.5f, 1f, effect, 0f);
+            spriteBatch.Draw(textureBody, drawPosition, rectangleBody, lightColor, 0f, textureBody.Size() * 0.5f, 1f, effect, 0f);
+            spriteBatch.Draw(textureHead, drawPosition, rectangleHead, lightColor, 0f, textureHead.Size() * 0.5f, 1f, effect, 0f);
+            spriteBatch.Draw(textureArms, drawPosition, rectangleArms, lightColor, 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
+
+            foreach (GenshinCharacter character in CharacterTeam)
+                character.DrawEffects(spriteBatch, lightColor);
         }
 
         public void GiveTeamEnergy(GenshinElement element, float value)
@@ -270,7 +278,7 @@ namespace GenshinMod.Common.ModObjects
         public void TrySwapCharacter(int slot)
         {
             SoundEngine.PlaySound(SoundID.MenuTick);
-            if (CharacterTeam.Count > slot && CharacterCurrent.CanUseAbility)
+            if (CharacterTeam.Count > slot && CharacterCurrent.CanUseAbility && !CharacterCurrent.IsHoldingAbility)
             {
                 if (CharacterCurrent != CharacterTeam[slot])
                 {

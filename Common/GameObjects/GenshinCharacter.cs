@@ -18,6 +18,7 @@ namespace GenshinMod.Common.GameObjects
         public Player Player;
         public GenshinPlayer GenshinPlayer;
         public GenshinAbility AbilityCurrent;
+        public GenshinAbility AbilityHeld;
 
         public Texture2D TextureHead;
         public Texture2D TextureBody;
@@ -119,6 +120,7 @@ namespace GenshinMod.Common.GameObjects
         public virtual void SafePreUpdate() { }
         public virtual void SafePostUpdate() { }
         public virtual void SafeResetEffects() { }
+        public virtual void DrawEffects(SpriteBatch spriteBatch, Color lightColor) { }
         public virtual void OnSwapIn() { }
         public virtual bool OnSwapOut() => true; // Return false to prevent swap out
         public virtual bool OnHeal(int value) => true; // Return false to prevent heal
@@ -179,7 +181,6 @@ namespace GenshinMod.Common.GameObjects
                     AbilityCurrent = null;
                 }
             }
-
             else if (IsCurrentCharacter)
             {
                 Weapon.WeaponPostUpdateActive();
@@ -188,7 +189,7 @@ namespace GenshinMod.Common.GameObjects
                 if (Main.mouseLeft && !GenshinPlayer.IsUsing()) // Try use NA if LMB used
                 {
                     if (AbilityNormal.HoldTimeMax > 0)
-                        TryHoldAbility(AbilityNormal);
+                        TryHoldAbility(AbilityNormal, Main.mouseLeftRelease);
                     else if (Main.mouseLeftRelease || Autoswing)
                         TryUseAbility(AbilityNormal);
                 }
@@ -196,7 +197,7 @@ namespace GenshinMod.Common.GameObjects
                 if (Main.mouseRight && !GenshinPlayer.IsUsing()) // Try use CA if LMB used
                 {
                     if (AbilityCharged.HoldTimeMax > 0)
-                        TryHoldAbility(AbilityCharged);
+                        TryHoldAbility(AbilityCharged, Main.mouseRightRelease);
                     else if (Main.mouseRightRelease || Autoswing)
                         TryUseAbility(AbilityCharged);
                 }
@@ -204,7 +205,7 @@ namespace GenshinMod.Common.GameObjects
                 if (GenshinPlayer.KeySkill && !GenshinPlayer.IsUsing()) // Try use Skill if Skill key used
                 {
                     if (AbilitySkill.HoldTimeMax > 0)
-                        TryHoldAbility(AbilitySkill);
+                        TryHoldAbility(AbilitySkill, GenshinPlayer.KeySkillRelease);
                     else if (GenshinPlayer.KeySkillRelease)
                         TryUseAbility(AbilitySkill);
                 }
@@ -212,10 +213,19 @@ namespace GenshinMod.Common.GameObjects
                 if (GenshinPlayer.KeyBurst && !GenshinPlayer.IsUsing()) // Try use Burst if Burst key used
                 {
                     if (AbilityBurst.HoldTimeMax > 0)
-                        TryHoldAbility(AbilityBurst);
+                        TryHoldAbility(AbilityBurst, GenshinPlayer.KeyBurstRelease);
                     else if (GenshinPlayer.KeyBurstRelease)
                         TryUseAbility(AbilityBurst);
                 }
+            }
+
+            if (IsHoldingAbility)
+            {
+                if ((AbilityHeld == AbilityNormal && !Main.mouseLeft)
+                    || (AbilityHeld == AbilityCharged && !Main.mouseRight)
+                    || (AbilityHeld == AbilitySkill && !GenshinPlayer.KeySkill)
+                    || (AbilityHeld == AbilityBurst && !GenshinPlayer.KeyBurst))
+                    StopHoldAbility();
             }
         }
 
@@ -278,7 +288,7 @@ namespace GenshinMod.Common.GameObjects
 
         public void TryUseAbility(GenshinAbility ability)
         {
-            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy && GenshinPlayer.TryUseStamina(ability.Stamina))
+            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy && GenshinPlayer.TryUseStamina(ability.Stamina) && !IsHoldingAbility)
             {
                 Energy -= ability.Energy;
                 AbilityCurrent = ability;
@@ -286,21 +296,40 @@ namespace GenshinMod.Common.GameObjects
             }
         }
 
-        public void TryHoldAbility(GenshinAbility ability)
+        public void TryHoldAbility(GenshinAbility ability, bool keyReleased)
         {
-            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy)
+            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy && (keyReleased || AbilityHeld != null))
             {
                 ability.Hold();
-                if (ability.HoldTime >= ability.HoldTimeMax)
+                GenshinPlayer.IsHolding = true;
+                AbilityHeld = ability;
+                if (ability.HoldMax)
                 {
                     if (GenshinPlayer.TryUseStamina(ability.Stamina))
                     {
                         Energy -= ability.Energy;
                         AbilityCurrent = ability;
+                        AbilityHeld = null;
                         ability.Use();
                     }
+                    ability.HoldReset();
                 }
             }
+        }
+
+        public void StopHoldAbility()
+        {
+            if (!AbilityHeld.IsUsed() && AbilityHeld.CanUse() && CanUseAbility && Energy >= AbilityHeld.Energy)
+            {
+                if (GenshinPlayer.TryUseStamina(AbilityHeld.Stamina))
+                {
+                    Energy -= AbilityHeld.Energy;
+                    AbilityCurrent = AbilityHeld;
+                    AbilityCurrent.Use();
+                }
+            }
+            AbilityHeld.HoldReset();
+            AbilityHeld = null;
         }
 
         public void GainEnergy(GenshinElement element, float value)
@@ -390,6 +419,7 @@ namespace GenshinMod.Common.GameObjects
         public int ApplyDefense(int value, int sourceLevel = 10) => (int)(value * (1f - (EffectiveDefense / (EffectiveDefense + 500f + sourceLevel * 50f))));
 
         public bool CanUseAbility => AbilityCurrent == null && TimerCanUse <= 0;
+        public bool IsHoldingAbility => AbilityHeld != null;
         public bool IsCurrentCharacter => GenshinPlayer.CharacterCurrent == this;
 
         public void TryEquipWeapon(GenshinWeapon weapon)

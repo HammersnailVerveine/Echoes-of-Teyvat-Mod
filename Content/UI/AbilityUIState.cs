@@ -74,7 +74,7 @@ namespace GenshinMod.Content.UI
             {
 				string text = (Math.DivRem(skillCooldown, 60).Quotient).ToString();
 				Vector2 position = skillLocation + new Vector2(TextureSkillBackground.Width, TextureSkillBackground.Height) * 0.32f;
-				if (text.Length == 1) position.X += 5f;
+				if (text.Length == 1) position.X += 5.5f;
 				if (text.StartsWith("1")) position.X += 5f;
 
 				ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, text, position, Color.White, 0f, Vector2.Zero, new Vector2(1.5f, 1.5f));

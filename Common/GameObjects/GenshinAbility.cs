@@ -19,10 +19,12 @@ namespace GenshinMod.Common.GameObjects
         public float Velocity = 0f; // Ability base Projectile Veloctiy
         public float Stamina = 0; // Ability base Stamina Cost
         public int Cooldown = 0; // Ability base Cooldown
+        public int CooldownHeld = 0; // Ability Held Cooldown
         public int Energy = 0; // Ability Particle generation (nb of particles)
         public int ChargesMax = 1; // Ability Maximum number of charges
-        public int HoldTimeMax = 0;
-        public int HoldTime = 0;
+        public int HoldTimeMax = 0; // Maximum hold time before forced use
+        public int HoldTimeFull = 30; // Maximum hold time for maximum effect
+        public int HoldTime = 0; // current hold time
 
         public int UseTimeCurrent = 0; // Current usetime (>0 = current being used)
         public int CooldownCurrent = 0; // Current Cooldown (0 = ready)
@@ -34,15 +36,17 @@ namespace GenshinMod.Common.GameObjects
         public static float AlmostImmobile = 0.001f;
         public static float Immobile = 0f;
 
-        public bool HoldCast => HoldTime == 30;
+        public bool HoldCast => HoldTime == HoldTimeFull;
+        public bool HoldFull => HoldTime >= HoldTimeFull; 
+        public bool HoldMax => HoldTime >= HoldTimeMax; 
 
         public abstract void SetDefaults();
         public abstract void OnUse();
         public virtual void OnUseUpdate() { }
         public virtual void OnUseEnd() { }
         public virtual void SafeResetEffects() { }
-        public virtual void OnHold() { }
-        public virtual void OnHoldReset() { }
+        public virtual void OnHold() { } // Called every frame while holding the ability
+        public virtual void OnHoldReset() { } // Called when releasing the hold key
         public int Level => Character.GetAbilityLevel(this);
         public float LevelScaling => 1f + (Level - 1f) * 0.09f;
         public virtual bool CanUse() => ChargesCurrent > 0;
@@ -79,7 +83,11 @@ namespace GenshinMod.Common.GameObjects
             Character.GenshinPlayer.TimerUse = UseTime;
             Character.GenshinPlayer.TimerUseRef = UseTime;
             Character.GenshinPlayer.LastUseDirection = Main.MouseWorld.X - Player.Center.X > 0 ? 1 : -1;
-            if (CooldownCurrent <= 0) CooldownCurrent = Cooldown;
+            if (CooldownCurrent <= 0)
+            {
+                CooldownCurrent = Cooldown;
+                if (HoldTimeMax > 0 && HoldFull) CooldownCurrent = CooldownHeld;
+            }
             OnUse();
         }
 
@@ -107,6 +115,9 @@ namespace GenshinMod.Common.GameObjects
             }
             return proj;
         }
+
+        public int SpawnProjectileSpecific(IEntitySource source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, float ai0 = 0, float ai1 = 0)
+            => SpawnProjectileSpecific(source, position, velocity, type, damage, knockback, Character.Player.whoAmI, Element, AbilityType, ai0, ai1);
 
         public int SpawnProjectileSpecific(Vector2 velocity, int type, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)
         {
