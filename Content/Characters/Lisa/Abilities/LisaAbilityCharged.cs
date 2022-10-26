@@ -14,9 +14,10 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
         public override void SetDefaults()
         {
             KnockBack = 1f;
-            UseTime = 25;
+            UseTime = 40;
+            Stamina = 50;
             Velocity = AlmostImmobile;
-            AbilityType = AbilityType.NORMAL;
+            AbilityType = AbilityType.CHARGED;
         }
 
         public override void OnUse()
@@ -46,7 +47,7 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
 
         public override int GetScaling()
         {
-            return (int)(0.42f * Character.EffectiveAttack * LevelScaling);
+            return (int)(1.77f * Character.EffectiveAttack * LevelScaling);
         }
     }
 }

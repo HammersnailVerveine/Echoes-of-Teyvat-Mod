@@ -185,13 +185,36 @@ namespace GenshinMod.Common.GameObjects
                 Weapon.WeaponPostUpdateActive();
                 if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
 
-                if (Main.mouseLeft && (Main.mouseLeftRelease || Autoswing) && !GenshinPlayer.IsUsing())
+                if (Main.mouseLeft && !GenshinPlayer.IsUsing()) // Try use NA if LMB used
                 {
-                    TryUseAbility(AbilityNormal);
+                    if (AbilityNormal.HoldTimeMax > 0)
+                        TryHoldAbility(AbilityNormal);
+                    else if (Main.mouseLeftRelease || Autoswing)
+                        TryUseAbility(AbilityNormal);
                 }
-                if (Main.mouseRight && (Main.mouseRightRelease || Autoswing) && !GenshinPlayer.IsUsing())
+
+                if (Main.mouseRight && !GenshinPlayer.IsUsing()) // Try use CA if LMB used
                 {
-                    TryUseAbility(AbilityCharged);
+                    if (AbilityCharged.HoldTimeMax > 0)
+                        TryHoldAbility(AbilityCharged);
+                    else if (Main.mouseRightRelease || Autoswing)
+                        TryUseAbility(AbilityCharged);
+                }
+
+                if (GenshinPlayer.KeySkill && !GenshinPlayer.IsUsing()) // Try use Skill if Skill key used
+                {
+                    if (AbilitySkill.HoldTimeMax > 0)
+                        TryHoldAbility(AbilitySkill);
+                    else if (GenshinPlayer.KeySkillRelease)
+                        TryUseAbility(AbilitySkill);
+                }
+
+                if (GenshinPlayer.KeyBurst && !GenshinPlayer.IsUsing()) // Try use Burst if Burst key used
+                {
+                    if (AbilityBurst.HoldTimeMax > 0)
+                        TryHoldAbility(AbilityBurst);
+                    else if (GenshinPlayer.KeyBurstRelease)
+                        TryUseAbility(AbilityBurst);
                 }
             }
         }
@@ -260,6 +283,23 @@ namespace GenshinMod.Common.GameObjects
                 Energy -= ability.Energy;
                 AbilityCurrent = ability;
                 ability.Use();
+            }
+        }
+
+        public void TryHoldAbility(GenshinAbility ability)
+        {
+            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy)
+            {
+                ability.Hold();
+                if (ability.HoldTime >= ability.HoldTimeMax)
+                {
+                    if (GenshinPlayer.TryUseStamina(ability.Stamina))
+                    {
+                        Energy -= ability.Energy;
+                        AbilityCurrent = ability;
+                        ability.Use();
+                    }
+                }
             }
         }
 

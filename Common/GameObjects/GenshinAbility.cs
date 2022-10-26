@@ -21,6 +21,8 @@ namespace GenshinMod.Common.GameObjects
         public int Cooldown = 0; // Ability base Cooldown
         public int Energy = 0; // Ability Particle generation (nb of particles)
         public int ChargesMax = 1; // Ability Maximum number of charges
+        public int HoldTimeMax = 0;
+        public int HoldTime = 0;
 
         public int UseTimeCurrent = 0; // Current usetime (>0 = current being used)
         public int CooldownCurrent = 0; // Current Cooldown (0 = ready)
@@ -32,11 +34,15 @@ namespace GenshinMod.Common.GameObjects
         public static float AlmostImmobile = 0.001f;
         public static float Immobile = 0f;
 
+        public bool HoldCast => HoldTime == 30;
+
         public abstract void SetDefaults();
         public abstract void OnUse();
         public virtual void OnUseUpdate() { }
         public virtual void OnUseEnd() { }
         public virtual void SafeResetEffects() { }
+        public virtual void OnHold() { }
+        public virtual void OnHoldReset() { }
         public int Level => Character.GetAbilityLevel(this);
         public float LevelScaling => 1f + (Level - 1f) * 0.09f;
         public virtual bool CanUse() => ChargesCurrent > 0;
@@ -75,6 +81,18 @@ namespace GenshinMod.Common.GameObjects
             Character.GenshinPlayer.LastUseDirection = Main.MouseWorld.X - Player.Center.X > 0 ? 1 : -1;
             if (CooldownCurrent <= 0) CooldownCurrent = Cooldown;
             OnUse();
+        }
+
+        public void Hold()
+        {
+            HoldTime++;
+            OnHold();
+        }
+
+        public void HoldReset()
+        {
+            HoldTime = 0;
+            OnHoldReset();
         }
 
         public int SpawnProjectileSpecific(IEntitySource source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, int owner, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)

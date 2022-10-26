@@ -31,6 +31,11 @@ namespace GenshinMod.Common.ModObjects
         public float StaminaConsumption = 1f; // Multiplies stamina consumption
         public int TimerStamina = 0; // Reset to 150 on stamina use
 
+        public bool KeySkill = false; // Is the Skill key pressed ?
+        public bool KeySkillRelease = true; // Was the Skill key released last frame ?
+        public bool KeyBurst = false; // Is the Burst key pressed ?
+        public bool KeyBurstRelease = true; // Was the Burst key released last frame ?
+
         public int StaminaMax => StaminaBase + StaminaBonus;
 
         public bool IsUsing() => TimerUse > 0;
@@ -149,13 +154,38 @@ namespace GenshinMod.Common.ModObjects
         {
             if (CharacterCurrent != null)
             {
-                if (GenshinKeybindsLoader.AbilitySkill.JustPressed) CharacterCurrent.TryUseAbility(CharacterCurrent.AbilitySkill);
-                if (GenshinKeybindsLoader.AbilityBurst.JustPressed) CharacterCurrent.TryUseAbility(CharacterCurrent.AbilityBurst);
+                //if (GenshinKeybindsLoader.AbilitySkill.JustPressed) CharacterCurrent.TryUseAbility(CharacterCurrent.AbilitySkill);
+                //if (GenshinKeybindsLoader.AbilityBurst.JustPressed) CharacterCurrent.TryUseAbility(CharacterCurrent.AbilityBurst);
                 if (GenshinKeybindsLoader.Character1.JustPressed) TrySwapCharacter(0);
                 if (GenshinKeybindsLoader.Character2.JustPressed) TrySwapCharacter(1);
                 if (GenshinKeybindsLoader.Character3.JustPressed) TrySwapCharacter(2);
                 if (GenshinKeybindsLoader.Character4.JustPressed) TrySwapCharacter(3);
                 if (GenshinKeybindsLoader.Character5.JustPressed) TrySwapCharacter(4);
+
+
+                if (GenshinKeybindsLoader.AbilitySkill.JustReleased)
+                {
+                    KeySkillRelease = true;
+                    KeySkill = false;
+                }
+
+                if (GenshinKeybindsLoader.AbilitySkill.Current)
+                {
+                    KeySkill = true;
+                    if (GenshinKeybindsLoader.AbilitySkill.Old) KeySkillRelease = false;
+                }
+
+                if (GenshinKeybindsLoader.AbilityBurst.JustReleased)
+                {
+                    KeyBurstRelease = true;
+                    KeyBurst = false;
+                }
+
+                if (GenshinKeybindsLoader.AbilityBurst.Current)
+                {
+                    KeyBurst = true;
+                    if (GenshinKeybindsLoader.AbilityBurst.Old) KeyBurstRelease = false;
+                }
             }
         }
 
