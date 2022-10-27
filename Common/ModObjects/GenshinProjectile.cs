@@ -41,6 +41,7 @@ namespace GenshinMod.Common.ModObjects
         public GenshinPlayer OwnerGenshinPlayer => Owner.GetModPlayer<GenshinPlayer>();
         public bool FirstFrame => TimeSpent == 1;
         public Texture2D GetTexture() => ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+        public Texture2D GetTexture(String loc) => ModContent.Request<Texture2D>(loc, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public Texture2D GetWeaponTexture() => ModContent.Request<Texture2D>(OwnerGenshinPlayer.CharacterCurrent.Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public static bool CanHomeInto(NPC npc) => npc.active && !npc.dontTakeDamage && !npc.friendly && npc.lifeMax > 5;
         public static int ElementApplicationWeak => 570; // 9.5 sec

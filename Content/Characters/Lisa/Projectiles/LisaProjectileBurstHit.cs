@@ -13,11 +13,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GenshinMod.Content.Characters.Lisa.Projectiles
 {
-    public class LisaProjectileSkillHold : GenshinProjectile
+    public class LisaProjectileBurstHit : GenshinProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Electro Blast");
+			DisplayName.SetDefault("Lamp Zap");
 		}
 
 		public override void SetDefaults()
@@ -30,18 +30,16 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 			Projectile.timeLeft = 2;
 			Projectile.alpha = 255;
 			Projectile.penetrate = 1;
-			IgnoreICD = true;
-			ElementApplication = ElementApplicationMedium;
 		}
 
 		public override void OnSpawn(IEntitySource source)
 		{
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				Vector2 direction = (Vector2.UnitY * Main.rand.NextFloat(5f, 10f)).RotatedByRandom(MathHelper.ToRadians(360));
 				SpawnDust<LisaDustRound>(Projectile.Center, direction, 1f, 1f, 0);
 			}
-			if (Projectile.ai[0] == 1f) ElementalParticles = 5;
+			if (Projectile.ai[0] == 1f) IgnoreICD = true;
 		}
 	}
 }

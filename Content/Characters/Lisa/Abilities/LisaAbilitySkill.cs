@@ -31,6 +31,7 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
             {
                 int type = ModContent.ProjectileType<LisaProjectileSkillHold>();
                 SoundEngine.PlaySound(SoundID.Item60);
+                bool firstHit = true;
                 if (Character is CharacterLisa lisa)
                 {
                     foreach (NPC npc in Main.npc)
@@ -39,7 +40,8 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
                         if (GenshinProjectile.CanHomeInto(npc) && dir.Length() < Range)
                         {
                             dir.Normalize();
-                            SpawnProjectileSpecific(GetSource(), npc.Center, dir, type, GetScalingCharged(lisa.GetNPCStacks(npc)), 5f, Character.Player.whoAmI, Character.Element, AbilityType);
+                            SpawnProjectileSpecific(GetSource(), npc.Center, dir, type, GetScalingCharged(lisa.GetNPCStacks(npc)), 5f, Character.Player.whoAmI, Character.Element, AbilityType, firstHit ? 1f : 0f);
+                            firstHit = false;
                         }
                     }
                 }
@@ -60,7 +62,7 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
 
         public override int GetScaling()
         {
-            return (int)(1.77f * Character.EffectiveAttack * LevelScaling);
+            return (int)(0.8f * Character.EffectiveAttack * LevelScaling);
         }
 
         public int GetScalingCharged(int stacks)

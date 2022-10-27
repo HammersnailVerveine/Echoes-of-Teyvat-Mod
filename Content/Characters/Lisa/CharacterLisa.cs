@@ -28,7 +28,7 @@ namespace GenshinMod.Content.Characters.Lisa
 			AbilityNormal = new LisaAbilityNormal().Initialize(this);
 			AbilityCharged = new LisaAbilityCharged().Initialize(this);
 			AbilitySkill = new LisaAbilitySkill().Initialize(this);
-			AbilityBurst = new LisaAbilityNormal().Initialize(this);
+			AbilityBurst = new LisaAbilityBurst().Initialize(this);
 
 			BaseAttack = 34;
 			BaseDefense = 144;
