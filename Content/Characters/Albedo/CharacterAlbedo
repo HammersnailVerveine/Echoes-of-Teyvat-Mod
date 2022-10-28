@@ -2,14 +2,14 @@
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Characters.Kaeya.Abilities;
 
-namespace GenshinMod.Content.Characters.Kaeya
+namespace GenshinMod.Content.Characters.Albedo
 {
-    public class CharacterKaeya : GenshinCharacter
+    public class CharacterAlbedo : GenshinCharacter
 	{
         public override void SetDefaults()
 		{
-			Name = "Kaeya";
-			Element = GenshinElement.CRYO;
+			Name = "Albedo";
+			Element = GenshinElement.GEO;
 			WeaponType = WeaponType.SWORD;
 			AbilityNormal = new KaeyaAbilityNormal().Initialize(this);
 			AbilityCharged = new KaeyaAbilityCharged().Initialize(this);
@@ -17,9 +17,9 @@ namespace GenshinMod.Content.Characters.Kaeya
 			AbilityBurst = new KaeyaAbilityBurst().Initialize(this);
 			Autoswing = true;
 
-			BaseHealthMax = 11636;
-			BaseAttackMax = 223;
-			BaseDefenseMax = 792;
+			BaseHealthMax = 13226;
+			BaseAttackMax = 251;
+			BaseDefenseMax = 876;
 		}
     }
 }

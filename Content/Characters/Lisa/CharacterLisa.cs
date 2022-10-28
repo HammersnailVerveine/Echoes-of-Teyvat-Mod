@@ -30,9 +30,9 @@ namespace GenshinMod.Content.Characters.Lisa
 			AbilitySkill = new LisaAbilitySkill().Initialize(this);
 			AbilityBurst = new LisaAbilityBurst().Initialize(this);
 
-			BaseAttack = 34;
-			BaseDefense = 144;
-			BaseHealth = 201;
+			BaseAttackMax = 34;
+			BaseDefenseMax = 144;
+			BaseHealthMax = 201;
 
 			TextureSkill = ModContent.Request<Texture2D>("GenshinMod/Content/Characters/Lisa/Projectiles/LisaProjectileSkill", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			SkillNPCTimers = new List<LisaSkillNPCTimer>();

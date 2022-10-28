@@ -20,7 +20,7 @@ namespace GenshinMod.Common.ModObjects
         public List<GenshinCharacter> CharacterTeam; // Current team of 4 characters
         public int TimerMovement = 0; // Used for animations
         public int TimerUse = 0; // Used for animations (swing)
-        public bool IsHolding = false;
+        public bool IsHolding = false; // Used for hold animation
         public int TimerUseRef = 0; // Used for animations
         public int LastUseDirection = 1; // Animation swing direction
         public bool ReverseUseArmDirection = false;
@@ -49,6 +49,7 @@ namespace GenshinMod.Common.ModObjects
             CharacterTeam.Add(new Content.Characters.Barbara.CharacterBarbara().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Kaeya.CharacterKaeya().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Lisa.CharacterLisa().Initialize(this));
+            //CharacterTeam.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(this));
             // TEMP
             CharacterCurrent = CharacterTeam[0];
         }

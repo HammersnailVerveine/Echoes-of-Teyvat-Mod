@@ -38,9 +38,9 @@ namespace GenshinMod.Common.GameObjects
         public string Name;
         public GenshinElement Element;
 
-        public int BaseHealth = 100; // Max health no modifiers
-        public int BaseDefense = 100; // Max defense no modifiers
-        public int BaseAttack = 100; // Max attack no modifiers
+        public int BaseHealthMax = 1000; // Max health no modifiers
+        public int BaseDefenseMax = 1000; // Max defense no modifiers
+        public int BaseAttackMax = 1000; // Max attack no modifiers
         public WeaponType WeaponType; // Character Weapon Type
         public bool Autoswing = false; // NA autoswing
 
@@ -107,6 +107,10 @@ namespace GenshinMod.Common.GameObjects
         public float StatDamageReactionCrystallize = 0f; // Bonus Crystallize Reaction Shield Value (base = 0%)
 
         public List<ICDTracker> ICDTrackers;
+
+        public float BaseHealth => (BaseHealthMax / 10f) * Level;
+        public float BaseDefense => (BaseDefense / 10f) * Level;
+        public float BaseAttack => (BaseAttack / 10f) * Level;
 
         public int EffectiveHealth => (int)(BaseHealth * (1f + StatHealth)) + StatHealthFlat;
         public float EffectiveDefense => (float)(((float)BaseDefense * (1f + StatDefense)) + StatDefenseFlat);

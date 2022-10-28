@@ -16,9 +16,9 @@ namespace GenshinMod.Content.Characters.Klee
 			AbilitySkill = new KleeAbilitySkill().Initialize(this);
 			AbilityBurst = new KleeAbilityBurst().Initialize(this);
 
-			BaseAttack = 63;
-			BaseDefense = 124;
-			BaseHealth = 207;
+			BaseHealthMax = 10287;
+			BaseAttackMax = 311;
+			BaseDefenseMax = 615;
 		}
     }
 }

@@ -21,9 +21,9 @@ namespace GenshinMod.Content.Characters.Barbara
 			AbilitySkill = new BarbaraAbilitySkill().Initialize(this);
 			AbilityBurst = new BarbaraAbilityBurst().Initialize(this);
 
-			BaseAttack = 34;
-			BaseDefense = 144;
-			BaseHealth = 201;
+			BaseHealthMax = 9787;
+			BaseAttackMax = 159;
+			BaseDefenseMax = 669;
 
 			TryEquipWeapon(Common.ModObjects.Weapons.GenshinWeapon.GetWeapon(Terraria.ModLoader.ModContent.ItemType<Weapons.Catalyst.CatalystThrillingTales>()));
 		}
