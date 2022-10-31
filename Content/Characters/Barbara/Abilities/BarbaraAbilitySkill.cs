@@ -35,12 +35,12 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
 
         public override int GetScaling2() // NA Hit (CA = 4NA)
         {
-            return (int)(0.006f * Character.EffectiveHealth * LevelScaling + 6 * LevelScaling);
+            return (int)(0.0075f * Character.EffectiveHealth * LevelScaling + 72 * LevelScaling);
         }
 
         public override int GetScaling3() // Continuous Regeneration
         {
-            return (int)(0.03f * Character.EffectiveHealth * LevelScaling + 30 * LevelScaling);
+            return (int)(0.04f * Character.EffectiveHealth * LevelScaling + 385 * LevelScaling);
         }
     }
 }

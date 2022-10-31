@@ -1,5 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Content.Abilities;
 using GenshinMod.Content.Characters.Kaeya.Abilities;
 
 namespace GenshinMod.Content.Characters.Kaeya
@@ -11,8 +12,8 @@ namespace GenshinMod.Content.Characters.Kaeya
 			Name = "Kaeya";
 			Element = GenshinElement.CRYO;
 			WeaponType = WeaponType.SWORD;
-			AbilityNormal = new KaeyaAbilityNormal().Initialize(this);
-			AbilityCharged = new KaeyaAbilityCharged().Initialize(this);
+			AbilityNormal = new AbilitySwordNormal().Initialize(this);
+			AbilityCharged = new AbilitySwordCharged().Initialize(this);
 			AbilitySkill = new KaeyaAbilitySkill().Initialize(this);
 			AbilityBurst = new KaeyaAbilityBurst().Initialize(this);
 			Autoswing = true;

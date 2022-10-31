@@ -102,6 +102,11 @@ namespace GenshinMod.Common.ModObjects
 
         // UTILITY
 
+        public static int SpawnProjectile(GenshinProjectile projectile, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)
+        {
+            return projectile.SpawnProjectile(position, velocity, type, damage, knockback, element, damageType, ai0, ai1);
+        }
+
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage, float knockback, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)
         {
             int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), position, velocity, type, damage, knockback, Projectile.owner, ai0, ai1);

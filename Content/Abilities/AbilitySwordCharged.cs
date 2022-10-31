@@ -8,9 +8,9 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace GenshinMod.Content.Characters.Kaeya.Abilities
+namespace GenshinMod.Content.Abilities
 {
-    public abstract class AbilitySwordCharged : GenshinAbility
+    public class AbilitySwordCharged : GenshinAbility
     {
         public override void SetDefaults()
         {
