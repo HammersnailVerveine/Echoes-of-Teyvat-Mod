@@ -25,17 +25,18 @@ namespace GenshinMod.Common.GlobalObjets
                 foreach (GenshinCharacter character in genshinProjectile.OwnerGenshinPlayer.CharacterTeam)
                 {
                     if (character is Content.Characters.Albedo.CharacterAlbedo albedo)
-                    {
-                        if (albedo.skillActive && albedo.skillCooldown <= 0)
-                        {
+                    { 
+                        if (albedo.skillActive && albedo.skillCooldown <= 0 && projectile.type != ModContent.ProjectileType<Content.Characters.Albedo.Projectiles.AlbedoProjectileSkillMain>() 
+                            && projectile.type != ModContent.ProjectileType<Content.Characters.Albedo.Projectiles.AlbedoProjectileBlast>())
+                        { // Albedo E
                             foreach (Projectile proj in Main.projectile)
                             {
                                 if (proj.active && proj.owner == genshinProjectile.Owner.whoAmI && proj.ModProjectile is Content.Characters.Albedo.Projectiles.AlbedoProjectileSkillMain albedoFlower)
                                 {
                                     if (Vector2.Distance(proj.Center, npc.Center) < Content.Characters.Albedo.Projectiles.AlbedoProjectileSkillMain.Range)
                                     {
-                                        albedoFlower.SpawnProjectile(npc.Center, Vector2.Zero, ModContent.ProjectileType<Content.Characters.Lisa.Projectiles.LisaProjectileBurstHit>(), albedo.AbilitySkill.GetScaling2(), 0f);
-                                        albedo.skillCooldown = 60;
+                                        albedoFlower.SpawnProjectile(npc.Center, Vector2.Zero, ModContent.ProjectileType<Content.Characters.Albedo.Projectiles.AlbedoProjectileBlast>(), albedo.AbilitySkill.GetScaling2(), 0f);
+                                        albedo.skillCooldown = 120;
                                     }
                                     break;
                                 }

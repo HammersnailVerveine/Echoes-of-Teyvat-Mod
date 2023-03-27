@@ -91,8 +91,8 @@ namespace GenshinMod.Common.GlobalObjets
 
         public override void ResetEffects(NPC npc)
         {
-            TimerElementGeo--;
-            TimerElementAnemo--;
+            TimerElementGeo -= 60;
+            TimerElementAnemo -= 60;
             TimerElementCryo--;
             TimerElementElectro--;
             TimerElementDendro--;
@@ -550,6 +550,50 @@ namespace GenshinMod.Common.GlobalObjets
                         ReactionElectrochargedDamage = (int)(1.2f * genshinCharacter.ReactionTransformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), "Electro-Charged");
                         reacted = true;
+                    }
+                }
+
+                if (element == GenshinElement.GEO)
+                {
+                    int type = ModContent.ProjectileType<Content.Projectiles.ProjectileCrystallize>();
+                    GenshinElement crystallizeElement = GenshinElement.NONE;
+
+                    if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Pyro Crystallize
+                    {
+                        crystallizeElement = GenshinElement.PYRO;
+                        TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Cryo Crystallize
+                    {
+                        crystallizeElement = GenshinElement.CRYO;
+                        TimerElementCryo -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Electro Crystallize
+                    {
+                        crystallizeElement = GenshinElement.ELECTRO;
+                        TimerElementElectro -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Hydro Crystallize
+                    {
+                        crystallizeElement = GenshinElement.HYDRO;
+                        TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+
+                    if (crystallizeElement != GenshinElement.NONE)
+                    {
+                        CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.CRYSTALLIZE), "Crystallize");
+
+                        Vector2 velocity = genshinProjectile.Owner.Center - npc.Center;
+                        velocity.Normalize();
+                        velocity *= Main.rand.NextFloat(4) + 5f;
+                        velocity.Y = - Main.rand.NextFloat(2) - 2f;
+
+                        Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, velocity, type, 0, 0f, Main.myPlayer, (float)crystallizeElement);
+                        application = 0;
                     }
                 }
                 InflictElement(element, application);

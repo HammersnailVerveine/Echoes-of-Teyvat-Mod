@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 {
     public class BarbaraProjectileCharged : GenshinProjectile
 	{
-		public static Texture2D texture;
+		public static Texture2D TextureSelf;
 
 		public override void SetStaticDefaults()
 		{
@@ -39,7 +39,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
         public override void OnSpawn(IEntitySource source)
 		{
-			texture ??= ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+			TextureSelf ??= ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			Projectile.rotation = Main.rand.NextFloat(-(float)Math.PI / 4f, (float)Math.PI / 4f);
 			Projectile.spriteDirection = Main.rand.NextBool() ? 1 : -1;
 			Projectile.scale = 0.8f;
@@ -115,13 +115,13 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 				Color color = Color.White * (1.65f - (Projectile.scale > 0.55f ? 1.65f : Projectile.scale * 3f)) * mult;
 				Color color2 = Color.White * (1.445f - (Projectile.scale > 0.85f ? 1.445f : Projectile.scale * 1.7f)) * mult;
 				Color color3 = Color.White * (1.3f - (Projectile.scale > 1.4f ? 1.3f : Projectile.scale)) * mult;
-				Rectangle rectangle = new Rectangle(0, 0, texture.Width, texture.Height / 3);
-				spriteBatch.Draw(texture, drawPosition, rectangle, color , Projectile.rotation - ((float)Math.PI / 6f) * Projectile.spriteDirection, rectangle.Size() * 0.5f, Projectile.scale * 4f, SpriteEffects.None, 0f);
-				spriteBatch.Draw(texture, drawPosition, rectangle, color , Projectile.rotation - ((float)Math.PI / 6f) * Projectile.spriteDirection, rectangle.Size() * 0.5f, Projectile.scale * 3.5f, SpriteEffects.None, 0f);
-				rectangle.Y += texture.Height / 3;
-				spriteBatch.Draw(texture, drawPosition, rectangle, color2 , Projectile.rotation * Projectile.spriteDirection, rectangle.Size() * 0.5f, Projectile.scale * 2.25f, SpriteEffects.None, 0f);
-				rectangle.Y += texture.Height / 3;
-				spriteBatch.Draw(texture, drawPosition, rectangle, color3, Projectile.rotation + ((float)Math.PI / 6f) * Projectile.spriteDirection, rectangle.Size() * 0.5f, Projectile.scale * 1f, SpriteEffects.None, 0f);
+				Rectangle rectangle = new Rectangle(0, 0, TextureSelf.Width, TextureSelf.Height / 3);
+				spriteBatch.Draw(TextureSelf, drawPosition, rectangle, color , Projectile.rotation - ((float)Math.PI / 6f) * Projectile.spriteDirection, rectangle.Size() * 0.5f, Projectile.scale * 4f, SpriteEffects.None, 0f);
+				spriteBatch.Draw(TextureSelf, drawPosition, rectangle, color , Projectile.rotation - ((float)Math.PI / 6f) * Projectile.spriteDirection, rectangle.Size() * 0.5f, Projectile.scale * 3.5f, SpriteEffects.None, 0f);
+				rectangle.Y += TextureSelf.Height / 3;
+				spriteBatch.Draw(TextureSelf, drawPosition, rectangle, color2 , Projectile.rotation * Projectile.spriteDirection, rectangle.Size() * 0.5f, Projectile.scale * 2.25f, SpriteEffects.None, 0f);
+				rectangle.Y += TextureSelf.Height / 3;
+				spriteBatch.Draw(TextureSelf, drawPosition, rectangle, color3, Projectile.rotation + ((float)Math.PI / 6f) * Projectile.spriteDirection, rectangle.Size() * 0.5f, Projectile.scale * 1f, SpriteEffects.None, 0f);
 			}
 		}
 	}

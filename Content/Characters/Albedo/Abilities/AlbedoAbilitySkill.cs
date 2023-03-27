@@ -16,14 +16,15 @@ namespace GenshinMod.Content.Characters.Albedo.Abilities
         public override void SetDefaults()
         {
             KnockBack = 1f;
-            UseTime = 22;
+            UseTime = 30;
             Velocity = AlmostImmobile;
+            Cooldown = 4 * 60;
             AbilityType = AbilityType.SKILL;
         }
 
         public override void OnUse()
         {
-            SoundEngine.PlaySound(SoundID.SplashWeak);
+            SoundEngine.PlaySound(SoundID.Item69);
             int type = ModContent.ProjectileType<AlbedoProjectileSkillMain>();
 
             Vector2 target = Main.MouseWorld;
@@ -33,7 +34,7 @@ namespace GenshinMod.Content.Characters.Albedo.Abilities
 
             Vector2 position = Player.Center;
 
-            for (int i = 0; i < 15 ; i++)
+            for (int i = 0; i < 10 ; i++)
             {
                 position += offSet;
                 offSet = Collision.TileCollision(position, offSet, 2, 2, true, false, (int)Player.gravDir);

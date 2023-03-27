@@ -19,15 +19,17 @@ namespace GenshinMod.Common.ModObjects
         public bool ProjectileTrail = false; // Will the projectile leave a trail of afterimages ?
         public float ProjectileTrailOffset = 0f; // Offcenters the afterimages a bit. useless without projectileTrail activated. Looks terrible on most projectiles.
         public int ElementalParticles = 0; // Number of particles (value : 1) spawned on first hit
+        public int ElementalParticleChance = 100; // % chance of ElementalParticles spawning on first hit
         public GenshinElement Element = GenshinElement.NONE; // Projectile element
         public AbilityType AbilityType = AbilityType.NONE; // Bonus damage type for multipliers
-        public int ElementApplication = ElementApplicationWeak;
-        public bool IgnoreICD = false;
-        public bool CanReact = true;
-        public bool CanDealDamage = true;
-        public GenshinCharacter OwnerCharacter;
+        public int ElementApplication = ElementApplicationWeak; // Elemental application duration
+        public bool IgnoreICD = false; // Will the projectile always apply its element no matter what?
+        public bool CanReact = true; // Can the projectile trigger elemental reactions?
+        public bool CanDealDamage = true; // Can the projectile deal damage?
+        public bool FirstFrameDamage; // The projectile resets immunity and deals damage on its first frame only
+        public GenshinCharacter OwnerCharacter; // Reference to the owner character
         public bool FirstHit = false; // Has the projectile hit a target yet ?
-        public int TimeSpent = 0;
+        public int TimeSpent = 0; // Time the projectile has spent alive
         public float DefenseIgnore = 0f; // % of enemy defense ignored.
 
         public virtual void SafeAI() { }
@@ -59,6 +61,16 @@ namespace GenshinMod.Common.ModObjects
         public sealed override void AI()
         {
             TimeSpent++;
+            if (FirstFrameDamage)
+            {
+                if (FirstFrame)
+                {
+                    Projectile.friendly = true;
+                    ResetImmunity();
+                }
+                else
+                    Projectile.friendly = false;
+            }
             SafeAI();
         }
 
@@ -77,7 +89,7 @@ namespace GenshinMod.Common.ModObjects
             {
                 FirstHit = true;
 
-                if (ElementalParticles > 0)
+                if (ElementalParticles > 0 && Main.rand.Next(100) < ElementalParticleChance)
                 {
                     SpawnElementalParticle(Element, 1f, ElementalParticles);
                 }
