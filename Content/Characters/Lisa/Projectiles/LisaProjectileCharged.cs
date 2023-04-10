@@ -41,6 +41,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 			Projectile.tileCollide = false;
 			ElementApplication = ElementApplicationMedium;
 			IgnoreICD = true;
+			AttackWeight = AttackWeight.LIGHT;
 		}
 
 		public override void OnSpawn(IEntitySource source)

@@ -31,6 +31,7 @@ namespace GenshinMod.Common.ModObjects
         public bool FirstHit = false; // Has the projectile hit a target yet ?
         public int TimeSpent = 0; // Time the projectile has spent alive
         public float DefenseIgnore = 0f; // % of enemy defense ignored.
+        public AttackWeight AttackWeight = AttackWeight.MEDIUM;
 
         public virtual void SafeAI() { }
         public virtual void SafePostAI() { }

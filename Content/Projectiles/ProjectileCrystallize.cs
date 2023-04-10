@@ -9,6 +9,8 @@ using Terraria.Audio;
 using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework.Graphics;
 using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.GameObjects;
+using GenshinMod.Content.Shields;
 
 namespace GenshinMod.Content.Projectiles
 {
@@ -16,14 +18,11 @@ namespace GenshinMod.Content.Projectiles
 	{
 		public static Texture2D TextureSelf;
 		public Color GlowColor;
-		private bool HitGround = false;
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Crytallize");
 		}
-
-		//public override Color? GetAlpha(Color lightColor) => GlowColor * 0.7f;
 
 		public override void SetDefaults()
 		{
@@ -53,19 +52,31 @@ namespace GenshinMod.Content.Projectiles
 			 // shield = 15 sec
 			 // Only newer 3 crystals remain
 			 // cannot be picked up instantly when it spawns
+			foreach (Player player in Main.player)
+            {
+				if (player.Center.Distance(Projectile.Center) < 32f)
+                {
+					Projectile.Kill();
+					GenshinPlayer genshinPlayer = player.GetModPlayer<GenshinPlayer>();
+					GenshinShield shield = new ShieldCrystallize().Initialize((int)Projectile.ai[1], 900, GetElement());
+					genshinPlayer.AddShield(shield);
+                }
+            }
 		}
+
 		public override void PostDraw(Color lightColor)
 		{
 			SpriteBatch spriteBatch = Main.spriteBatch;
 			float lightFactor = (float)Math.Sin(OwnerGenshinPlayer.Timer * 0.05f) * 0.2f + 0.9f;
+			float lightFactorDisappear = Projectile.timeLeft < 60 ? Projectile.timeLeft / 60f : 1f;
 			float scaleMult = (((float)Math.Sin(TimeSpent * 0.05f)) * 0.1f + 0.8f);
 			float floatOffset = (((float)Math.Sin(TimeSpent * 0.05f)) * 4f + 10f);
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			drawPosition.Y -= floatOffset;
-			spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * lightFactor, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 0.8f * scaleMult, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * 0.4f * lightFactor, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 1.15f * scaleMult, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * 0.2f * lightFactor, Projectile.rotation + TimeSpent * 0.05f, TextureSelf.Size() * 0.5f, Projectile.scale * 1.1f * scaleMult, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * lightFactorDisappear, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * lightFactor * lightFactorDisappear, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 0.8f * scaleMult, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * 0.4f * lightFactor * lightFactorDisappear, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 1.15f * scaleMult, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * 0.2f * lightFactor * lightFactorDisappear, Projectile.rotation + TimeSpent * 0.05f, TextureSelf.Size() * 0.5f, Projectile.scale * 1.1f * scaleMult, SpriteEffects.None, 0f);
 		}
 
         public override bool OnTileCollide(Vector2 oldVelocity)

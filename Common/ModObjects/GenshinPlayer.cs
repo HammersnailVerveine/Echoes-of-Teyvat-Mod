@@ -1,5 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.Loadables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,8 +17,12 @@ namespace GenshinMod.Common.ModObjects
 {
     public class GenshinPlayer : ModPlayer
     {
+        // Fields
+
         public GenshinCharacter CharacterCurrent; // Currently selected character;
-        public List<GenshinCharacter> CharacterTeam; // Current team of 4 characters
+        public List<GenshinCharacter> CharacterTeam; // Current team of characters
+        public List<GenshinShield> Shields;
+
         public int TimerMovement = 0; // Used for animations
         public int TimerUse = 0; // Used for animations (swing)
         public bool IsHolding = false; // Used for hold animation
@@ -41,9 +46,12 @@ namespace GenshinMod.Common.ModObjects
 
         public bool IsUsing() => TimerUse > 0;
 
+        // Overrides
+
         public override void Initialize()
         {
             CharacterTeam = new List<GenshinCharacter>();
+            Shields = new List<GenshinShield>();
             // TEMP
             CharacterTeam.Add(new Content.Characters.Klee.CharacterKlee().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Barbara.CharacterBarbara().Initialize(this));
@@ -64,6 +72,9 @@ namespace GenshinMod.Common.ModObjects
         {
             foreach (GenshinCharacter character in CharacterTeam)
                 character.Update();
+
+            foreach (GenshinShield shield in Shields)
+                shield.Update(this);
         }
 
         public override void PostUpdate()
@@ -97,14 +108,17 @@ namespace GenshinMod.Common.ModObjects
 
         public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
         {
-            CharacterCurrent.Damage(damage, crit);
+            GenshinElement element = npc.GetGlobalNPC<GenshinGlobalNPC>().Element;
+            CharacterCurrent.Damage(damage, element, crit);
             crit = false;
             damage = 1;
         }
 
         public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
         {
-            CharacterCurrent.Damage(damage, crit);
+            GenshinElement element = GenshinElement.NONE;
+            if (proj.ModProjectile is GenshinProjectile genshinProj) element = genshinProj.Element;
+            CharacterCurrent.Damage(damage, element, crit);
             crit = false;
             damage = 1;
         }
@@ -152,14 +166,19 @@ namespace GenshinMod.Common.ModObjects
 
             foreach (GenshinCharacter character in CharacterTeam)
                 character.ResetEffects();
+
+            for (int i = Shields.Count - 1; i >= 0; i--)
+            {
+                Shields[i].ResetEffects();
+                if (Shields[i].Duration < 1 || Shields[i].Health < 1)
+                    Shields.RemoveAt(i);
+            }
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             if (CharacterCurrent != null)
             {
-                //if (GenshinKeybindsLoader.AbilitySkill.JustPressed) CharacterCurrent.TryUseAbility(CharacterCurrent.AbilitySkill);
-                //if (GenshinKeybindsLoader.AbilityBurst.JustPressed) CharacterCurrent.TryUseAbility(CharacterCurrent.AbilityBurst);
                 if (GenshinKeybindsLoader.Character1.JustPressed) TrySwapCharacter(0);
                 if (GenshinKeybindsLoader.Character2.JustPressed) TrySwapCharacter(1);
                 if (GenshinKeybindsLoader.Character3.JustPressed) TrySwapCharacter(2);
@@ -268,7 +287,12 @@ namespace GenshinMod.Common.ModObjects
 
             foreach (GenshinCharacter character in CharacterTeam)
                 character.DrawEffects(spriteBatch, lightColor);
+
+            foreach (GenshinShield shield in Shields)
+                shield.Draw(spriteBatch, lightColor, this);
         }
+
+        // Methods
 
         public void GiveTeamEnergy(GenshinElement element, float value)
         {
@@ -307,6 +331,17 @@ namespace GenshinMod.Common.ModObjects
                 return true;
             }
             return false;
+        }
+
+        public void AddShield(GenshinShield shield)
+        {
+            for (int i = Shields.Count - 1; i >= 0; i--)
+            {
+                if (Shields[i].GetType() == shield.GetType())
+                    Shields.RemoveAt(i);
+            }
+
+            Shields.Add(shield);
         }
     }
 }

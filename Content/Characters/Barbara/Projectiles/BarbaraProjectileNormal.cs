@@ -27,6 +27,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.timeLeft = 40;
 			Projectile.penetrate = -1;
 			Main.projFrames[Projectile.type] = 3;
+			AttackWeight = AttackWeight.LIGHT;
 		}
 
         public override Color? GetAlpha(Color lightColor)

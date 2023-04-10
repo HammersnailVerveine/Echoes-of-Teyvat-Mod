@@ -26,6 +26,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Main.projFrames[Projectile.type] = 9;
 			ElementApplication = ElementApplicationMedium;
 			IgnoreICD = true;
+			AttackWeight = AttackWeight.BLUNT;
 		}
 
         public override Color? GetAlpha(Color lightColor)

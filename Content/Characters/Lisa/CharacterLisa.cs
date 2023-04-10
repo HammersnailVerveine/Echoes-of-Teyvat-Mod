@@ -43,7 +43,7 @@ namespace GenshinMod.Content.Characters.Lisa
 			for (int i = SkillNPCTimers.Count - 1; i >= 0; i--)
 			{
 				SkillNPCTimers[i].Timer--;
-				if (SkillNPCTimers[i].Timer <= 0 || SkillNPCTimers[i].Stacks < 1) SkillNPCTimers.RemoveAt(i);
+				if (SkillNPCTimers[i].Timer <= 0 || SkillNPCTimers[i].Stacks < 1 || !SkillNPCTimers[i].npc.active) SkillNPCTimers.RemoveAt(i);
 			}
 		}
 

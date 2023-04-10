@@ -19,6 +19,7 @@ namespace GenshinMod.Common.GlobalObjets
 
         public bool HalfLifeParticle = false;
         public GenshinElement Element = GenshinElement.NONE;
+        public bool BluntTarget = false; // is the target more susceptible to heavy attacks ?
         public int Level = 1;
 
         public int TimerElementGeo = 0;
@@ -42,14 +43,14 @@ namespace GenshinMod.Common.GlobalObjets
         public int TimerReactionSuperconduct = 0; // superconduct damage ICD
         public int TimerReactionElectrocharged = 0; // electrocharged damage ICD
 
-        public float ResistanceBaseGeo = 0.1f; // 0f = 100% damage taken, 1f = immune
-        public float ResistanceBaseAnemo = 0.1f;
-        public float ResistanceBaseCryo = 0.1f;
-        public float ResistanceBaseElectro = 0.1f;
-        public float ResistanceBaseDendro = 0.1f;
-        public float ResistanceBaseHydro = 0.1f;
-        public float ResistanceBasePyro = 0.1f;
-        public float ResistanceBasePhysical = 0.1f;
+        public float ResistanceGeo = 0.1f; // 0f = 100% damage taken, 1f = immune
+        public float ResistanceAnemo = 0.1f;
+        public float ResistanceCryo = 0.1f;
+        public float ResistanceElectro = 0.1f;
+        public float ResistanceDendro = 0.1f;
+        public float ResistanceHydro = 0.1f;
+        public float ResistancePyro = 0.1f;
+        public float ResistancePhysical = 0.1f;
 
         public float ReductionDefense = 0f; // Add to deal more damage with all attacks
         public float ReductionResistanceGeo = 0f; // Add to deal more damage with X element
@@ -60,6 +61,8 @@ namespace GenshinMod.Common.GlobalObjets
         public float ReductionResistanceHydro = 0f;
         public float ReductionResistancePyro = 0f;
         public float ReductionResistancePhysical = 0f;
+
+        public int ElementSymbolDrawOffset = 0; // used to offset the drawing of the element symbols above specific enemies, may be used for some bosses
 
         public static bool CanBefrozen(NPC npc) => npc.knockBackResist > 0f; //|| npc.type == NPCID.TargetDummy;
         public override bool InstancePerEntity => true;
@@ -78,10 +81,9 @@ namespace GenshinMod.Common.GlobalObjets
         public override void SetDefaults(NPC npc)
         {
             npc.defense = 0;
-            npc.lifeMax = (int)(npc.lifeMax * 1.5f);
             npc.value = 0;
 
-            if (npc.type == NPCID.ArmoredViking) ResistanceBaseCryo = 1f;
+            if (npc.type == NPCID.ArmoredViking) ResistanceCryo = 1f;
         }
 
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
@@ -155,36 +157,36 @@ namespace GenshinMod.Common.GlobalObjets
             switch(element)
             {
                 case GenshinElement.GEO:
-                    if (ResistanceBaseGeo >= 1f) return 0f; 
-                    mult = ResistanceBaseGeo - ReductionResistanceGeo;
+                    if (ResistanceGeo >= 1f) return 0f; 
+                    mult = ResistanceGeo - ReductionResistanceGeo;
                     break;
                 case GenshinElement.ANEMO:
-                    if (ResistanceBaseAnemo >= 1f) return 0f;
-                    mult = ResistanceBaseAnemo - ReductionResistanceAnemo;
+                    if (ResistanceAnemo >= 1f) return 0f;
+                    mult = ResistanceAnemo - ReductionResistanceAnemo;
                     break;
                 case GenshinElement.CRYO:
-                    if (ResistanceBaseCryo >= 1f) return 0f;
-                    mult = ResistanceBaseCryo - ReductionResistanceCryo;
+                    if (ResistanceCryo >= 1f) return 0f;
+                    mult = ResistanceCryo - ReductionResistanceCryo;
                     break;
                 case GenshinElement.DENDRO:
-                    if (ResistanceBaseDendro >= 1f) return 0f;
-                    mult = ResistanceBaseDendro - ReductionResistanceDendro;
+                    if (ResistanceDendro >= 1f) return 0f;
+                    mult = ResistanceDendro - ReductionResistanceDendro;
                     break;
                 case GenshinElement.ELECTRO:
-                    if (ResistanceBaseElectro >= 1f) return 0f;
-                    mult = ResistanceBaseElectro - ReductionResistanceElectro;
+                    if (ResistanceElectro >= 1f) return 0f;
+                    mult = ResistanceElectro - ReductionResistanceElectro;
                     break;
                 case GenshinElement.HYDRO:
-                    if (ResistanceBaseHydro >= 1f) return 0f;
-                    mult = ResistanceBaseHydro - ReductionResistanceHydro;
+                    if (ResistanceHydro >= 1f) return 0f;
+                    mult = ResistanceHydro - ReductionResistanceHydro;
                     break;
                 case GenshinElement.PYRO:
-                    if (ResistanceBasePyro >= 1f) return 0f;
-                    mult = ResistanceBasePyro - ReductionResistancePyro;
+                    if (ResistancePyro >= 1f) return 0f;
+                    mult = ResistancePyro - ReductionResistancePyro;
                     break;
                 default: // Physical
-                    if (ResistanceBasePhysical >= 1f) return 0f;
-                    mult = ResistanceBasePhysical - ReductionResistancePhysical;
+                    if (ResistancePhysical >= 1f) return 0f;
+                    mult = ResistancePhysical - ReductionResistancePhysical;
                     break;
             }
 
@@ -244,7 +246,7 @@ namespace GenshinMod.Common.GlobalObjets
             foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
                 if (element != GenshinElement.NONE) if (AffectedByElement(element)) nbElements++;
             if (AffectedByElement(GenshinElement.HYDRO) && ReactionFrozen) nbElements--;
-            int offSetY = -30;
+            int offSetY = - (30 + ElementSymbolDrawOffset);
             int offSetX = 0;
             setOffset(ref offSetX, ref offSetY, ref nbElements);
 
@@ -284,8 +286,27 @@ namespace GenshinMod.Common.GlobalObjets
                 damage = ApplyResistance(damage, element);
                 damage = ApplyDefense(damage, genshinProjectile.DefenseIgnore, genshinCharacter.Level);
 
+                if (BluntTarget)
+                {
+                    switch (genshinProjectile.AttackWeight)
+                    {
+                        case AttackWeight.LIGHT:
+                            damage = 0;
+                            break;
+                        case AttackWeight.BLUNT:
+                            damage *= 5;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
                 if (damage > 0) CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
-                else if (genshinProjectile.CanDealDamage) CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
+                else if (genshinProjectile.CanDealDamage)
+                {
+                    CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
+                    npc.life++;
+                }
             }
         }
 
@@ -296,6 +317,7 @@ namespace GenshinMod.Common.GlobalObjets
                 int application = genshinProjectile.ElementApplication;
                 float mastery = genshinCharacter.StatElementalMastery;
                 bool reacted = false; // Individual attacks can only cause 1 reaction
+                GenshinElement crystallizeElement = GenshinElement.NONE;
 
                 if (element == GenshinElement.PYRO)
                 {
@@ -357,6 +379,12 @@ namespace GenshinMod.Common.GlobalObjets
                         application = 0;
                         reacted = true;
                     }
+
+                    if (AffectedByElement(GenshinElement.GEO) && !reacted) // Pyro Crystallize
+                    {
+                        crystallizeElement = GenshinElement.PYRO;
+                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                    }
                 }
 
                 if (element == GenshinElement.HYDRO)
@@ -396,6 +424,12 @@ namespace GenshinMod.Common.GlobalObjets
                         ReactionElectrochargedDamage = (int)(1.2f * genshinCharacter.ReactionTransformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), "Electro-Charged");
                         reacted = true;
+                    }
+
+                    if (AffectedByElement(GenshinElement.GEO) && !reacted) // Hydro Crystallize
+                    {
+                        crystallizeElement = GenshinElement.HYDRO;
+                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
                 }
 
@@ -463,6 +497,12 @@ namespace GenshinMod.Common.GlobalObjets
                             CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.FROZEN), "Frozen");
                             reacted = true;
                         }
+                    }
+
+                    if (AffectedByElement(GenshinElement.GEO) && !reacted) // Cryo Crystallize
+                    {
+                        crystallizeElement = GenshinElement.CRYO;
+                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
                 }
 
@@ -551,13 +591,16 @@ namespace GenshinMod.Common.GlobalObjets
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), "Electro-Charged");
                         reacted = true;
                     }
+
+                    if (AffectedByElement(GenshinElement.GEO) && !reacted) // Electro Crystallize
+                    {
+                        crystallizeElement = GenshinElement.ELECTRO;
+                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                    }
                 }
 
                 if (element == GenshinElement.GEO)
                 {
-                    int type = ModContent.ProjectileType<Content.Projectiles.ProjectileCrystallize>();
-                    GenshinElement crystallizeElement = GenshinElement.NONE;
-
                     if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Pyro Crystallize
                     {
                         crystallizeElement = GenshinElement.PYRO;
@@ -582,20 +625,64 @@ namespace GenshinMod.Common.GlobalObjets
                         TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
-
-                    if (crystallizeElement != GenshinElement.NONE)
-                    {
-                        CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.CRYSTALLIZE), "Crystallize");
-
-                        Vector2 velocity = genshinProjectile.Owner.Center - npc.Center;
-                        velocity.Normalize();
-                        velocity *= Main.rand.NextFloat(4) + 5f;
-                        velocity.Y = - Main.rand.NextFloat(2) - 2f;
-
-                        Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, velocity, type, 0, 0f, Main.myPlayer, (float)crystallizeElement);
-                        application = 0;
-                    }
                 }
+
+                if (crystallizeElement != GenshinElement.NONE)
+                {
+                    // Might be improved : sets the timeleft of every crystal except the latest 3 (counting the one that's going to spawn right after) to 2 seconds.
+                    Projectile first = null;
+                    Projectile second = null;
+
+                    foreach (Projectile projectile in Main.projectile)
+                    { 
+                        if (projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize crystal)
+                        {
+                            if (first == null)
+                                first = projectile;
+                            else if (second == null)
+                            {
+                                if (first.timeLeft > projectile.timeLeft)
+                                    second = projectile;
+                                else
+                                {
+                                    second = first;
+                                    first = projectile;
+                                }
+                            }
+                            else if (projectile.timeLeft > second.timeLeft)
+                            {
+                                if (projectile.timeLeft > first.timeLeft)
+                                {
+                                    second = first;
+                                    first = projectile;
+                                }
+                                else
+                                    second = projectile;
+                            }
+                        }
+                    }
+
+                    if (second != null)
+                    {
+                        foreach (Projectile projectile in Main.projectile)
+                        {
+                            if (projectile != first && projectile != second && projectile.timeLeft > 120)
+                                projectile.timeLeft = 120;
+                        }
+                    }
+
+                    int type = ModContent.ProjectileType<Content.Projectiles.ProjectileCrystallize>();
+                    CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.CRYSTALLIZE), "Crystallize");
+
+                    Vector2 velocity = genshinProjectile.Owner.Center - npc.Center;
+                    velocity.Normalize();
+                    velocity *= Main.rand.NextFloat(4) + 5f;
+                    velocity.Y = -Main.rand.NextFloat(2) - 2f;
+                    float shieldValue = 200f * genshinCharacter.Level * (1f + (4.44f * (mastery / (mastery + 1400))));
+                    Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, velocity, type, 0, 0f, Main.myPlayer, (float)crystallizeElement, shieldValue);
+                    application = 0;
+                }
+
                 InflictElement(element, application);
             }
         }

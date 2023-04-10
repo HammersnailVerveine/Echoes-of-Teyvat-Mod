@@ -29,6 +29,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Projectile.timeLeft = 100;
 			Projectile.penetrate = -1;
 			Projectile.alpha = 255;
+			AttackWeight = AttackWeight.LIGHT;
 		}
 
         public override void OnSpawn(IEntitySource source)

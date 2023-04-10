@@ -189,36 +189,39 @@ namespace GenshinMod.Common.GameObjects
                 Weapon.WeaponPostUpdateActive();
                 if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
 
-                if (Main.mouseLeft && !GenshinPlayer.IsUsing()) // Try use NA if LMB used
+                if (!Main.playerInventory) // cannot use abilities with inventory open
                 {
-                    if (AbilityNormal.HoldTimeMax > 0)
-                        TryHoldAbility(AbilityNormal, Main.mouseLeftRelease);
-                    else if (Main.mouseLeftRelease || Autoswing)
-                        TryUseAbility(AbilityNormal);
-                }
+                    if (Main.mouseLeft && !GenshinPlayer.IsUsing()) // Try use NA if LMB used
+                    {
+                        if (AbilityNormal.HoldTimeMax > 0)
+                            TryHoldAbility(AbilityNormal, Main.mouseLeftRelease);
+                        else if (Main.mouseLeftRelease || Autoswing)
+                            TryUseAbility(AbilityNormal);
+                    }
 
-                if (Main.mouseRight && !GenshinPlayer.IsUsing()) // Try use CA if LMB used
-                {
-                    if (AbilityCharged.HoldTimeMax > 0)
-                        TryHoldAbility(AbilityCharged, Main.mouseRightRelease);
-                    else if (Main.mouseRightRelease || Autoswing)
-                        TryUseAbility(AbilityCharged);
-                }
+                    if (Main.mouseRight && !GenshinPlayer.IsUsing()) // Try use CA if LMB used
+                    {
+                        if (AbilityCharged.HoldTimeMax > 0)
+                            TryHoldAbility(AbilityCharged, Main.mouseRightRelease);
+                        else if (Main.mouseRightRelease || Autoswing)
+                            TryUseAbility(AbilityCharged);
+                    }
 
-                if (GenshinPlayer.KeySkill && !GenshinPlayer.IsUsing()) // Try use Skill if Skill key used
-                {
-                    if (AbilitySkill.HoldTimeMax > 0)
-                        TryHoldAbility(AbilitySkill, GenshinPlayer.KeySkillRelease);
-                    else if (GenshinPlayer.KeySkillRelease)
-                        TryUseAbility(AbilitySkill);
-                }
+                    if (GenshinPlayer.KeySkill && !GenshinPlayer.IsUsing()) // Try use Skill if Skill key used
+                    {
+                        if (AbilitySkill.HoldTimeMax > 0)
+                            TryHoldAbility(AbilitySkill, GenshinPlayer.KeySkillRelease);
+                        else if (GenshinPlayer.KeySkillRelease)
+                            TryUseAbility(AbilitySkill);
+                    }
 
-                if (GenshinPlayer.KeyBurst && !GenshinPlayer.IsUsing()) // Try use Burst if Burst key used
-                {
-                    if (AbilityBurst.HoldTimeMax > 0)
-                        TryHoldAbility(AbilityBurst, GenshinPlayer.KeyBurstRelease);
-                    else if (GenshinPlayer.KeyBurstRelease)
-                        TryUseAbility(AbilityBurst);
+                    if (GenshinPlayer.KeyBurst && !GenshinPlayer.IsUsing()) // Try use Burst if Burst key used
+                    {
+                        if (AbilityBurst.HoldTimeMax > 0)
+                            TryHoldAbility(AbilityBurst, GenshinPlayer.KeyBurstRelease);
+                        else if (GenshinPlayer.KeyBurstRelease)
+                            TryUseAbility(AbilityBurst);
+                    }
                 }
             }
 
@@ -400,13 +403,31 @@ namespace GenshinMod.Common.GameObjects
             }
         }
 
-        public void Damage(int value, bool crit = false, bool combatText = true)
+        public void Damage(int value, GenshinElement element, bool crit = false, bool combatText = true)
         {
             if (OnDamage(value))
             {
                 value = ApplyDefense(value);
-                Health -= value;
-                if (Health < 0) Health = 0;
+                if (GenshinPlayer.Shields.Count > 0)
+                {
+                    foreach (GenshinShield shield in GenshinPlayer.Shields)
+                    {
+                        if (shield.Element == GenshinElement.GEO)
+                        {
+                            value = (int)(value * 0.67f);
+                        }
+                        else if (shield.Element == element)
+                        {
+                            value = (int)(value * 0.4f);
+                        }
+                        shield.Health -= value;
+                    }
+                }
+                else
+                {
+                    Health -= value;
+                    if (Health < 0) Health = 0;
+                }
                 if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
             }
         }

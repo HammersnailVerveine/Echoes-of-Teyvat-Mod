@@ -34,6 +34,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 			Projectile.timeLeft = 20;
 			Projectile.alpha = 255;
 			Projectile.penetrate = -1;
+			AttackWeight = AttackWeight.LIGHT;
 		}
 
 		public override void OnSpawn(IEntitySource source)

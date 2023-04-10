@@ -32,6 +32,7 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
 			Projectile.penetrate = -1;
 			ElementalParticles = 1;
 			ElementalParticleChance = 67;
+			AttackWeight = AttackWeight.BLUNT;
 		}
 
 		public override void SafeAI()

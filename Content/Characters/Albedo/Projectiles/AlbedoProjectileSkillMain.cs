@@ -43,6 +43,7 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
 			IgnoreICD = true;
 			FirstFrameDamage = true;
 			ElementalParticles = 1;
+			AttackWeight = AttackWeight.BLUNT;
 		}
 
 		public override void OnSpawn(IEntitySource source)

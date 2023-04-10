@@ -35,6 +35,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			Main.projFrames[Projectile.type] = 3;
 			ElementApplication = ElementApplicationMedium;
 			IgnoreICD = true;
+			AttackWeight = AttackWeight.LIGHT;
 		}
 
         public override void OnSpawn(IEntitySource source)
