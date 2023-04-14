@@ -29,6 +29,11 @@ namespace GenshinMod.Common.Loadables
         {
             AbilitySkill = null;
             AbilityBurst = null;
+            Character1 = null;
+            Character2 = null;
+            Character3 = null;
+            Character4 = null;
+            Character5 = null;
         }
 
     }
