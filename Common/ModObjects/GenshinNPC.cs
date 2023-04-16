@@ -2,6 +2,7 @@
 using GenshinMod.Common.GlobalObjets;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace GenshinMod.Common.ModObjects
@@ -11,10 +12,14 @@ namespace GenshinMod.Common.ModObjects
         public GenshinGlobalNPC GenshinGlobalNPC;
         public Vector2 TargetPosition = Vector2.Zero;
 
+        public bool NoBestiaryEntry = true;
+
         public bool TargetLocalPlayer => NPC.target == Main.myPlayer;
+        public Player PlayerTarget => Main.player[NPC.target];
 
         public int TimeAlive = 0;
         public abstract void SafeSetDefaults();
+        public abstract void SafeSetStaticDefaults();
         public virtual void SafeAI() { }
         public virtual void OnFirstFrame() { }
 
@@ -24,6 +29,19 @@ namespace GenshinMod.Common.ModObjects
             GenshinGlobalNPC globalNPC = NPC.GetGlobalNPC<GenshinGlobalNPC>();
             GenshinGlobalNPC = globalNPC;
             SafeSetDefaults();
+        }
+
+        public sealed override void SetStaticDefaults()
+        {
+            SafeSetStaticDefaults();
+            if (NoBestiaryEntry)
+            {
+                NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers(0)
+                {
+                    Hide = true
+                };
+                NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+            }
         }
 
         public sealed override void AI()

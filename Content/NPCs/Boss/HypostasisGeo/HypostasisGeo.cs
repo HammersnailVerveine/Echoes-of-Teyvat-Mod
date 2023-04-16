@@ -2,6 +2,7 @@ using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Dusts;
+using GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -59,7 +60,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 		public bool InCombat => StateCombat != 0;
 		public Vector2 SpawnCenter => SpawnPosition + new Vector2(NPC.width / 2f, NPC.height / 2f);
 
-		public override void SetStaticDefaults() {
+		public override void SafeSetStaticDefaults() {
 			DisplayName.SetDefault("Geo Hypostasis");
 		}
 
@@ -118,6 +119,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			Timer++;
 			if (InCombat)
 			{
+				TargetPosition = PlayerTarget.Center;
+
 				if (PillarSelected != null && !PillarSelected.active)
 				{
 					ChangeCombatState(4);
@@ -181,10 +184,10 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							cube.RotationTarget += 0.01f + Main.rand.NextFloat(0.0025f * i);
 							cube.FrontDraw = true;
 
-							if (Timer < 220)
+							if (Timer < 120)
 								cube.PositionTarget = NPC.Center + new Vector2(0f, 90f).RotatedBy(MathHelper.TwoPi / 8f * i);
 
-							if (Timer == 220 + i * 10)
+							if (Timer == 120 + i * 10)
                             {
 								cube.PositionTarget = NPC.Center;
 								cube.ScaleTarget = 0f;
@@ -385,7 +388,16 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							SymbolGlowTarget = 0.7f;
 						}
 
-						if (Timer == 480)
+						if (Timer >= 260 && Timer < 440 && Timer % 15 == 0)
+                        {
+							int type = ModContent.ProjectileType<HypostasisGeoProjectileShoot>();
+							Vector2 velocity = TargetPosition - NPC.Center;
+							velocity.Normalize();
+							velocity *= 12f;
+							Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, velocity, type, NPC.damage, 0f);
+                        }
+
+						if (Timer == 560)
 							ChangeCombatState(3);
 						break;
 					default:

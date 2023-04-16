@@ -26,7 +26,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 		public Color ColorGeo => HypostasisGeo.ColorGeo;
 		public Color ColorBrown => HypostasisGeo.ColorBrown;
 
-		public override void SetStaticDefaults() {
+		public override void SafeSetStaticDefaults() {
 			DisplayName.SetDefault("Geo Hypostasis Pillar");
 		}
 
