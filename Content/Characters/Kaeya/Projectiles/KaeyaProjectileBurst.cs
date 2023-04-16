@@ -108,9 +108,8 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
 			return base.CanHitNPC(target);
 		}
 
-		public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			spriteBatch.Draw(TextureProjectile, drawPosition, null, Color.White * 0.5f, Projectile.rotation, TextureProjectile.Size() * 0.5f, Projectile.scale * 1f, SpriteEffects.None, 0f);
 

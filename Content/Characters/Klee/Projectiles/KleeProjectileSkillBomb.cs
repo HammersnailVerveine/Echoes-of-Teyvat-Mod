@@ -34,6 +34,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 			Projectile.timeLeft = 900; // 15 sec
 			Main.projFrames[Projectile.type] = 8;
 			CanReact = false;
+			CanDealDamage = false;
 		}
 
 		public override void OnSpawn(IEntitySource source)

@@ -105,11 +105,10 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			}
 		}
 
-		public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
 			if (TimeSpent > 10)
 			{
-				SpriteBatch spriteBatch = Main.spriteBatch;
 				Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 				float mult = 0.6f;
 				if (TimeSpent < 30) mult *= 0.4f;

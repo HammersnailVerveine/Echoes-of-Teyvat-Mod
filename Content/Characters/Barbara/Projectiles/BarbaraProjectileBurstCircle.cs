@@ -70,9 +70,8 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 				character.Heal(Projectile.damage); // TEMP
 		}
 
-        public override void PostDraw(Color lightColor)
-        {
-			SpriteBatch spriteBatch = Main.spriteBatch;
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
+		{
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			Color color = lightColor * 1.1f * (1 - Projectile.scale / 3);
 			float randomRotation = -Projectile.rotation + 0.3f * Projectile.scale;

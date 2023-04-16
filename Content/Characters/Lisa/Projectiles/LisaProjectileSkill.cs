@@ -64,9 +64,8 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 			if (OwnerCharacter is CharacterLisa lisa) lisa.TryApplyStackLisa(target);
         }
 
-        public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 lastPosition = Owner.Center;
 			Color color = new Color(155, 155, 255);
 			float lightFactor = lightmult * ((float)Math.Sin(TimeSpent * 0.25f) + 1.5f) * 0.25f;

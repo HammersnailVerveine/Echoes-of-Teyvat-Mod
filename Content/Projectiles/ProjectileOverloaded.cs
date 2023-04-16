@@ -52,9 +52,8 @@ namespace GenshinMod.Content.Projectiles
 			if (TimeSpent > 6) alpha -= (1 / 20f) * 2;
 		}
 
-		public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			float rotation = Projectile.rotation + (OwnerGenshinPlayer.LastUseDirection == 1 ? 0f : MathHelper.ToRadians(90f));
 			Rectangle rectangle = TextureProjectile.Bounds;

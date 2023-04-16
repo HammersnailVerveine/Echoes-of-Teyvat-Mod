@@ -31,6 +31,7 @@ namespace GenshinMod.Common.ModObjects
         public bool FirstHit = false; // Has the projectile hit a target yet ?
         public int TimeSpent = 0; // Time the projectile has spent alive
         public float DefenseIgnore = 0f; // % of enemy defense ignored.
+        public bool PostDrawAdditive = false; // Should the SafePostDrawAdditive() methos be called?
         public AttackWeight AttackWeight = AttackWeight.MEDIUM;
 
         public virtual void SafeAI() { }
@@ -39,6 +40,8 @@ namespace GenshinMod.Common.ModObjects
         public virtual void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit) { }
         public virtual void SafeModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
+        public virtual void SafePostDraw(Color lightColor, SpriteBatch spriteBatch) { }
+        public virtual void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch) { }
         public bool IsLocalOwner => Projectile.owner == Main.myPlayer;
         public Player Owner => Main.player[Projectile.owner];
         public GenshinPlayer OwnerGenshinPlayer => Owner.GetModPlayer<GenshinPlayer>();
@@ -102,7 +105,11 @@ namespace GenshinMod.Common.ModObjects
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            if (!CanDealDamage) damage = 0;
+            if (!CanDealDamage)
+            {
+                damage = 0;
+                target.life++;
+            }
             SafeModifyHitNPC(target, ref damage, ref knockback, ref crit, ref hitDirection);
         }
 
@@ -223,6 +230,22 @@ namespace GenshinMod.Common.ModObjects
                 Vector2 drawPos = Projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, Projectile.gfxOffY);
                 Color color = Projectile.GetAlpha(lightColor) * ((Projectile.oldPos.Length - k) / (float)Projectile.oldPos.Length);
                 spriteBatch.Draw(TextureAssets.Projectile[Projectile.type].Value, drawPos, null, color, Projectile.rotation, drawOrigin, Projectile.scale, SpriteEffects.None, 0.3f);
+            }
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            SpriteBatch spriteBatch = Main.spriteBatch;
+            SafePostDraw(lightColor, spriteBatch);
+            if (PostDrawAdditive)
+            {
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null);
+
+                SafePostDrawAdditive(lightColor, spriteBatch);
+
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null);
             }
         }
 

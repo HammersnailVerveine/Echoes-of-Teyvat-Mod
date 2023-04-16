@@ -77,9 +77,8 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			}
 		}
 
-		public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
 			Color color = Color.White * 0.4f * Projectile.scale;
 			spriteBatch.Draw(texture, drawPosition, null, color, Projectile.rotation + (MathHelper.TwoPi / 3), texture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);

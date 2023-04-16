@@ -81,9 +81,8 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 			SpawnDust<BarbaraDustStar>(0.2f, 1f, 0, 4);
         }
 
-        public override void PostDraw(Color lightColor)
-        {
-			SpriteBatch spriteBatch = Main.spriteBatch;
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
+		{
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			Color color = lightColor * 0.9f * (1 - Projectile.scale / 2);
 			float randomRotation = -Projectile.rotation + 0.3f * Projectile.scale;

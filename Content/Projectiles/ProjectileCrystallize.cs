@@ -64,9 +64,8 @@ namespace GenshinMod.Content.Projectiles
             }
 		}
 
-		public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			float lightFactor = (float)Math.Sin(OwnerGenshinPlayer.Timer * 0.05f) * 0.2f + 0.9f;
 			float lightFactorDisappear = Projectile.timeLeft < 60 ? Projectile.timeLeft / 60f : 1f;
 			float scaleMult = (((float)Math.Sin(TimeSpent * 0.05f)) * 0.1f + 0.8f);

@@ -63,9 +63,8 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
 			Projectile.friendly = FirstFrame;
 		}
 
-        public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			int nbDots = 150;
 			float segment = (MathHelper.TwoPi / nbDots);
 			float rotationBonus = 0.005f * OwnerGenshinPlayer.Timer;

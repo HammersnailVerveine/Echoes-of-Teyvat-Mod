@@ -96,9 +96,8 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 			}
 		}
 
-		public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			Color color = new Color(155, 155, 255);
 			float colorMult = (((float)Math.Sin(TimeSpent * 0.2f)) * 0.25f + 0.7f);
 			float scaleMult = (((float)Math.Sin(TimeSpent * 0.1f)) * 0.075f + 1.1f);

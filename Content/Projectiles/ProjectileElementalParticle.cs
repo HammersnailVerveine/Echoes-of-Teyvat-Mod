@@ -72,9 +72,9 @@ namespace GenshinMod.Content.Projectiles
 			Projectile.rotation += 0.2f;
 			Lighting.AddLight(Projectile.Center, 0.3f, 0.3f, 0.3f);
 		}
-		public override void PostDraw(Color lightColor)
+
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			spriteBatch.Draw(texture, drawPosition, null, Color.White * 0.8f, -Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.8f, SpriteEffects.None, 0f);
 			spriteBatch.Draw(texture, drawPosition, null, GlowColor * 0.5f, - Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 1.6f, SpriteEffects.None, 0f);

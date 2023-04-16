@@ -97,9 +97,8 @@ namespace GenshinMod.Content.Projectiles
 			return base.CanHitNPC(target);
         }
 
-        public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			SpriteEffects effect = OwnerGenshinPlayer.LastUseDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 			float rotation = Projectile.rotation + (OwnerGenshinPlayer.LastUseDirection == 1 ? 0f : MathHelper.ToRadians(90f));

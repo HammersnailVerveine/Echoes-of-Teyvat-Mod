@@ -60,9 +60,8 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
 			if (Projectile.ai[0] != 0f) ElementalParticles = 0;
 		}
 
-		public override void PostDraw(Color lightColor)
+		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			SpriteBatch spriteBatch = Main.spriteBatch;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			Color color = GenshinElementUtils.GetColor(GenshinElement.GEO);
 			spriteBatch.Draw(TextureSelf, drawPosition, null, color * (1.5f - Projectile.scale), Projectile.rotation * Projectile.spriteDirection + ((float)Math.PI / 8f), TextureSelf.Size() * 0.5f, Projectile.scale * 0.5f, SpriteEffects.None, 0f);
