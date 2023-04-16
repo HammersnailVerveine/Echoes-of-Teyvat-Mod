@@ -31,6 +31,8 @@ namespace GenshinMod.Common.ModObjects
         public bool ReverseUseArmDirection = false;
         public int Timer = 0; // Increased by 1 every frame
 
+        public int DeadCharacter = 0; // Set to 120 when the active character dies. Another character is selected when it reaches 0.
+
         public int StaminaBase = 100; // Maximum Base stamina
         public int StaminaBonus = 0; // Bonus stamina (max = base + bonus) (140 max)
         public float Stamina = 0; // current stamina
@@ -65,16 +67,26 @@ namespace GenshinMod.Common.ModObjects
         public override void PreUpdate()
         {
             foreach (GenshinCharacter character in CharacterTeam)
+            {
                 character.PreUpdate();
+            }
         }
 
         public override void UpdateEquips()
         {
             foreach (GenshinCharacter character in CharacterTeam)
+            {
                 character.Update();
 
+                // TEMP
+                character.StatEnergyRecharge += 1f;
+            }
+
             foreach (GenshinShield shield in Shields)
+            {
                 shield.Update(this);
+
+            }
         }
 
         public override void PostUpdate()
@@ -132,6 +144,12 @@ namespace GenshinMod.Common.ModObjects
             IsHolding = false;
 
             Timer++;
+
+            if (DeadCharacter > 0)
+            {
+                DeadCharacter--;
+                Player.velocity *= 0f;
+            }
 
             if (Player.velocity.X != 0)
             {

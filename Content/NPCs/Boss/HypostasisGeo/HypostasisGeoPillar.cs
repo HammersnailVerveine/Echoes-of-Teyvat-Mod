@@ -36,7 +36,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			NPC.width = 70;
 			NPC.height = 106;
 			NPC.damage = 0;
-			NPC.lifeMax = 1000;
+			NPC.lifeMax = 1750;
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath2;
 			NPC.knockBackResist = 0f;
@@ -76,7 +76,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 		{
 		}
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        public override bool SafePreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			Vector2 drawPosition = Vector2.Transform((NPC.position + new Vector2(NPC.width * 0.5f, NPC.height * 0.5f + NPC.gfxOffY)) - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
 

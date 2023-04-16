@@ -31,9 +31,11 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 			Projectile.hostile = true;
 			Projectile.tileCollide = true;
 			Projectile.aiStyle = 0;
-            Projectile.timeLeft = 600;
+            Projectile.timeLeft = 180;
 			Projectile.scale = 1f;
 			PostDrawAdditive = true;
+			Projectile.alpha = 255;
+			Element = GenshinElement.GEO;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -68,6 +70,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 		{
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			spriteBatch.Draw(TextureProj, drawPosition, null, ColorGeo, - Projectile.rotation, TextureProj.Size() * 0.5f, Projectile.scale * 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureProj, drawPosition, null, ColorGeo, - Projectile.rotation + MathHelper.Pi / 4f, TextureProj.Size() * 0.5f, Projectile.scale * 1f, SpriteEffects.None, 0f);
 		}
 
         public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)

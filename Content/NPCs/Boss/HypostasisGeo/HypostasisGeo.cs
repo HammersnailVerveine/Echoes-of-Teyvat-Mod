@@ -57,6 +57,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
 		private Vector2 PositionTarget;
 
+		List<int> OwnedProjectileTypes;
+
 		public bool InCombat => StateCombat != 0;
 		public Vector2 SpawnCenter => SpawnPosition + new Vector2(NPC.width / 2f, NPC.height / 2f);
 
@@ -69,8 +71,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			NPC.aiStyle = -1;
 			NPC.width = 40;
 			NPC.height = 40;
-			NPC.damage = 100;
-			NPC.lifeMax = 500;
+			NPC.damage = 200;
+			NPC.lifeMax = 750;
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath2;
 			NPC.knockBackResist = 0f;
@@ -96,6 +98,10 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
 			SpawnPosition = NPC.position;
 			PositionTarget = NPC.position;
+
+			OwnedProjectileTypes = new List<int>();
+			OwnedProjectileTypes.Add(ModContent.ProjectileType<HypostasisGeoProjectileShoot>());
+			OwnedProjectileTypes.Add(ModContent.ProjectileType<HypostasisGeoProjectileTarget>());
 
 			Pillars = new List<NPC>();
 			Cubes = new HypostasisGeoCube[8];
@@ -270,6 +276,10 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							PillarSelected = Pillars[Main.rand.Next(Pillars.Count)];
 							PositionTarget = PillarSelected.Center - new Vector2(NPC.width * 0.5f, 192f);
 						}
+						else if (Pillars.Count == 0)
+						{
+							ChangeCombatState(2);
+						}
 
 						if (Timer == 300)
 						{ // randomly selects an attack
@@ -292,6 +302,12 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							ScaleCoreTarget = 1.2f;
 							ChangeCubeState(5);
 							Exposed = true;
+
+							foreach (Projectile projectile in Main.projectile)
+                            {
+								if (OwnedProjectileTypes.Contains(projectile.type))
+									projectile.Kill();
+                            }
 						}
 
 						if (Timer == 600)
@@ -343,7 +359,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							for (int i = -1; i < RemainingPillars - 1; i ++)
 							{
 								Vector2 pillarPosition = spawnGroundPosition;
-								pillarPosition.X += i * 200f;
+								pillarPosition.X += i * 300f;
 								NPC pillar = Main.npc[NPC.NewNPC(NPC.GetSource_FromAI(), (int)pillarPosition.X, (int)pillarPosition.Y, type)];
 								Pillars.Add(pillar);
 							}
@@ -378,6 +394,20 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							SymbolGlowTarget = 0.7f;
 						}
 
+						if (Timer == 60)
+						{
+							int type = OwnedProjectileTypes[1];
+							foreach (Player player in Main.player)
+                            {
+								if (player.active && player.Distance(NPC.Center) < 3200f)
+                                {
+									Vector2 groundPosition = FindGround(player.Center);
+									groundPosition.Y -= 196;
+									Projectile.NewProjectile(NPC.GetSource_FromAI(), groundPosition, Vector2.Zero, type, (int)(NPC.damage * 2.5f), 0f, 255, player.whoAmI);
+								}
+                            }
+                        }
+
 						if (Timer == 480)
 							ChangeCombatState(3);
 						break;
@@ -390,7 +420,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
 						if (Timer >= 260 && Timer < 440 && Timer % 15 == 0)
                         {
-							int type = ModContent.ProjectileType<HypostasisGeoProjectileShoot>();
+							int type = OwnedProjectileTypes[0];
 							Vector2 velocity = TargetPosition - NPC.Center;
 							velocity.Normalize();
 							velocity *= 12f;
@@ -413,7 +443,29 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			}
 		}
 
+		/*
+        public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+			if (NPC.life - damage < NPC.lifeMax * 0.1f)
+				damage = (int)(damage - NPC.lifeMax * 0.1f) + 1;
+		}
+
         public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+		{
+		}
+
+        public override bool SpecialOnKill()
+		{
+			if (RemainingPillars > 0)
+			{
+				NPC.life = (int)(NPC.lifeMax * 0.1f);
+				return false;
+			}
+			return true;
+		}
+		*/
+
+        public override void HitEffect(int hitDirection, double damage)
 		{
 			if (!InCombat)
 				ChangeCombatState(1);
@@ -425,17 +477,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			}
 		}
 
-        public override bool PreKill()
-        {
-            if (RemainingPillars > 0)
-			{
-				NPC.life = (int)(NPC.lifeMax * 0.1f);
-				return false;
-			}
-			return true;
-		}
-
-        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        public override bool SafePreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			Vector2 drawPosition = Vector2.Transform(NPC.position + new Vector2(NPC.width * 0.5f, NPC.height * 0.5f + NPC.gfxOffY) - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
 			float scaleMult = ((float)Math.Sin(TimeAlive * 0.05f)) * 0.05f + 1.1f;
@@ -489,7 +531,6 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			// Draw Front Cubes
 			foreach (HypostasisGeoCube cube in Cubes)
 				if (cube.FrontDraw) cube.DrawCube(TimeAlive, this, spriteBatch);
-
 
 			return false;
 		}

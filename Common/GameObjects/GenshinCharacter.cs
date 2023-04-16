@@ -391,14 +391,17 @@ namespace GenshinMod.Common.GameObjects
 
         public void Heal(int value, bool combatText = true)
         {
-            if (OnHeal(value))
+            if (IsAlive)
             {
-                if (value > EffectiveHealth - Health) value = EffectiveHealth - Health;
-                if (value > 0)
+                if (OnHeal(value))
                 {
-                    Health += value;
-                    if (Health > EffectiveHealth) Health = EffectiveHealth;
-                    if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(188, 255, 55), value);
+                    if (value > EffectiveHealth - Health) value = EffectiveHealth - Health;
+                    if (value > 0)
+                    {
+                        Health += value;
+                        if (Health > EffectiveHealth) Health = EffectiveHealth;
+                        if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(188, 255, 55), value);
+                    }
                 }
             }
         }

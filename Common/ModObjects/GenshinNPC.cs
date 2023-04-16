@@ -1,6 +1,7 @@
 ﻿using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.GlobalObjets;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -22,6 +23,7 @@ namespace GenshinMod.Common.ModObjects
         public abstract void SafeSetStaticDefaults();
         public virtual void SafeAI() { }
         public virtual void OnFirstFrame() { }
+        public virtual bool SafePreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) => true;
 
         public sealed override void SetDefaults()
         {
@@ -53,6 +55,15 @@ namespace GenshinMod.Common.ModObjects
             }
             SafeAI();
             TimeAlive++;
+        }
+
+        public sealed override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            if (TimeAlive > 0)
+            {
+                return SafePreDraw(spriteBatch, screenPos, drawColor);
+            }
+            return true;
         }
 
         public void SpawnDust<T>(float velocity = 0f, float scale = 1f, int offSet = 10, int quantity = 1, int chanceDenominator = 1) where T : ModDust => SpawnDust(ModContent.DustType<T>(), velocity, scale, offSet, quantity, chanceDenominator);
