@@ -20,6 +20,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 		public static Color ColorBrown;
 
 		private Vector2 position;
+		private int RotationQuarter = 0;
 
 		private Player PlayerTarget => Main.player[(int)Projectile.ai[0]];
 
@@ -39,6 +40,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
             Projectile.timeLeft = 480;
 			Projectile.scale = 1f;
 			Projectile.alpha = 255;
+			Projectile.penetrate = -1;
 			Element = GenshinElement.GEO;
 		}
 
@@ -65,18 +67,26 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 			}
 			else
 			{
-				Projectile.hostile = true;
-				Projectile.velocity.Y += 0.5f;
-				Projectile.tileCollide = true;
+				if (Projectile.tileCollide)
+                {  // Didn't hit the ground yet
+					Projectile.hostile = true;
+					Projectile.velocity.Y += 0.5f;
+					Projectile.tileCollide = true;
+				}
 			}
 
 			if (Projectile.timeLeft > 180)
 			{
 				Projectile.rotation += 0.016f;
+				if (Projectile.rotation > MathHelper.TwoPi / 4f)
+                {
+					RotationQuarter++;
+					Projectile.rotation %= MathHelper.TwoPi / 4f;
+				}
 			} 
 			else
 			{
-				Projectile.rotation += Projectile.rotation % (MathHelper.TwoPi / 4f) / 30f;
+				Projectile.rotation = Projectile.tileCollide ? Projectile.rotation * 0.9f: 0f;
 			}
 
 			for (int length = Projectile.oldPos.Length - 1; length > 0; length--)
@@ -91,9 +101,6 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 
         public override void Kill(int timeLeft)
 		{
-			SpawnDust<HypostasisGeoDust>(Projectile.Center, Projectile.velocity, Main.rand.NextFloat(2.5f) + 2.5f, 1f, 56, 4);
-			SpawnDust<HypostasisGeoDustSmall>(Projectile.Center, Projectile.velocity, Main.rand.NextFloat(2.5f) + 2.5f, 1f, 72, 12);
-			SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
 		}
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
@@ -101,14 +108,27 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			float Glow = 1f - ((float)Math.Sin(TimeSpent * 0.03f) * 0.15f + 0.15f);
 			float scaleMultGlow = ((float)Math.Sin(Projectile.timeLeft * 0.05f)) * 0.025f + 1.05f;
-			float scaleMultSpawn = TimeSpent < 60 ? TimeSpent / 60f : 1f;
+			float scaleMult = TimeSpent < 60 ? TimeSpent / 60f : 1f * (Projectile.timeLeft > 30 ? 1f : (Projectile.timeLeft + 1) / 31f);
+			float rotation = Projectile.rotation + (MathHelper.TwoPi / 4f) * RotationQuarter;
 
-			spriteBatch.Draw(TextureProj, drawPosition, null, ColorGeo * 0.1f * Glow, Projectile.rotation, TextureProj.Size() * 0.5f, Projectile.scale * scaleMultSpawn * 1.3f * scaleMultGlow, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureProj, drawPosition, null, ColorGeo * 0.05f * Glow, - Projectile.rotation, TextureProj.Size() * 0.5f, Projectile.scale * scaleMultSpawn * 1.5f * scaleMultGlow, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureProj, drawPosition, null, ColorBrown, Projectile.rotation, TextureProj.Size() * 0.5f, Projectile.scale * scaleMultSpawn, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureProjGlow, drawPosition, null, ColorGeo * 0.5f * Glow, Projectile.rotation, TextureProjGlow.Size() * 0.5f, Projectile.scale * scaleMultSpawn, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureProjGlow, drawPosition, null, ColorGeo * 0.3f * Glow, Projectile.rotation, TextureProj.Size() * 0.5f, Projectile.scale * scaleMultGlow * scaleMultSpawn, SpriteEffects.None, 0f);
-			spriteBatch.Draw(TextureProjGlow, drawPosition, null, ColorGeo * 0.15f * Glow, Projectile.rotation, TextureProj.Size() * 0.5f, Projectile.scale * scaleMultGlow * scaleMultSpawn * 1.1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureProj, drawPosition, null, ColorGeo * 0.1f * Glow, rotation, TextureProj.Size() * 0.5f, Projectile.scale * scaleMult * 1.3f * scaleMultGlow, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureProj, drawPosition, null, ColorGeo * 0.05f * Glow, - rotation, TextureProj.Size() * 0.5f, Projectile.scale * scaleMult * 1.5f * scaleMultGlow, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureProj, drawPosition, null, ColorBrown, rotation, TextureProj.Size() * 0.5f, Projectile.scale * scaleMult, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureProjGlow, drawPosition, null, ColorGeo * 0.5f * Glow, rotation, TextureProjGlow.Size() * 0.5f, Projectile.scale * scaleMult, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureProjGlow, drawPosition, null, ColorGeo * 0.3f * Glow, rotation, TextureProjGlow.Size() * 0.5f, Projectile.scale * scaleMultGlow * scaleMult, SpriteEffects.None, 0f);
+			spriteBatch.Draw(TextureProjGlow, drawPosition, null, ColorGeo * 0.15f * Glow, rotation, TextureProjGlow.Size() * 0.5f, Projectile.scale * scaleMultGlow * scaleMult * 1.1f, SpriteEffects.None, 0f);
 		}
-	}
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+		{
+			Projectile.velocity *= 0f;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 90;
+			Projectile.hostile = false;
+			SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
+			SpawnDust<HypostasisGeoDust>(Projectile.Center, Projectile.velocity, Main.rand.NextFloat(2.5f) + 2.5f, 1f, 56, 4);
+			SpawnDust<HypostasisGeoDustSmall>(Projectile.Center, Projectile.velocity, Main.rand.NextFloat(2.5f) + 2.5f, 1f, 72, 12);
+			return false;
+        }
+    }
 }

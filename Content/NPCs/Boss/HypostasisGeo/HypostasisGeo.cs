@@ -72,7 +72,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			NPC.width = 40;
 			NPC.height = 40;
 			NPC.damage = 200;
-			NPC.lifeMax = 750;
+			//NPC.lifeMax = 750;
+			NPC.lifeMax = 100;
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath2;
 			NPC.knockBackResist = 0f;
@@ -171,7 +172,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 						for (int i = 0; i < 8; i++)
 						{
 							HypostasisGeoCube cube = Cubes[i];
-							float value = TimeAlive * 0.06f * (1f + Timer * 0.001f) + (MathHelper.TwoPi / 8f) * i;
+							float value = Timer * 0.08f + (MathHelper.TwoPi / 8f) * i;
 							float distmult = 1f + (Timer < 90 ? Timer * 0.1f : 9f);
 							float offset = (float)Math.Sin(value) * 32f * distmult;
 							float cosOffset = (float)Math.Cos(value);
@@ -650,7 +651,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			Rotation += (RotationTarget - Rotation) * 0.05f;
 			GlowMult += (GlowMultTarget - GlowMult) * 0.05f;
 			Scale += (ScaleTarget - Scale) * 0.05f;
-			ShadeIntensity += (ShadeIntensityTarget - ShadeIntensity) * 0.05f;
+			ShadeIntensity += (ShadeIntensityTarget - ShadeIntensity) * 0.15f;
 			Vector2 velocity = PositionTarget - Position;
 			Position += velocity * 0.06f;
 			if (Scale < 0.1f && ScaleTarget < 0.1f) Scale = 0f;

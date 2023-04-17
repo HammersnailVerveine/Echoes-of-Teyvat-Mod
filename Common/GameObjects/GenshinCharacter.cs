@@ -128,6 +128,7 @@ namespace GenshinMod.Common.GameObjects
         public virtual bool OnSwapOut() => true; // Return false to prevent swap out
         public virtual bool OnHeal(int value) => true; // Return false to prevent heal
         public virtual bool OnDamage(int value) => true; // Return false to prevent damage
+        public virtual bool OnDeath() => true; // Return false to prevent death
 
         public GenshinCharacter Initialize(GenshinPlayer modPlayer)
         {
@@ -191,7 +192,7 @@ namespace GenshinMod.Common.GameObjects
 
                 if (!Main.playerInventory) // cannot use abilities with inventory open
                 {
-                    if (Main.mouseLeft && !GenshinPlayer.IsUsing()) // Try use NA if LMB used
+                    if (Main.mouseLeft && !GenshinPlayer.IsUsing) // Try use NA if LMB used
                     {
                         if (AbilityNormal.HoldTimeMax > 0)
                             TryHoldAbility(AbilityNormal, Main.mouseLeftRelease);
@@ -199,7 +200,7 @@ namespace GenshinMod.Common.GameObjects
                             TryUseAbility(AbilityNormal);
                     }
 
-                    if (Main.mouseRight && !GenshinPlayer.IsUsing()) // Try use CA if LMB used
+                    if (Main.mouseRight && !GenshinPlayer.IsUsing) // Try use CA if LMB used
                     {
                         if (AbilityCharged.HoldTimeMax > 0)
                             TryHoldAbility(AbilityCharged, Main.mouseRightRelease);
@@ -207,7 +208,7 @@ namespace GenshinMod.Common.GameObjects
                             TryUseAbility(AbilityCharged);
                     }
 
-                    if (GenshinPlayer.KeySkill && !GenshinPlayer.IsUsing()) // Try use Skill if Skill key used
+                    if (GenshinPlayer.KeySkill && !GenshinPlayer.IsUsing) // Try use Skill if Skill key used
                     {
                         if (AbilitySkill.HoldTimeMax > 0)
                             TryHoldAbility(AbilitySkill, GenshinPlayer.KeySkillRelease);
@@ -215,7 +216,7 @@ namespace GenshinMod.Common.GameObjects
                             TryUseAbility(AbilitySkill);
                     }
 
-                    if (GenshinPlayer.KeyBurst && !GenshinPlayer.IsUsing()) // Try use Burst if Burst key used
+                    if (GenshinPlayer.KeyBurst && !GenshinPlayer.IsUsing) // Try use Burst if Burst key used
                     {
                         if (AbilityBurst.HoldTimeMax > 0)
                             TryHoldAbility(AbilityBurst, GenshinPlayer.KeyBurstRelease);
@@ -406,6 +407,13 @@ namespace GenshinMod.Common.GameObjects
             }
         }
 
+        public void Revive(float maxHealth = 0.1f, int value = 0, bool combatText = false)
+        {
+            Health = (int)(EffectiveHealth * maxHealth) + value;
+            if (Health > EffectiveHealth) Health = EffectiveHealth;
+            CombatText.NewText(Player.Hitbox, new Color(188, 255, 55), value);
+        }
+
         public void Damage(int value, GenshinElement element, bool crit = false, bool combatText = true)
         {
             if (OnDamage(value))
@@ -429,7 +437,32 @@ namespace GenshinMod.Common.GameObjects
                 else
                 {
                     Health -= value;
-                    if (Health < 0) Health = 0;
+                    if (Health <= 0)
+                    { // Death
+                        for (int i = 0; i < 20; i++)
+                        {
+                            Dust dust = Main.dust[Dust.NewDust(Player.position, Player.width, Player.height, DustID.Smoke, 0f, 0f)];
+                            dust.scale *= 1.75f + Main.rand.NextFloat(0.5f);
+                        }
+
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Dust dust = Main.dust[Dust.NewDust(Player.position, Player.width, Player.height, DustID.Smoke, 0f, 0f)];
+                            dust.scale *= 2.5f + Main.rand.NextFloat(0.5f);
+                        }
+
+                        if (OnDeath())
+                        {
+                            GenshinPlayer.OnCharacterDeath();
+                            Health = 0;
+                            RemoveVanityWeapon(300);
+                        }
+                        else
+                        {
+                            if (Health < 1)
+                                Health = 1;
+                        }
+                    }
                 }
                 if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
             }

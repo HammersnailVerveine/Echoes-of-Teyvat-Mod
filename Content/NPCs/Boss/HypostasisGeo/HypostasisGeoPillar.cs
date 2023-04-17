@@ -36,7 +36,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			NPC.width = 70;
 			NPC.height = 106;
 			NPC.damage = 0;
-			NPC.lifeMax = 1750;
+			//NPC.lifeMax = 1750;
+			NPC.lifeMax = 500;
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath2;
 			NPC.knockBackResist = 0f;

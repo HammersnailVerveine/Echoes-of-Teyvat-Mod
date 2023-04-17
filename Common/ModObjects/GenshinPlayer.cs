@@ -31,7 +31,7 @@ namespace GenshinMod.Common.ModObjects
         public bool ReverseUseArmDirection = false;
         public int Timer = 0; // Increased by 1 every frame
 
-        public int DeadCharacter = 0; // Set to 120 when the active character dies. Another character is selected when it reaches 0.
+        public int TimerDeath = 0; // Set to 180 when the active character dies. Another character is selected when it reaches 0.
 
         public int StaminaBase = 100; // Maximum Base stamina
         public int StaminaBonus = 0; // Bonus stamina (max = base + bonus) (140 max)
@@ -46,7 +46,8 @@ namespace GenshinMod.Common.ModObjects
 
         public int StaminaMax => StaminaBase + StaminaBonus;
 
-        public bool IsUsing() => TimerUse > 0;
+        public bool IsUsing => TimerUse > 0;
+        public bool IsDead => TimerDeath > 0;
 
         // Overrides
 
@@ -118,6 +119,18 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
+        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
+        {
+            if (IsDead) return false;
+            return base.CanBeHitByNPC(npc, ref cooldownSlot);
+        }
+
+        public override bool CanBeHitByProjectile(Projectile proj)
+        {
+            if (IsDead) return false;
+            return base.CanBeHitByProjectile(proj);
+        }
+
         public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
         {
             GenshinElement element = npc.GetGlobalNPC<GenshinGlobalNPC>().Element;
@@ -145,10 +158,39 @@ namespace GenshinMod.Common.ModObjects
 
             Timer++;
 
-            if (DeadCharacter > 0)
+            if (IsDead)
             {
-                DeadCharacter--;
+                TimerDeath--;
+                Player.moveSpeed = 0f;
                 Player.velocity *= 0f;
+
+                if (TimerDeath == 0)
+                {
+                    GenshinCharacter characterSwap = null;
+                    foreach (GenshinCharacter character in CharacterTeam)
+                    {
+                        if (character.IsAlive)
+                        {
+                            characterSwap = character;
+                            break;
+                        }
+                    }
+
+                    if (characterSwap != null)
+                    { // At least 1 character is alive, swap to it
+                        CharacterCurrent = characterSwap;
+                        CharacterCurrent.OnSwapInGlobal();
+                        SoundEngine.PlaySound(SoundID.MenuOpen);
+                    }
+                    else
+                    { // All the team is dead
+                        // TEMP
+                        foreach (GenshinCharacter character in CharacterTeam)
+                            character.Revive();
+                        TimerDeath = 1;
+                        // TEMP
+                    }
+                }
             }
 
             if (Player.velocity.X != 0)
@@ -195,7 +237,7 @@ namespace GenshinMod.Common.ModObjects
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (CharacterCurrent != null)
+            if (CharacterCurrent != null && !IsDead)
             {
                 if (GenshinKeybindsLoader.Character1.JustPressed) TrySwapCharacter(0);
                 if (GenshinKeybindsLoader.Character2.JustPressed) TrySwapCharacter(1);
@@ -232,14 +274,14 @@ namespace GenshinMod.Common.ModObjects
 
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
-            if (CharacterCurrent == null) return;
+            if (CharacterCurrent == null || IsDead) return;
             SpriteBatch spriteBatch = Main.spriteBatch;
 
             Vector2 drawPosition = (Player.position + new Vector2(Player.width * 0.5f, Player.gfxOffY + 20 + 530)).Floor();
             drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
             Point coord = new Point((int)(Player.position.X / 16), (int)(Player.position.Y / 16));
             Color lightColor = Lighting.GetColor(coord);
-            SpriteEffects effect = (IsUsing() ? LastUseDirection : Player.direction) == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects effect = (IsUsing ? LastUseDirection : Player.direction) == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             int movementFrame = 0;
             int legFrame = 0;
@@ -257,7 +299,7 @@ namespace GenshinMod.Common.ModObjects
                     }
                     movementFrame += 6;
 
-                    if (IsUsing() && LastUseDirection != Player.direction)
+                    if (IsUsing && LastUseDirection != Player.direction)
                     {
                         legFrame = 19 - movementFrame + 6;
                     }
@@ -323,7 +365,7 @@ namespace GenshinMod.Common.ModObjects
             SoundEngine.PlaySound(SoundID.MenuTick);
             if (CharacterTeam.Count > slot && CharacterCurrent.CanUseAbility && !CharacterCurrent.IsHoldingAbility)
             {
-                if (CharacterCurrent != CharacterTeam[slot])
+                if (CharacterCurrent != CharacterTeam[slot] && CharacterTeam[slot].IsAlive)
                 {
                     if (CharacterCurrent.OnSwapOutGlobal())
                     {
@@ -360,6 +402,11 @@ namespace GenshinMod.Common.ModObjects
             }
 
             Shields.Add(shield);
+        }
+
+        public void OnCharacterDeath()
+        {
+            TimerDeath = 180;
         }
     }
 }
