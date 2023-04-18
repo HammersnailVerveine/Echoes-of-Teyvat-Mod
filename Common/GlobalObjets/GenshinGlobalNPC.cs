@@ -669,7 +669,7 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         foreach (Projectile projectile in Main.projectile)
                         {
-                            if (projectile != first && projectile != second && projectile.timeLeft > 120 && projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize crystal)
+                            if (projectile != first && projectile != second && projectile.timeLeft > 120 && projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize)
                                 projectile.timeLeft = 120;
                         }
                     }

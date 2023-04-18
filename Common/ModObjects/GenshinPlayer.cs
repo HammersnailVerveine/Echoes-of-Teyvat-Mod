@@ -32,6 +32,7 @@ namespace GenshinMod.Common.ModObjects
         public int Timer = 0; // Increased by 1 every frame
 
         public int TimerDeath = 0; // Set to 180 when the active character dies. Another character is selected when it reaches 0.
+        public int TimerInvincibility = 0; // Cannot take damage if > 0
 
         public int StaminaBase = 100; // Maximum Base stamina
         public int StaminaBonus = 0; // Bonus stamina (max = base + bonus) (140 max)
@@ -121,13 +122,13 @@ namespace GenshinMod.Common.ModObjects
 
         public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
         {
-            if (IsDead) return false;
+            if (IsDead || TimerInvincibility > 0) return false;
             return base.CanBeHitByNPC(npc, ref cooldownSlot);
         }
 
         public override bool CanBeHitByProjectile(Projectile proj)
         {
-            if (IsDead) return false;
+            if (IsDead || TimerInvincibility > 0) return false;
             return base.CanBeHitByProjectile(proj);
         }
 
@@ -157,6 +158,7 @@ namespace GenshinMod.Common.ModObjects
             IsHolding = false;
 
             Timer++;
+            TimerInvincibility--;
 
             if (IsDead)
             {
@@ -180,6 +182,7 @@ namespace GenshinMod.Common.ModObjects
                     { // At least 1 character is alive, swap to it
                         CharacterCurrent = characterSwap;
                         CharacterCurrent.OnSwapInGlobal();
+                        TimerInvincibility = 120;
                         SoundEngine.PlaySound(SoundID.MenuOpen);
                     }
                     else

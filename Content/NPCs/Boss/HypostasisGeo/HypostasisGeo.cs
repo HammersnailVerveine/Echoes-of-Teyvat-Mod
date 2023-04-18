@@ -50,6 +50,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 		private int StateCombat = 0;
 		private int StateCubes = 0;
 		private bool StateChanged = false;
+		private int LingeringAttackTimer = 3000;
 
 		public List<NPC> Pillars;
 		public NPC PillarSelected;
@@ -301,13 +302,16 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
 						if (Timer == 300)
 						{ // randomly selects an attack
-							switch (Main.rand.Next(3))
+							if (LingeringAttackTimer > 3000)
+							{
+								ChangeCombatState(9);
+								break;
+							}
+
+							switch (Main.rand.Next(2))
 							{
 								case 1:
 									ChangeCombatState(8);
-									break;
-								case 2:
-									ChangeCombatState(9);
 									break;
 								default:
 									ChangeCombatState(7);
@@ -326,9 +330,9 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
 							foreach (Projectile projectile in Main.projectile)
                             {
-								if (OwnedProjectileTypes.Contains(projectile.type))
+								if (projectile.type == OwnedProjectileTypes[0] || projectile.type == OwnedProjectileTypes[1]) 
 									projectile.Kill();
-                            }
+							}
 						}
 
 						if (Timer == 600)
@@ -356,6 +360,14 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 						if (CheckChange())
 						{
 							ChangeCubeState(5);
+
+							foreach (Projectile projectile in Main.projectile)
+							{
+								if (projectile.type == OwnedProjectileTypes[2])
+									projectile.timeLeft = 45;
+							}
+
+							LingeringAttackTimer = 3000;
 
 							foreach (NPC pillar in Pillars)
 							{
@@ -460,6 +472,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
 						if (Timer == 180)
 						{
+							LingeringAttackTimer = 0;
 							int type = OwnedProjectileTypes[2];
 							foreach (Projectile projectile in Main.projectile)
                             {
@@ -471,7 +484,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							{
 								Vector2 groundPosition = FindGround(new Vector2(SpawnCenter.X - Main.rand.NextFloat(1700) + 850f, NPC.position.Y));
 								groundPosition.Y -= 250f;
-								Projectile.NewProjectile(NPC.GetSource_FromAI(), groundPosition, Vector2.Zero, type, NPC.damage, 0f);
+								Projectile.NewProjectile(NPC.GetSource_FromAI(), groundPosition, Vector2.Zero, type, (int)(NPC.damage * 0.75f), 0f);
 							}
                         }
 
@@ -589,6 +602,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			ScaleCore += (ScaleCoreTarget - ScaleCore) * 0.025f;
 			SymbolGlow += (SymbolGlowTarget - SymbolGlow) * 0.05f;
 			Glow += (GlowTarget - Glow) * 0.05f;
+			LingeringAttackTimer++;
 			foreach (HypostasisGeoCube cube in Cubes)
 				cube.ResetEffects();
 

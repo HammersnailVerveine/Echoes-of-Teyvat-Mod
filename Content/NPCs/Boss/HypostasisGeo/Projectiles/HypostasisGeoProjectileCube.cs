@@ -34,7 +34,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 			Projectile.hostile = true;
 			Projectile.tileCollide = true;
 			Projectile.aiStyle = 0;
-            Projectile.timeLeft = 1800;
+            Projectile.timeLeft = 3000;
 			Projectile.scale = 1f;
 			PostDrawAdditive = true;
 			Projectile.alpha = 255;
