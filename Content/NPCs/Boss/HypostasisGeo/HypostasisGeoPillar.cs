@@ -73,8 +73,17 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			}
 		}
 
-        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
-		{
+        public override bool? CanBeHitByProjectile(Projectile projectile)
+        {
+			if (NPC.ai[1] > 0f) return false;
+            return base.CanBeHitByProjectile(projectile);
+        }
+
+
+        public override bool? CanBeHitByItem(Player player, Item item)
+        {
+			if (NPC.ai[1] > 0f) return false;
+            return base.CanBeHitByItem(player, item);
 		}
 
         public override bool SafePreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
