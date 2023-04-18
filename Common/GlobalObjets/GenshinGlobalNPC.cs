@@ -297,7 +297,7 @@ namespace GenshinMod.Common.GlobalObjets
                             damage = 0;
                             break;
                         case AttackWeight.BLUNT:
-                            damage *= 5;
+                            damage = (int)(damage * 2.5f);
                             break;
                         default:
                             break;
@@ -375,7 +375,7 @@ namespace GenshinMod.Common.GlobalObjets
                     if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Vaporize Weak
                     {
                         float reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.VAPORIZE);
-                        damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionBonus));
+                        damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400))) + reactionBonus));
 
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
                         TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
@@ -395,7 +395,7 @@ namespace GenshinMod.Common.GlobalObjets
                     if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Vaporize Strong
                     {
                         float reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.VAPORIZE);
-                        damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionBonus));
+                        damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400))) + reactionBonus));
 
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
                         TimerElementPyro -= application * 2; // 2x modifier

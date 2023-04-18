@@ -30,7 +30,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
 
         public override int GetScaling() // Healing
         {
-            return (int)(0.015f * Character.EffectiveHealth * LevelScaling + 100 * LevelScaling);
+            return (int)((0.176f * Character.EffectiveHealth + 1694) * Character.EffectiveHealing * LevelScaling);
         }
     }
 }

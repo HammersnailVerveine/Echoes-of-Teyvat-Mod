@@ -86,6 +86,9 @@ namespace GenshinMod.Common.GameObjects
         public float StatDamageCA = 0f; // Bonus CA Damage% (base = 0%)
         public float StatDamageSkill = 0f; // Bonus Skill Damage% (base = 0%)
         public float StatDamageBurst = 0f; // Bonus Burst Damage% (base = 0%)
+        public float StatHealingBonus = 0f; // Bonus Healing Done% (base = 0%)
+        public float StatHealingReceived = 0f; // Bonus Healind Received% (base = 0%)
+        public float StatShieldStrength = 0f; // Bonus Shield Strength% (base = 0%)
 
 
         public float StatDamageReaction = 0f; // Bonus Reaction Damage (base = 0%)
@@ -114,6 +117,7 @@ namespace GenshinMod.Common.GameObjects
         public int EffectiveHealth => (int)(BaseHealth * (1f + StatHealth)) + StatHealthFlat;
         public float EffectiveDefense => (float)(((float)BaseDefense * (1f + StatDefense)) + StatDefenseFlat);
         public float EffectiveAttack => (float)(((float)(BaseAttack + Weapon.EffectiveAttack) * (1f + StatAttack)) + StatAttackFlat);
+        public float EffectiveHealing => (float)(1f + StatHealingBonus);
         public float ReactionTransformativeDamage => 16.05f * Level * 10f;
 
         public bool IsAlive => Health > 0; 
@@ -190,7 +194,7 @@ namespace GenshinMod.Common.GameObjects
                 Weapon.WeaponPostUpdateActive();
                 if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
 
-                if (!Main.playerInventory) // cannot use abilities with inventory open
+                if (!Main.playerInventory && IsAlive) // cannot use abilities with inventory open or while dead
                 {
                     if (Main.mouseLeft && !GenshinPlayer.IsUsing) // Try use NA if LMB used
                     {
@@ -268,6 +272,9 @@ namespace GenshinMod.Common.GameObjects
             StatDamageCA = 0f;
             StatDamageSkill = 0f;
             StatDamageBurst = 0f;
+            StatHealingBonus = 0f;
+            StatHealingReceived = 0f;
+            StatShieldStrength = 0f;
             StatDamageReaction = 0f;
             StatDamageReactionVaporize = 0f;
             StatDamageReactionOverloaded = 0f;
@@ -394,6 +401,7 @@ namespace GenshinMod.Common.GameObjects
         {
             if (IsAlive)
             {
+                value = (int)(value * (1f + StatHealingReceived));
                 if (OnHeal(value))
                 {
                     if (value > EffectiveHealth - Health) value = EffectiveHealth - Health;
@@ -418,23 +426,26 @@ namespace GenshinMod.Common.GameObjects
         {
             if (OnDamage(value))
             {
+                if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
                 value = ApplyDefense(value);
                 if (GenshinPlayer.Shields.Count > 0)
-                {
+                { // Shield damage calculations
+                    int highestRemainingHealth = int.MinValue;
                     foreach (GenshinShield shield in GenshinPlayer.Shields)
                     {
-                        if (shield.Element == GenshinElement.GEO)
-                        {
-                            value = (int)(value * 0.67f);
-                        }
-                        else if (shield.Element == element)
-                        {
-                            value = (int)(value * 0.4f);
-                        }
-                        shield.Health -= value;
+                        int remainingValue = value;
+                        if (shield.Element == GenshinElement.GEO) remainingValue = (int)(remainingValue / 1.5f / (1f + StatShieldStrength));
+                        else if (shield.Element == element) remainingValue = (int)(remainingValue / 2.5f / (1f + StatShieldStrength));
+                        else remainingValue = (int)(remainingValue / (1f + StatShieldStrength));
+
+                        shield.Health -= remainingValue;
+                        if (shield.Health > highestRemainingHealth)
+                            highestRemainingHealth = shield.Health;
                     }
+                    value = -highestRemainingHealth;
                 }
-                else
+
+                if (value > 0) 
                 {
                     Health -= value;
                     if (Health <= 0)
@@ -464,7 +475,6 @@ namespace GenshinMod.Common.GameObjects
                         }
                     }
                 }
-                if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
             }
         }
 

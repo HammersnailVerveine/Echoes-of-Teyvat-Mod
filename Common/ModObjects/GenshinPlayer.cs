@@ -82,6 +82,9 @@ namespace GenshinMod.Common.ModObjects
 
                 // TEMP
                 character.StatEnergyRecharge += 1f;
+                character.StatHealingReceived -= 0.5f;
+                character.StatShieldStrength += 10f;
+                // TEMP
             }
 
             foreach (GenshinShield shield in Shields)

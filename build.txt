@@ -1,5 +1,5 @@
 author = Verveine
-displayName = Genshin Mod
+displayName = Echoes of Teyvat
 hideCode = true
 hideResources = true
 homepage = https://discord.gg/DZKtVwq

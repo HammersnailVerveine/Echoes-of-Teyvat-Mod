@@ -275,6 +275,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 								Vector2 pillarPosition = spawnGroundPosition;
 								pillarPosition.X += i * 224f;
 								NPC pillar = Main.npc[NPC.NewNPC(NPC.GetSource_FromAI(), (int)pillarPosition.X, (int)pillarPosition.Y, type)];
+								pillar.life = (int)(pillar.lifeMax / 3f * RemainingPillars);
 								Pillars.Add(pillar);
 							}
 						}
@@ -454,7 +455,9 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 						if (Timer >= 260 && Timer < 440 && Timer % 15 == 0)
                         {
 							int type = OwnedProjectileTypes[0];
-							Vector2 velocity = TargetPosition - NPC.Center;
+							Vector2 playerPos = FindGround(TargetPosition);
+							playerPos.Y -= 32f;
+							Vector2 velocity = playerPos - NPC.Center;
 							velocity.Normalize();
 							velocity *= 12f;
 							Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, velocity, type, NPC.damage, 0f);
