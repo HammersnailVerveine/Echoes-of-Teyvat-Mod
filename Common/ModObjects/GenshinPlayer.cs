@@ -86,7 +86,7 @@ namespace GenshinMod.Common.ModObjects
             foreach (GenshinShield shield in Shields)
             {
                 shield.Update(this);
-
+                Player.noKnockback = true;
             }
         }
 
