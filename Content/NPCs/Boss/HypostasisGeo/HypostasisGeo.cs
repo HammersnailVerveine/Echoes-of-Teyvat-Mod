@@ -72,10 +72,9 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			NPC.width = 40;
 			NPC.height = 40;
 			NPC.damage = 200;
-			//NPC.lifeMax = 750;
-			NPC.lifeMax = 100;
-			NPC.HitSound = SoundID.NPCHit1;
-			NPC.DeathSound = SoundID.NPCDeath2;
+			NPC.lifeMax = 750;
+			NPC.HitSound = SoundID.NPCHit41;
+			NPC.DeathSound = SoundID.NPCDeath43;
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
 
@@ -103,6 +102,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			OwnedProjectileTypes = new List<int>();
 			OwnedProjectileTypes.Add(ModContent.ProjectileType<HypostasisGeoProjectileShoot>());
 			OwnedProjectileTypes.Add(ModContent.ProjectileType<HypostasisGeoProjectileTarget>());
+			OwnedProjectileTypes.Add(ModContent.ProjectileType<HypostasisGeoProjectileCube>());
 
 			Pillars = new List<NPC>();
 			Cubes = new HypostasisGeoCube[8];
@@ -184,7 +184,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 								cube.ScaleTarget *= 0.95f;
 						}
 						break;
-					case 3: // flat circle around the core, then absorbed by it one by one. intended to use with timer > 160
+					case 3: // flat circle around the core, then absorbed by it one by one.
 						for (int i = 0; i < 8; i++)
 						{
 							HypostasisGeoCube cube = Cubes[i];
@@ -201,7 +201,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                             }
 						}
 						break;
-					case 4: // flat circle around the core, then starts spinning. intended to use with timer > 160
+					case 4: // flat circle around the core, then starts spinning.
 						for (int i = 0; i < 8; i++)
 						{
 							HypostasisGeoCube cube = Cubes[i];
@@ -217,6 +217,23 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							cube.ScaleTarget = 0f;
 							if (Timer > 120)
 								cube.PositionTarget = NPC.Center;
+						}
+						break;
+					case 6: // flat circle around the core, then disappear and reappear.
+						for (int i = 0; i < 8; i++)
+						{
+							HypostasisGeoCube cube = Cubes[i];
+							cube.RotationTarget += 0.01f + Main.rand.NextFloat(0.0025f * i);
+							cube.FrontDraw = true;
+
+							if (Timer < 120)
+								cube.PositionTarget = NPC.Center + new Vector2(0f, 90f).RotatedBy(MathHelper.TwoPi / 8f * i);
+
+							if (Timer == 120)
+								cube.ScaleTarget = 0f;
+
+							if (Timer == 390)
+								cube.ScaleTarget = 1f;
 						}
 						break;
 					default:
@@ -284,13 +301,16 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
 						if (Timer == 300)
 						{ // randomly selects an attack
-							switch (Main.rand.Next(2))
+							switch (Main.rand.Next(3))
 							{
 								case 1:
-									ChangeCombatState(10);
+									ChangeCombatState(8);
+									break;
+								case 2:
+									ChangeCombatState(9);
 									break;
 								default:
-									ChangeCombatState(11);
+									ChangeCombatState(7);
 									break;
 							}
 						}
@@ -388,7 +408,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 								NPC.life = (int)(NPC.lifeMax / 3 * RemainingPillars);
 						}
 						break;
-					case 10: // Spawns delayed explosion where player will be attack
+					case 7: // Spawns delayed explosion where player will be attack
 						if (CheckChange())
                         {
 							ChangeCubeState(4);
@@ -412,7 +432,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 						if (Timer == 480)
 							ChangeCombatState(3);
 						break;
-					case 11: // Circle shoot attack
+					case 8: // Circle shoot attack
 						if (CheckChange())
 						{
 							ChangeCubeState(3);
@@ -426,6 +446,33 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 							velocity.Normalize();
 							velocity *= 12f;
 							Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, velocity, type, NPC.damage, 0f);
+                        }
+
+						if (Timer == 560)
+							ChangeCombatState(3);
+						break;
+					case 9: // Lingering cubes attack
+						if (CheckChange())
+						{
+							ChangeCubeState(6);
+							SymbolGlowTarget = 0.7f;
+						}
+
+						if (Timer == 180)
+						{
+							int type = OwnedProjectileTypes[2];
+							foreach (Projectile projectile in Main.projectile)
+                            {
+								if (projectile.type == type)
+									projectile.timeLeft = 45;
+                            }
+
+							for (int i = 0; i < 10; i ++)
+							{
+								Vector2 groundPosition = FindGround(new Vector2(SpawnCenter.X - Main.rand.NextFloat(1800) + 800f, NPC.position.Y));
+								groundPosition.Y -= 250f;
+								Projectile.NewProjectile(NPC.GetSource_FromAI(), groundPosition, Vector2.Zero, type, NPC.damage, 0f);
+							}
                         }
 
 						if (Timer == 560)

@@ -44,6 +44,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 			TextureProjAdd ??= ModContent.Request<Texture2D>("GenshinMod/Content/NPCs/Boss/HypostasisGeo/Projectiles/HypostasisGeoProjectileShoot_Add", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);
 			ColorGeo = GenshinElementUtils.GetColor(GenshinElement.GEO);
+			SoundEngine.PlaySound(SoundID.DD2_OgreSpit, Projectile.Center);
 		}
 
         public override void SafeAI()
@@ -63,7 +64,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 		{
 			SpawnDust<HypostasisGeoDust>(Projectile.Center, Projectile.velocity, Main.rand.NextFloat(2.5f) + 2.5f, 1f, 16, 1);
 			SpawnDust<HypostasisGeoDustSmall>(Projectile.Center, Projectile.velocity, Main.rand.NextFloat(2.5f) + 2.5f, 1f, 16, 2);
-			SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
+			SoundEngine.PlaySound(SoundID.Item110, Projectile.Center);
 		}
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)

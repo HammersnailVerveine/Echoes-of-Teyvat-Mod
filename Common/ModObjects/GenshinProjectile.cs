@@ -93,7 +93,7 @@ namespace GenshinMod.Common.ModObjects
             {
                 FirstHit = true;
 
-                if (ElementalParticles > 0 && Main.rand.Next(100) < ElementalParticleChance)
+                if (ElementalParticles > 0 && Main.rand.Next(100) < ElementalParticleChance && target.GetGlobalNPC<GenshinGlobalNPC>().GiveEnergyParticlesHit)
                 {
                     SpawnElementalParticle(Element, 1f, ElementalParticles);
                 }

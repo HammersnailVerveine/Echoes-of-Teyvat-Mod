@@ -17,7 +17,6 @@ namespace GenshinMod.Common.GlobalObjets
     {
         public static Texture2D[] ElementTexture;
 
-        public bool HalfLifeParticle = false;
         public GenshinElement Element = GenshinElement.NONE;
         public bool BluntTarget = false; // is the target more susceptible to heavy attacks ?
         public int Level = 1;
@@ -63,6 +62,10 @@ namespace GenshinMod.Common.GlobalObjets
         public float ReductionResistancePhysical = 0f;
 
         public int ElementSymbolDrawOffset = 0; // used to offset the drawing of the element symbols above specific enemies, may be used for some bosses
+        public bool GiveEnergyParticlesLife = false; // should the NPC release particles at half and 0 health
+        public bool GiveEnergyParticlesHit = false; // should the NPC release particles when hit by projectiles
+
+        private bool HalfLifeParticle = false;
 
         public static bool CanBefrozen(NPC npc) => npc.knockBackResist > 0f; //|| npc.type == NPCID.TargetDummy;
         public override bool InstancePerEntity => true;
