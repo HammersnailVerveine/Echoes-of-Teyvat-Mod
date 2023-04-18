@@ -469,7 +469,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
 							for (int i = 0; i < 10; i ++)
 							{
-								Vector2 groundPosition = FindGround(new Vector2(SpawnCenter.X - Main.rand.NextFloat(1800) + 800f, NPC.position.Y));
+								Vector2 groundPosition = FindGround(new Vector2(SpawnCenter.X - Main.rand.NextFloat(1700) + 850f, NPC.position.Y));
 								groundPosition.Y -= 250f;
 								Projectile.NewProjectile(NPC.GetSource_FromAI(), groundPosition, Vector2.Zero, type, NPC.damage, 0f);
 							}

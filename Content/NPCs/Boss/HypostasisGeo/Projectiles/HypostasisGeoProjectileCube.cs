@@ -65,6 +65,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 					Projectile.velocity.Y += 0.5f;
 				else Projectile.velocity.Y *= 0.7f;
 			}
+
+			SpawnDust<HypostasisGeoDustSmall>(0f, 1f, 16, 1, 60);
 		}
 
         public override void Kill(int timeLeft)
@@ -75,6 +77,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 		{
 			Projectile.tileCollide = false;
 			SoundEngine.PlaySound(SoundID.NPCDeath43, Projectile.Center);
+			SpawnDust<HypostasisGeoDust>(Projectile.Center, - Projectile.velocity, Main.rand.NextFloat(2.5f) + 2.5f, 1f, 16, 2);
+			SpawnDust<HypostasisGeoDustSmall>(Projectile.Center, - Projectile.velocity, Main.rand.NextFloat(2.5f) + 2.5f, 1f, 16, 5);
 			return false;
 		}
 

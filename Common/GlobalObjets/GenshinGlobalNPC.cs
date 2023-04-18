@@ -62,8 +62,8 @@ namespace GenshinMod.Common.GlobalObjets
         public float ReductionResistancePhysical = 0f;
 
         public int ElementSymbolDrawOffset = 0; // used to offset the drawing of the element symbols above specific enemies, may be used for some bosses
-        public bool GiveEnergyParticlesLife = false; // should the NPC release particles at half and 0 health
-        public bool GiveEnergyParticlesHit = false; // should the NPC release particles when hit by projectiles
+        public bool GiveEnergyParticlesLife = true; // should the NPC release particles at half and 0 health
+        public bool GiveEnergyParticlesHit = true; // should the NPC release particles when hit by projectiles
 
         private bool HalfLifeParticle = false;
 
@@ -669,7 +669,7 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         foreach (Projectile projectile in Main.projectile)
                         {
-                            if (projectile != first && projectile != second && projectile.timeLeft > 120)
+                            if (projectile != first && projectile != second && projectile.timeLeft > 120 && projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize crystal)
                                 projectile.timeLeft = 120;
                         }
                     }

@@ -78,7 +78,7 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
 					{
 						foreach (Projectile proj in Main.projectile)
 						{
-							if (proj.active && proj.owner == Owner.whoAmI && proj.ModProjectile is AlbedoProjectileSkillMain albedoFlower)
+							if (proj.active && proj.owner == Owner.whoAmI && proj.ModProjectile is AlbedoProjectileSkillMain)
 							{
 								bool hit = false;
 								foreach (NPC npc in Main.npc)
