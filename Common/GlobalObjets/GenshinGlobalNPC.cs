@@ -187,7 +187,7 @@ namespace GenshinMod.Common.GlobalObjets
                     if (ResistancePyro >= 1f) return 0f;
                     mult = ResistancePyro - ReductionResistancePyro;
                     break;
-                default: // Physical
+                default: // Physical or NONE
                     if (ResistancePhysical >= 1f) return 0f;
                     mult = ResistancePhysical - ReductionResistancePhysical;
                     break;
@@ -302,6 +302,24 @@ namespace GenshinMod.Common.GlobalObjets
                         default:
                             break;
                     }
+                }
+
+                if (element != GenshinElement.NONE && genshinProjectile.AttackWeight == AttackWeight.BLUNT && ReactionFrozen)
+                { // Shatter reaction
+                    Player player = genshinCharacter.Player;
+                    ReactionFrozen = false;
+                    TimerElementCryo = 0;
+                    float mastery = genshinCharacter.StatElementalMastery;
+                    float reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.SHATTER);
+                    int reactionDamage = (int)(1.5f * genshinCharacter.ReactionTransformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
+                    int targetDamage = ApplyResistance(reactionDamage, GenshinElement.NONE);
+                    if (targetDamage > 0)
+                    {
+                        player.ApplyDamageToNPC(npc, targetDamage, 15f, -player.direction, false);
+                        CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.SHATTER), targetDamage);
+                    }
+                    else CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
+                    CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.SHATTER), "Shatter");
                 }
 
                 if (damage > 0) CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
