@@ -79,7 +79,6 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             return base.CanBeHitByProjectile(projectile);
         }
 
-
         public override bool? CanBeHitByItem(Player player, Item item)
         {
 			if (NPC.ai[1] > 0f) return false;
