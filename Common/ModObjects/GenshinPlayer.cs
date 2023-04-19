@@ -63,6 +63,7 @@ namespace GenshinMod.Common.ModObjects
             CharacterTeam.Add(new Content.Characters.Lisa.CharacterLisa().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Noelle.CharacterNoelle().Initialize(this));
             //CharacterTeam.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(this));
+            CharacterTeam.Add(new Content.Characters.Jean.CharacterJean().Initialize(this));
             // TEMP
             CharacterCurrent = CharacterTeam[0];
         }
