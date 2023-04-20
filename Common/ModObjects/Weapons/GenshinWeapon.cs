@@ -19,13 +19,13 @@ namespace GenshinMod.Common.ModObjects.Weapons
         public GenshinRarity Rarity;
         public int BaseAttack;
         public float BaseSubstat;
-        public int Level = 1;
-        public int Refinement = 1;
+        public int Level = 1; // Max 5
+        public int Refinement = 1; // Max 5
 
         public GenshinCharacter Character;
 
-        public float EffectiveAttack => BaseAttack * GenshinRarityUtils.GetEffectiveValueMain(Rarity, Level);
-        public float EffectiveSubstat => BaseSubstat * GenshinRarityUtils.GetEffectiveValueSecondary(Rarity, Level);
+        public float EffectiveAttack => BaseAttack / 5f * Level;
+        public float EffectiveSubstat => BaseSubstat / 5f * Level;
         public Player Player => Character.Player;
         public GenshinPlayer genshinPlayer => Character.GenshinPlayer;
         public float RefineValue(float value) => value + (value * (Refinement - 1) * 0.25f);

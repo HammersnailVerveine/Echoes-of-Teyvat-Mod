@@ -9,7 +9,7 @@ namespace GenshinMod.Content.Weapons.Sword
 		{
 			Rarity = GenshinRarity.ONESTAR;
 			SubstatType = StatType.ATTACK;
-			BaseAttack = 27;
+			BaseAttack = 185;
 			BaseSubstat = 0f;
 		}
 

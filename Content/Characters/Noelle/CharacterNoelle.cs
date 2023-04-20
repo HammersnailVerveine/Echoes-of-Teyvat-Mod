@@ -13,8 +13,8 @@ namespace GenshinMod.Content.Characters.Noelle
 			Name = "Noelle";
 			Element = GenshinElement.GEO;
 			WeaponType = WeaponType.CLAYMORE;
-			AbilityNormal = new AbilitySwordNormal().Initialize(this);
-			AbilityCharged = new AbilitySwordCharged().Initialize(this);
+			AbilityNormal = new AbilityClaymoreNormal().Initialize(this);
+			AbilityCharged = new AbilityClaymoreCharged().Initialize(this);
 			AbilitySkill = new AbilitySwordNormal().Initialize(this);
 			AbilityBurst = new AbilitySwordNormal().Initialize(this);
 			Autoswing = true;

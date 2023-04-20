@@ -38,8 +38,5 @@ namespace GenshinMod.Common.GameObjects.Enums
                     return 0.8f;
             }
         }
-
-        public static float GetEffectiveValueMain(GenshinRarity rarity, int level) => GetStatMultiplierMain(rarity) * level;
-        public static float GetEffectiveValueSecondary(GenshinRarity rarity, int level) => GetStatMultiplierSecondary(rarity) * level;
     }
 }

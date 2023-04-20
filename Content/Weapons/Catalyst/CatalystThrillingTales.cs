@@ -15,8 +15,8 @@ namespace GenshinMod.Content.Weapons.Catalyst
 		{
 			Rarity = GenshinRarity.THREESTAR;
 			SubstatType = StatType.HEALTH;
-			BaseAttack = 94;
-			BaseSubstat = 13.5f;
+			BaseAttack = 401;
+			BaseSubstat = 35.19f;
 		}
 
 		public override void SafeSetStaticDefaults()

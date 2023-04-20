@@ -14,12 +14,11 @@ using System.Collections.Generic;
 
 namespace GenshinMod.Content.Projectiles
 {
-    public class ProjectileSwordNormal : GenshinProjectile
+    public class ProjectileClaymoreNormal : GenshinProjectile
 	{
 		public Texture2D WeaponTexture;
 		public GenshinWeapon Weapon;
 		public float acceleration = 0.8f;
-		//public float acceleration = 1f;
 
 		public List<Vector2> OldPosition;
 		public List<float> OldRotation;
@@ -27,7 +26,7 @@ namespace GenshinMod.Content.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sword Slash");
+			DisplayName.SetDefault("Claymore Slash");
 		}
 
 		public override void SetDefaults()
@@ -37,7 +36,7 @@ namespace GenshinMod.Content.Projectiles
 			Projectile.friendly = true;
 			Projectile.tileCollide = false;
 			Projectile.aiStyle = 0;
-            Projectile.timeLeft = 30;
+            Projectile.timeLeft = 45;
 			Projectile.scale = 1f;
             ProjectileTrail = true;
 			Projectile.alpha = 255;
@@ -57,15 +56,15 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafeAI()
 		{
-			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4.5f).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
 			Projectile.position = position;
 
 			Vector2 direction = Projectile.Center - Owner.Center;
 			Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
 
 			Projectile.ai[0] += Projectile.ai[1] * acceleration;
-			if (TimeSpent > 17) acceleration *= 0.7f;
-			if (TimeSpent < 4) acceleration *= 2.35f;
+			if (TimeSpent > 17) acceleration *= 0.775f;
+			if (TimeSpent < 4) acceleration *= 2.3f;
 
 			// Afterimages
 			if (TimeSpent < 30)
@@ -95,7 +94,7 @@ namespace GenshinMod.Content.Projectiles
         {
 			if (HitNPC.Contains(target.whoAmI)) return false;
 			return base.CanHitNPC(target);
-		}
+        }
 
 		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
@@ -105,11 +104,11 @@ namespace GenshinMod.Content.Projectiles
 			float rotation = Projectile.rotation + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
 			spriteBatch.Draw(WeaponTexture, drawPosition, null, lightColor * 1.5f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 
-			for (int i = 0; i < OldPosition.Count; i++)
+			for (int i = 0; i < OldPosition.Count; i ++)
 			{
 				Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 				float rotation2 = OldRotation[i] + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
-				spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+				spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i,  rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 			}
 		}
 	}

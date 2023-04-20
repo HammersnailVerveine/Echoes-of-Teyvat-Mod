@@ -10,12 +10,12 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Abilities
 {
-    public class AbilitySwordNormal : GenshinAbility
+    public class AbilityClaymoreNormal : GenshinAbility
     {
         public override void SetDefaults()
         {
             KnockBack = 1f;
-            UseTime = 30;
+            UseTime = 45;
             Velocity = AlmostImmobile;
             AbilityType = AbilityType.NORMAL;
         }
@@ -28,17 +28,17 @@ namespace GenshinMod.Content.Abilities
             float mult = Main.rand.NextBool() ? 1f : -1f;
             angle -= mult * 100f;
 
-            int type = ModContent.ProjectileType<ProjectileSwordNormal>();
+            int type = ModContent.ProjectileType<ProjectileClaymoreNormal>();
             SpawnProjectile(VelocityToCursor(), type, GenshinElement.NONE, angle, mult);
 
-            SoundEngine.PlaySound(SoundID.Item1);
+            SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing);
             Character.RemoveVanityWeapon();
             if (mult * (direction.X > 0 ? 1 : -1) < 0f) GenshinPlayer.ReverseUseArmDirection = true;
         }
 
         public override int GetScaling()
         {
-            return (int)(0.5f * Character.EffectiveAttack * LevelScaling);
+            return (int)(0.75f * Character.EffectiveAttack * LevelScaling);
         }
     }
 }

@@ -97,20 +97,21 @@ namespace GenshinMod.Content.Projectiles
         {
 			if (HitNPC.Contains(target.whoAmI)) return false;
 			return base.CanHitNPC(target);
-        }
+		}
 
 		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-			SpriteEffects effect = OwnerGenshinPlayer.LastUseDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-			float rotation = Projectile.rotation + (OwnerGenshinPlayer.LastUseDirection == 1 ? 0f : MathHelper.ToRadians(90f));
+			SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+			float rotation = Projectile.rotation + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
 			spriteBatch.Draw(WeaponTexture, drawPosition, null, lightColor * 1.5f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 
-			for (int i = 0; i < OldPosition.Count; i ++)
+			for (int i = 0; i < OldPosition.Count; i++)
 			{
 				Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-				float rotation2 = OldRotation[i] + (OwnerGenshinPlayer.LastUseDirection == 1 ? 0f : MathHelper.ToRadians(90f));
-				spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i,  rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+				float rotation2 = OldRotation[i] + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
+				spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 			}
 		}
 	}
