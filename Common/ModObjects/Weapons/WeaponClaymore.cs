@@ -11,11 +11,11 @@ using GenshinMod.Common.ModObjects.Weapons.Projectiles;
 
 namespace GenshinMod.Common.ModObjects.Weapons
 {
-	public abstract class WeaponCatalyst : GenshinWeapon
+	public abstract class WeaponClaymore : GenshinWeapon
 	{
 		public sealed override void SafeSetDefaultsWeaponType()
 		{
-			WeaponType = WeaponType.CATALYST;
+			WeaponType = WeaponType.CLAYMORE;
 		}
 
 		public sealed override void SpawnVanityWeapon()
@@ -24,7 +24,7 @@ namespace GenshinMod.Common.ModObjects.Weapons
 
 			if (Player.ownedProjectileCounts[anchorType] == 0)
 			{
-				Vector2 position = Player.Center - new Vector2(32f * Player.direction, 16f);
+				Vector2 position = Player.Center - new Vector2(24f * Player.direction, 12f);
 				var index = Projectile.NewProjectile(null, position, Vector2.Zero, anchorType, 0, 0f, Player.whoAmI);
 
 				var proj = Main.projectile[index];

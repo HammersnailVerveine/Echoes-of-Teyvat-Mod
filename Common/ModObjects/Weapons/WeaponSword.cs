@@ -28,8 +28,8 @@ namespace GenshinMod.Common.ModObjects.Weapons
 				var index = Projectile.NewProjectile(null, position, Vector2.Zero, anchorType, 0, 0f, Player.whoAmI);
 
 				var proj = Main.projectile[index];
-				if (!(proj.ModProjectile is WeaponAnchor catalyst)) proj.Kill();
-				else catalyst.OnChangeEquipedItem(this);
+				if (!(proj.ModProjectile is WeaponAnchor anchor)) proj.Kill();
+				else anchor.OnChangeEquipedItem(this);
 			}
 			else
 			{

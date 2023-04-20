@@ -86,12 +86,13 @@ namespace GenshinMod.Common.ModObjects.Weapons
                 case WeaponType.POLEARM:
                     return null;
                 case WeaponType.CLAYMORE:
-                    return null;
+                    return GetWeapon(ModContent.ItemType<Content.Weapons.Claymore.ClaymoreWasterGreatsword>());
                 case WeaponType.SWORD:
                     return GetWeapon(ModContent.ItemType<Content.Weapons.Sword.SwordDullBlade>());
             }
             return null;
         }
+
         public virtual void KillProjectile()
         {
             var anchorType = ModContent.ProjectileType<WeaponAnchor>();

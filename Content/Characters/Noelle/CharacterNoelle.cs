@@ -12,7 +12,7 @@ namespace GenshinMod.Content.Characters.Noelle
 		{
 			Name = "Noelle";
 			Element = GenshinElement.GEO;
-			WeaponType = WeaponType.SWORD;
+			WeaponType = WeaponType.CLAYMORE;
 			AbilityNormal = new AbilitySwordNormal().Initialize(this);
 			AbilityCharged = new AbilitySwordCharged().Initialize(this);
 			AbilitySkill = new AbilitySwordNormal().Initialize(this);
