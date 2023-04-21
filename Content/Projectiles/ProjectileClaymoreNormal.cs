@@ -41,6 +41,7 @@ namespace GenshinMod.Content.Projectiles
             ProjectileTrail = true;
 			Projectile.alpha = 255;
 			Projectile.penetrate = -1;
+			AttackWeight = AttackWeight.BLUNT;
 		}
 
 		public override void OnSpawn(IEntitySource source)

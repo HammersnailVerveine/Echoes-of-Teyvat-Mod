@@ -90,7 +90,7 @@ namespace GenshinMod.Common.ModObjects
 
             foreach (GenshinShield shield in Shields)
             {
-                shield.Update(this);
+                shield.Update();
                 Player.noKnockback = true;
             }
         }
@@ -238,7 +238,10 @@ namespace GenshinMod.Common.ModObjects
             {
                 Shields[i].ResetEffects();
                 if (Shields[i].Duration < 1 || Shields[i].Health < 1)
+                {
+                    Shields[i].OnKillBase(Shields[i].Health < 1);
                     Shields.RemoveAt(i);
+                }
             }
         }
 

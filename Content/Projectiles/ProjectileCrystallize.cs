@@ -58,7 +58,7 @@ namespace GenshinMod.Content.Projectiles
                 {
 					Projectile.Kill();
 					GenshinPlayer genshinPlayer = player.GetModPlayer<GenshinPlayer>();
-					GenshinShield shield = new ShieldCrystallize().Initialize((int)Projectile.ai[1], 900, GetElement());
+					GenshinShield shield = new ShieldCrystallize().Initialize(genshinPlayer, (int)Projectile.ai[1], 900, GetElement());
 					genshinPlayer.AddShield(shield);
                 }
             }

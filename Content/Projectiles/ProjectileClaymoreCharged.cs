@@ -41,6 +41,7 @@ namespace GenshinMod.Content.Projectiles
             ProjectileTrail = true;
 			Projectile.alpha = 255;
 			Projectile.penetrate = -1;
+			AttackWeight = AttackWeight.BLUNT;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -83,7 +84,7 @@ namespace GenshinMod.Content.Projectiles
 				OldRotation.RemoveAt(0);
 			}
 
-			if (TimeSpent % 40 == 0) HitNPC.Clear();
+			if (TimeSpent % 35 == 0) HitNPC.Clear();
 		}
 
         public override void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit)

@@ -16,9 +16,17 @@ namespace GenshinMod.Common.GameObjects
         public int Duration; // Shield remaining duration
 		public int TimeSpent = 0; // Time spent active
         public GenshinElement Element = GenshinElement.NONE; // Shield Element
+        public GenshinPlayer GenshinPlayer;
+        public Player Player => GenshinPlayer.Player;
 
-        public void UpdateBase(GenshinPlayer genshinPlayer) {
-            Update(genshinPlayer);
+        public void UpdateBase() 
+        {
+            Update();
+        }
+
+        public void OnKillBase(bool killByDamage) 
+        {
+            OnKill(killByDamage);
         }
 
         public void ResetEffects()
@@ -27,8 +35,9 @@ namespace GenshinMod.Common.GameObjects
 			TimeSpent++;
         }
 
-        public GenshinShield Initialize(int health, int duration, GenshinElement element = GenshinElement.NONE, int ai = 0) // "ai" is used to communicate more information if needed
+        public GenshinShield Initialize(GenshinPlayer genshinPlayer, int health, int duration, GenshinElement element = GenshinElement.NONE, int ai = 0) // "ai" is used to communicate more information if needed
         {
+            GenshinPlayer = genshinPlayer;
             OnInitialize(ref health, ref duration, ref element, ai);
             Health = health;
             Duration = duration;
@@ -37,7 +46,8 @@ namespace GenshinMod.Common.GameObjects
         }
 
         public virtual void OnInitialize(ref int health, ref int duration, ref GenshinElement element, int value) { }
-        public virtual void Update(GenshinPlayer genshinPlayer) { }
+        public virtual void Update() { }
+        public virtual void OnKill(bool killByDamage) { }
         public virtual void Draw(SpriteBatch spriteBatch, Color lightColor, GenshinPlayer genshinPlayer) { }
 	}
 }

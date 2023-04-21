@@ -1,8 +1,7 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Abilities;
-using Terraria;
-using Terraria.ModLoader;
+using GenshinMod.Content.Characters.Noelle.Abilities;
 
 namespace GenshinMod.Content.Characters.Noelle
 {
@@ -15,7 +14,7 @@ namespace GenshinMod.Content.Characters.Noelle
 			WeaponType = WeaponType.CLAYMORE;
 			AbilityNormal = new AbilityClaymoreNormal().Initialize(this);
 			AbilityCharged = new AbilityClaymoreCharged().Initialize(this);
-			AbilitySkill = new AbilitySwordNormal().Initialize(this);
+			AbilitySkill = new NoelleAbilitySkill().Initialize(this);
 			AbilityBurst = new AbilitySwordNormal().Initialize(this);
 			Autoswing = true;
 
