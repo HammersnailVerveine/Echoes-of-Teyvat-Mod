@@ -24,7 +24,7 @@ namespace GenshinMod.Content.Characters.Noelle.Shields
 			TextureShieldOut ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/Noelle/Shields/ShieldNoelle_Out", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			TextureShieldIn ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/Noelle/Shields/ShieldNoelle_In", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			GlowColor = GenshinElementUtils.GetColor(GenshinElement.GEO);
-			damage = GenshinPlayer.CharacterCurrent.AbilitySkill.GetScaling2();
+			damage = GenshinPlayer.CharacterCurrent.AbilitySkill.GetScaling();
 			Noelle = GenshinPlayer.CharacterCurrent;
 		}
 

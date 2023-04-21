@@ -24,20 +24,20 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
         public override void OnUse()
         {
             int duration = 12 * 60; // 12 seconds
-            GenshinShield shield = new ShieldNoelle().Initialize(GenshinPlayer, GetScaling(), duration, GenshinElement.GEO);
+            GenshinShield shield = new ShieldNoelle().Initialize(GenshinPlayer, GetScaling2(), duration, GenshinElement.GEO);
             GenshinPlayer.AddShield(shield);
             SoundEngine.PlaySound(SoundID.Item69);
             SpawnProjectile(Vector2.Zero, ModContent.ProjectileType<ProjectileNoelleShield>(), 1f);
         }
 
         public override int GetScaling()
-        { // Shield health
-            return (int)((1.6f * Character.EffectiveDefense + 769) * LevelScaling);
+        { // Damage
+            return (int)(1.2f * Character.EffectiveDefense * LevelScaling);
         }
 
         public override int GetScaling2()
-        { // Damage
-            return (int)(1.2f * Character.EffectiveDefense * LevelScaling);
+        { // Shield health
+            return (int)((1.6f * Character.EffectiveDefense + 769) * LevelScaling);
         }
 
         public override int GetScaling3()
