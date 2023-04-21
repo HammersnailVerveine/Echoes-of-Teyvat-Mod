@@ -112,6 +112,8 @@ namespace GenshinMod.Common.GameObjects
         public float StatDamageReactionFrozen = 0f; // Bonus Frozen Duration (base = 0%)
         public float StatDamageReactionCrystallize = 0f; // Bonus Crystallize Reaction Shield Value (base = 0%)
 
+        public float WeaponSize = 1f;
+
         public List<ICDTracker> ICDTrackers;
 
         public float BaseHealth => (BaseHealthMax / 10f) * Level;
@@ -296,6 +298,7 @@ namespace GenshinMod.Common.GameObjects
             StatDamageReactionShatter = 0f;
             StatDamageReactionFrozen = 0f;
             StatDamageReactionCrystallize = 0f;
+            WeaponSize = 1f;
 
             if (TimerWeaponInfusion < 1)
             {

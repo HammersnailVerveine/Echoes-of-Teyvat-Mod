@@ -36,7 +36,6 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 		public override void SafeAI()
 		{
 			Lighting.AddLight(Projectile.Center, 0.2f, 0.2f, 0.1f);
-			Projectile.rotation += 0.115f;
 			Projectile.scale *= 1.1f;
 			if (FirstFrame)
             {
@@ -60,7 +59,6 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 			spriteBatch.Draw(TextureSelf, drawPosition, null, color * (1.2f - Projectile.scale * 0.75f), Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
 			spriteBatch.Draw(TextureSelf, drawPosition, null, color * (1.2f - Projectile.scale * 0.75f) * 0.15f, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 1.2f, SpriteEffects.None, 0f);
 			spriteBatch.Draw(TextureSelf, drawPosition, null, color * (1.2f - Projectile.scale * 0.75f) * 0.5f, Projectile.rotation + ((float)Math.PI / 2f), TextureSelf.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
-			//spriteBatch.Draw(TextureSelf, drawPosition, null, color * (1.2f - Projectile.scale) * 0.15f, Projectile.rotation + ((float)Math.PI / 2f), TextureSelf.Size() * 0.5f, Projectile.scale * 1.2f, SpriteEffects.None, 0f);
 		}
 	}
 }

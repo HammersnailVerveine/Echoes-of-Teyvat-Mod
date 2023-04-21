@@ -12,9 +12,9 @@ using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects.Weapons;
 using System.Collections.Generic;
 
-namespace GenshinMod.Content.Projectiles
+namespace GenshinMod.Content.Characters.Noelle.Projectiles
 {
-    public class ProjectileSwordCharged : GenshinProjectile
+    public class ProjectileNoelleBurst : GenshinProjectile
 	{
 		public Texture2D WeaponTexture;
 		public GenshinWeapon Weapon;
@@ -26,7 +26,7 @@ namespace GenshinMod.Content.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sword Slash");
+			DisplayName.SetDefault("Sweeping Time");
 		}
 
 		public override void SetDefaults()
@@ -42,6 +42,7 @@ namespace GenshinMod.Content.Projectiles
 			Projectile.alpha = 255;
 			Projectile.penetrate = -1;
 			PostDrawAdditive = true;
+			AttackWeight = AttackWeight.BLUNT;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -68,8 +69,6 @@ namespace GenshinMod.Content.Projectiles
 			Projectile.ai[0] += Projectile.ai[1] * acceleration;
 			if (TimeSpent > 42) acceleration *= 0.8f;
 			if (TimeSpent < 6) acceleration *= 1.85f;
-
-			AttackWeight = Element == GenshinElement.GEO ? AttackWeight.BLUNT : AttackWeight.MEDIUM;
 
 			// Afterimages
 			if (TimeSpent < 50)

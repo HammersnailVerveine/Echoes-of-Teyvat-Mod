@@ -47,10 +47,11 @@ namespace GenshinMod.Content.Projectiles
 
 		public override void OnSpawn(IEntitySource source)
 		{
-			Weapon = Owner.GetModPlayer<GenshinPlayer>().CharacterCurrent.Weapon;
+			GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
+			Weapon = ownerPlayer.CharacterCurrent.Weapon;
 			WeaponTexture = ModContent.Request<Texture2D>(Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-			Projectile.width = WeaponTexture.Width;
-			Projectile.height = WeaponTexture.Height;
+			Projectile.width = (int)(WeaponTexture.Width * ownerPlayer.CharacterCurrent.WeaponSize);
+			Projectile.height = (int)(WeaponTexture.Height * ownerPlayer.CharacterCurrent.WeaponSize);
 			OldPosition = new List<Vector2>();
 			OldRotation = new List<float>();
 			HitNPC = new List<int>();
@@ -58,7 +59,8 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafeAI()
 		{
-			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4.5f).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+			Projectile.scale = OwnerCharacter.WeaponSize;
+			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4.5f * OwnerCharacter.WeaponSize).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
 			Projectile.position = position;
 
 			Vector2 direction = Projectile.Center - Owner.Center;

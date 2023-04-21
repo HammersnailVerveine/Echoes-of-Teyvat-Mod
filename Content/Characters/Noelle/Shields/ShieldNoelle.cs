@@ -28,11 +28,6 @@ namespace GenshinMod.Content.Characters.Noelle.Shields
 			Noelle = GenshinPlayer.CharacterCurrent;
 		}
 
-        public override void Update()
-        {
-			Main.NewText(Health);
-        }
-
         public override void OnKill(bool killByDamage)
         {
 			Noelle.AbilitySkill.SpawnProjectileSpecific(Noelle.AbilitySkill.GetSource(), Player.Center, Vector2.Zero, ModContent.ProjectileType<ProjectileNoelleShield>(), damage, 5f, Player.whoAmI, Noelle.Element, Noelle.AbilitySkill.AbilityType);

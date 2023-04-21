@@ -1,3 +1,4 @@
+using GenshinMod.Common.GameObjects.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -41,6 +42,7 @@ namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 		public override void SafeAI()
 		{
 			var owner = Main.player[Projectile.owner];
+			PostDrawAdditive = OwnerGenshinPlayer.CharacterCurrent.WeaponInfusion != GenshinElement.NONE;
 
 			if (!owner.active || owner.dead || Weapon == null)
 			{
@@ -79,15 +81,6 @@ namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 		public override bool? CanCutTiles() => false;
 		public override bool? CanDamage() => null;
 
-		public override bool SafePreDraw(SpriteBatch spriteBatch, Color lightColor)
-		{
-			float lightmult = TimeSpent > 30 ? 1f : 1f * (TimeSpent / 30f);
-			var position = Projectile.Center - Main.screenPosition + Vector2.UnitY * Projectile.gfxOffY;
-			var effect = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-			spriteBatch.Draw(WeaponTexture, position, null, lightColor * lightmult, Projectile.rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
-			return false;
-		}
-
 		public override void SendExtraAI(BinaryWriter writer)
 		{
 			writer.Write(Weapon.Type);
@@ -105,5 +98,23 @@ namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 			}
 			else Projectile.Kill();
 		}
-	}
+
+		public override bool SafePreDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+			float lightmult = TimeSpent > 30 ? 1f : 1f * (TimeSpent / 30f);
+			var position = Projectile.Center - Main.screenPosition + Vector2.UnitY * Projectile.gfxOffY;
+			var effect = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+			spriteBatch.Draw(WeaponTexture, position, null, lightColor * lightmult, Projectile.rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+			return false;
+		}
+
+        public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
+		{
+			var position = Projectile.Center - Main.screenPosition + Vector2.UnitY * Projectile.gfxOffY;
+			var effect = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+			float scaleMult = ((float)Math.Sin(TimeSpent * 0.02f)) * 0.025f + 1.04f;
+			spriteBatch.Draw(WeaponTexture, position, null, GenshinElementUtils.GetColor(OwnerGenshinPlayer.CharacterCurrent.WeaponInfusion) * 0.75f, Projectile.rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.05f * scaleMult, effect, 0f);
+			spriteBatch.Draw(WeaponTexture, position, null, GenshinElementUtils.GetColor(OwnerGenshinPlayer.CharacterCurrent.WeaponInfusion) * 0.5f, Projectile.rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.1f * scaleMult * scaleMult, effect, 0f);
+		}
+    }
 }

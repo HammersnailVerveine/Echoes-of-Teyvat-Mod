@@ -1,6 +1,7 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Characters.Kaeya.Projectiles;
+using GenshinMod.Content.Characters.Noelle.Projectiles;
 using GenshinMod.Content.Characters.Noelle.Shields;
 using Microsoft.Xna.Framework;
 using System;
@@ -26,6 +27,7 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
             GenshinShield shield = new ShieldNoelle().Initialize(GenshinPlayer, GetScaling(), duration, GenshinElement.GEO);
             GenshinPlayer.AddShield(shield);
             SoundEngine.PlaySound(SoundID.Item69);
+            SpawnProjectile(Vector2.Zero, ModContent.ProjectileType<ProjectileNoelleShield>(), 1f);
         }
 
         public override int GetScaling()

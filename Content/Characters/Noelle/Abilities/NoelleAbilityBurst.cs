@@ -1,5 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Content.Characters.Kaeya.Projectiles;
+using GenshinMod.Content.Characters.Noelle.Projectiles;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -14,7 +15,7 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
         public override void SetDefaults()
         {
             KnockBack = 0f;
-            UseTime = 45;
+            UseTime = 70;
             Velocity = Immobile;
             Cooldown = 15 * 60;
             Energy = 60;
@@ -23,17 +24,34 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
 
         public override void OnUse()
         {
-            int type = ModContent.ProjectileType<KaeyaProjectileBurst>();
-            int nbProjectile = 3;
-            for (int i = 0; i < nbProjectile; i ++)
-                SpawnProjectile(Vector2.Zero, type, i * (360f / nbProjectile));
+            if (Character is CharacterNoelle noelle)
+            {
+                noelle.BurstTimer = 15 * 60 + 70;
+                noelle.WeaponSize += 0.33f;
+                noelle.Infuse(Common.GameObjects.Enums.GenshinElement.GEO, 2, false);
+            }
 
-            SoundEngine.PlaySound(SoundID.Item28);
+
+            Vector2 direction = Main.MouseWorld - Player.Center;
+            direction.Normalize();
+            float angle = 2 * MathHelper.ToDegrees((float)Math.Atan2(1 - direction.Y, 0 - direction.X)) - 100f;
+
+            int type = ModContent.ProjectileType<ProjectileNoelleBurst>();
+            SpawnProjectile(VelocityToCursor(), type, Character.WeaponInfusion, angle, 1f);
+
+            SoundEngine.PlaySound(SoundID.Item70);
+
+            Character.RemoveVanityWeapon();
         }
 
         public override int GetScaling()
-        {
-            return (int)(0.8f * Character.EffectiveAttack * LevelScaling);
+        { // Activation Damage (with the atk buff)
+            return (int)(0.92f * (Character.EffectiveAttack + GetScaling2())* LevelScaling);
+        }
+
+        public override int GetScaling2()
+        { // Atk buff
+            return (int)(0.4f * Character.EffectiveDefense * LevelScaling);
         }
     }
 }
