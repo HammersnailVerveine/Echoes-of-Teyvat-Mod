@@ -17,8 +17,8 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
             KnockBack = 0f;
             UseTime = 70;
             Velocity = Immobile;
-            Cooldown = 10; // 15 * 60;
-            Energy = 0;
+            Cooldown = 15 * 60;
+            Energy = 60;
             AbilityType = AbilityType.BURST;
         }
 
