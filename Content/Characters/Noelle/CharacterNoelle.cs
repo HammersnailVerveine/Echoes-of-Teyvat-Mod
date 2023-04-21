@@ -34,7 +34,6 @@ namespace GenshinMod.Content.Characters.Noelle
 				WeaponSize += 0.33f;
 				Infuse(GenshinElement.GEO, 2, false);
 			}
-			else Infuse(GenshinElement.DENDRO, 2, false);
 		}
 
         public override void SafeResetEffects()
