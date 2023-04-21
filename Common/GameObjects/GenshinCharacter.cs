@@ -63,6 +63,7 @@ namespace GenshinMod.Common.GameObjects
         public int TimerVanityWeapon = 0; // Vanity (floating) weapon can only appear if <= 0
         public int TimerWeaponInfusion = 0;
         public GenshinElement WeaponInfusion = GenshinElement.NONE;
+        public bool WeaponInfusionOverridable = true;
 
         // Reset variables
 
@@ -253,7 +254,6 @@ namespace GenshinMod.Common.GameObjects
             TimerCanUse --;
             TimerVanityWeapon--;
             TimerWeaponInfusion--;
-            if (TimerWeaponInfusion < 1) WeaponInfusion = GenshinElement.NONE;
 
             StatEnergyRecharge = 1f;
             StatAttack = 0f;
@@ -296,6 +296,12 @@ namespace GenshinMod.Common.GameObjects
             StatDamageReactionShatter = 0f;
             StatDamageReactionFrozen = 0f;
             StatDamageReactionCrystallize = 0f;
+
+            if (TimerWeaponInfusion < 1)
+            {
+                WeaponInfusion = GenshinElement.NONE;
+                WeaponInfusionOverridable = true;
+            }
 
             for (int i = ICDTrackers.Count - 1; i >= 0; i--)
             {
@@ -426,10 +432,14 @@ namespace GenshinMod.Common.GameObjects
             CombatText.NewText(Player.Hitbox, new Color(188, 255, 55), value);
         }
 
-        public void Infuse(GenshinElement element, int duration)
+        public void Infuse(GenshinElement element, int duration, bool overridable = true)
         {
-            WeaponInfusion = element;
-            TimerWeaponInfusion = duration;
+            if (!WeaponInfusionOverridable || !overridable) // Only a non overridable infusion can replace a non overridable infusion.
+            {
+                WeaponInfusion = element;
+                TimerWeaponInfusion = duration;
+                WeaponInfusionOverridable = overridable;
+            }
         }
 
         public void Damage(int value, GenshinElement element, bool crit = false, bool combatText = true)
