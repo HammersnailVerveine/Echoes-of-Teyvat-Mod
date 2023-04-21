@@ -59,8 +59,9 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafeAI()
 		{
+			Element = OwnerCharacter.WeaponInfusion;
 			Projectile.scale = OwnerCharacter.WeaponSize;
-			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4.5f * OwnerCharacter.WeaponSize).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4.5f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
 			Projectile.position = position;
 
 			Vector2 direction = Projectile.Center - Owner.Center;
@@ -104,7 +105,6 @@ namespace GenshinMod.Content.Projectiles
 
 		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			GenshinElement infusion = OwnerCharacter.WeaponInfusion;
 			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 

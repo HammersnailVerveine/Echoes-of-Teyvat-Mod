@@ -23,6 +23,8 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 		public List<Vector2> OldPosition;
 		public List<float> OldRotation;
 		public List<int> HitNPC;
+		public Texture2D TextureGlowMain => ProjectileNoelleNormal.TextureGlowMain;
+		public Texture2D TextureGlow => ProjectileNoelleNormal.TextureGlow;
 
 		public override void SetStaticDefaults()
 		{
@@ -55,12 +57,13 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 			OldPosition = new List<Vector2>();
 			OldRotation = new List<float>();
 			HitNPC = new List<int>();
+			ProjectileNoelleNormal.LoadTextures();
 		}
 
         public override void SafeAI()
 		{
-			Projectile.scale = OwnerCharacter.WeaponSize;
-			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f * OwnerCharacter.WeaponSize).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+			Projectile.scale *= 1.005f;
+			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
 			Projectile.position = position;
 
 			Vector2 direction = Projectile.Center - Owner.Center;
@@ -71,17 +74,17 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 			if (TimeSpent < 6) acceleration *= 1.85f;
 
 			// Afterimages
-			if (TimeSpent < 50)
+			if (Projectile.timeLeft > 15)
 			{
 				OldPosition.Add(Projectile.Center);
-				OldRotation.Add(Projectile.rotation); 
-				if (OldPosition.Count > 10)
+				OldRotation.Add(Projectile.rotation);
+				if (OldPosition.Count > 16)
 				{
 					OldPosition.RemoveAt(0);
 					OldRotation.RemoveAt(0);
 				}
 			}
-			else if (OldPosition.Count > 1)
+			else if (OldPosition.Count > 1 && TimeSpent % 2 == 0)
 			{
 				OldPosition.RemoveAt(0);
 				OldRotation.RemoveAt(0);
@@ -104,12 +107,11 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 
 		public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
 		{
-			GenshinElement infusion = OwnerCharacter.WeaponInfusion;
-			Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+			Vector2 drawPosition = Vector2.Transform(Owner.Center + (Vector2.UnitY * TileLength * 4.5f).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) + new Vector2(Projectile.width, Projectile.height) * 0.5f - Projectile.Size * 0.5f - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
 			SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
 			float rotation = Projectile.rotation + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
-			spriteBatch.Draw(WeaponTexture, drawPosition, null, lightColor * 1.5f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+			spriteBatch.Draw(WeaponTexture, drawPosition, null, lightColor * 1.5f, rotation, WeaponTexture.Size() * 0.5f, 1f, effect, 0f);
 		}
 
 		public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
@@ -120,7 +122,8 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 			if (Element != GenshinElement.NONE)
 			{
 				Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-				spriteBatch.Draw(WeaponTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
+				spriteBatch.Draw(WeaponTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+				spriteBatch.Draw(WeaponTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.25f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.2f, effect, 0f);
 			}
 
 			for (int i = 0; i < OldPosition.Count; i++)
@@ -130,7 +133,11 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 				if (Element == GenshinElement.NONE)
 					spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 				else
-					spriteBatch.Draw(WeaponTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.125f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
+				{
+					spriteBatch.Draw(TextureGlow, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.06f * i, rotation2, TextureGlow.Size() * 0.5f, Projectile.scale * 1.1f, effect, 0f);
+					spriteBatch.Draw(TextureGlow, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.015f * i, rotation2, TextureGlow.Size() * 0.5f, Projectile.scale * 1.3f, effect, 0f);
+					spriteBatch.Draw(WeaponTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.025f * i, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
+				}
 			}
 		}
 	}

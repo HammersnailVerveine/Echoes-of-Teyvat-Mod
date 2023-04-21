@@ -17,8 +17,8 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
             KnockBack = 0f;
             UseTime = 70;
             Velocity = Immobile;
-            Cooldown = 15 * 60;
-            Energy = 60;
+            Cooldown = 10; // 15 * 60;
+            Energy = 0;
             AbilityType = AbilityType.BURST;
         }
 
@@ -30,7 +30,6 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
                 noelle.WeaponSize += 0.33f;
                 noelle.Infuse(Common.GameObjects.Enums.GenshinElement.GEO, 2, false);
             }
-
 
             Vector2 direction = Main.MouseWorld - Player.Center;
             direction.Normalize();

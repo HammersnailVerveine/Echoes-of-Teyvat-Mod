@@ -59,7 +59,7 @@ namespace GenshinMod.Content.Projectiles
         public override void SafeAI()
 		{
 			Projectile.scale = OwnerCharacter.WeaponSize;
-			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f * OwnerCharacter.WeaponSize).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+			Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
 			Projectile.position = position;
 
 			Vector2 direction = Projectile.Center - Owner.Center;
