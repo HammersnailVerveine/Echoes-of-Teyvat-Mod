@@ -29,6 +29,8 @@ namespace GenshinMod.Content.Characters.Noelle
 
         public override void SafeResetEffects()
 		{
+			WeaponInfusion = GenshinElement.GEO;
+			TimerWeaponInfusion = 60;
 		}
     }
 }

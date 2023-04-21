@@ -29,7 +29,7 @@ namespace GenshinMod.Content.Abilities
             angle -= mult * 100f;
 
             int type = ModContent.ProjectileType<ProjectileSwordNormal>();
-            SpawnProjectile(VelocityToCursor(), type, GenshinElement.NONE, angle, mult);
+            SpawnProjectile(VelocityToCursor(), type, Character.WeaponInfusion, angle, mult);
 
             SoundEngine.PlaySound(SoundID.Item1);
             Character.RemoveVanityWeapon();

@@ -52,7 +52,7 @@ namespace GenshinMod.Content.Abilities
                 angle -= mult * 100f;
 
                 int type = ModContent.ProjectileType<ProjectileClaymoreCharged>();
-                LinkedProjectile = SpawnProjectile(VelocityToCursor(), type, GenshinElement.NONE, angle, mult);
+                LinkedProjectile = SpawnProjectile(VelocityToCursor(), type, Character.WeaponInfusion, angle, mult);
                 if (mult * (direction.X > 0 ? 1 : -1) < 0f) GenshinPlayer.ReverseUseArmDirection = true;
                 SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing);
             }

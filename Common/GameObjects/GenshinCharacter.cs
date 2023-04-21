@@ -61,6 +61,8 @@ namespace GenshinMod.Common.GameObjects
         public float Energy = 0f; // Current energy
         public int TimerCanUse = 0;
         public int TimerVanityWeapon = 0; // Vanity (floating) weapon can only appear if <= 0
+        public int TimerWeaponInfusion = 0;
+        public GenshinElement WeaponInfusion = GenshinElement.NONE;
 
         // Reset variables
 
@@ -250,6 +252,8 @@ namespace GenshinMod.Common.GameObjects
             Weapon.WeaponResetEffects();
             TimerCanUse --;
             TimerVanityWeapon--;
+            TimerWeaponInfusion--;
+            if (TimerWeaponInfusion < 1) WeaponInfusion = GenshinElement.NONE;
 
             StatEnergyRecharge = 1f;
             StatAttack = 0f;
@@ -422,12 +426,18 @@ namespace GenshinMod.Common.GameObjects
             CombatText.NewText(Player.Hitbox, new Color(188, 255, 55), value);
         }
 
+        public void Infuse(GenshinElement element, int duration)
+        {
+            WeaponInfusion = element;
+            TimerWeaponInfusion = duration;
+        }
+
         public void Damage(int value, GenshinElement element, bool crit = false, bool combatText = true)
         {
             if (OnDamage(value))
             {
-                if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
                 value = ApplyDefense(value);
+                if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
                 if (GenshinPlayer.Shields.Count > 0)
                 { // Shield damage calculations
                     int highestRemainingHealth = int.MinValue;
