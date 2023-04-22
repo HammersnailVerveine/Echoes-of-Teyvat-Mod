@@ -17,7 +17,6 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 {
     public class ProjectileNoelleNormal : ProjectileClaymoreNormal
 	{
-		public static Texture2D TextureGlowMain;
 		public static Texture2D TextureGlow;
 
 		public override void OnSpawn(IEntitySource source)
@@ -36,7 +35,6 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 
 		public static void LoadTextures()
 		{
-			TextureGlowMain ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/Noelle/Projectiles/ProjectileNoelleNormalGlowMain", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 			TextureGlow ??= ModContent.Request<Texture2D>("GenshinMod/Content/Characters/Noelle/Projectiles/ProjectileNoelleNormalGlow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 		}
 

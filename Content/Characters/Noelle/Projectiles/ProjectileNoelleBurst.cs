@@ -23,7 +23,6 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 		public List<Vector2> OldPosition;
 		public List<float> OldRotation;
 		public List<int> HitNPC;
-		public Texture2D TextureGlowMain => ProjectileNoelleNormal.TextureGlowMain;
 		public Texture2D TextureGlow => ProjectileNoelleNormal.TextureGlow;
 
 		public override void SetStaticDefaults()

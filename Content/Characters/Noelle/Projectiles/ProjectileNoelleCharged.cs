@@ -17,7 +17,6 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 {
     public class ProjectileNoelleCharged : ProjectileClaymoreCharged
 	{
-		public Texture2D TextureGlowMain => ProjectileNoelleNormal.TextureGlowMain;
 		public Texture2D TextureGlow => ProjectileNoelleNormal.TextureGlow;
 
 		public override void SetStaticDefaults()
