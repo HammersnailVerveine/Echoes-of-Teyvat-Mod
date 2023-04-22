@@ -437,7 +437,7 @@ namespace GenshinMod.Common.GameObjects
 
         public void Infuse(GenshinElement element, int duration, bool overridable = true)
         {
-            if (!WeaponInfusionOverridable || !overridable) // Only a non overridable infusion can replace a non overridable infusion.
+            if (WeaponInfusionOverridable || !overridable) // Only a non overridable infusion can replace a non overridable infusion.
             {
                 WeaponInfusion = element;
                 TimerWeaponInfusion = duration;
