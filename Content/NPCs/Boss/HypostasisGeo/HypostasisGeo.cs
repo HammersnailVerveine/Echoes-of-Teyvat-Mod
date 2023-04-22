@@ -84,6 +84,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 			GenshinGlobalNPC.Element = GenshinElement.GEO;
 			GenshinGlobalNPC.ResistanceGeo = 1f;
 			GenshinGlobalNPC.ElementSymbolDrawOffset = 32;
+			GenshinGlobalNPC.GiveEnergyParticlesLife = false;
 		}
 
         public override void OnSpawn(IEntitySource source)

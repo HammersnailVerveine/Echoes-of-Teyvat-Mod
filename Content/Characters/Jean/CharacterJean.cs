@@ -26,7 +26,7 @@ namespace GenshinMod.Content.Characters.Jean
 
         public override void SafePostUpdate()
 		{
-			Infuse(GenshinElement.ANEMO, 2, false);
+			Infuse(GenshinElement.ANEMO, 2);
 		}
 
         public override void SafeResetEffects()

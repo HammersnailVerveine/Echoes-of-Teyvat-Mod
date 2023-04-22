@@ -57,12 +57,12 @@ namespace GenshinMod.Common.ModObjects
             CharacterTeam = new List<GenshinCharacter>();
             Shields = new List<GenshinShield>();
             // TEMP
-            //CharacterTeam.Add(new Content.Characters.Klee.CharacterKlee().Initialize(this));
+            CharacterTeam.Add(new Content.Characters.Klee.CharacterKlee().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Barbara.CharacterBarbara().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Kaeya.CharacterKaeya().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Lisa.CharacterLisa().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Noelle.CharacterNoelle().Initialize(this));
-            //CharacterTeam.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(this));
+            CharacterTeam.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(this));
             CharacterTeam.Add(new Content.Characters.Jean.CharacterJean().Initialize(this));
             // TEMP
             CharacterCurrent = CharacterTeam[0];
@@ -254,6 +254,19 @@ namespace GenshinMod.Common.ModObjects
                 if (GenshinKeybindsLoader.Character3.JustPressed) TrySwapCharacter(2);
                 if (GenshinKeybindsLoader.Character4.JustPressed) TrySwapCharacter(3);
                 if (GenshinKeybindsLoader.Character5.JustPressed) TrySwapCharacter(4);
+
+                if (GenshinKeybindsLoader.Debug.JustPressed)
+                {
+                    int select = 0;
+                    for (int i = 0; i < CharacterTeam.Count ; i ++) {
+                        if (CharacterTeam[i] == CharacterCurrent)
+                        {
+                            select = i + 1;
+                            if (select == CharacterTeam.Count) select = 0;
+                        }
+                    }
+                    TrySwapCharacter(select);
+                }
 
 
                 if (GenshinKeybindsLoader.AbilitySkill.JustReleased)

@@ -12,6 +12,7 @@ namespace GenshinMod.Common.Loadables
         public static ModKeybind Character3 { get; private set; }
         public static ModKeybind Character4 { get; private set; }
         public static ModKeybind Character5 { get; private set; }
+        public static ModKeybind Debug { get; private set; }
 
 
         void ILoadable.Load(Mod mod)
@@ -23,6 +24,7 @@ namespace GenshinMod.Common.Loadables
             Character3 = KeybindLoader.RegisterKeybind(mod, "Character #3", Keys.D3);
             Character4 = KeybindLoader.RegisterKeybind(mod, "Character #4", Keys.D4);
             Character5 = KeybindLoader.RegisterKeybind(mod, "Character #5", Keys.D5);
+            Debug = KeybindLoader.RegisterKeybind(mod, "Debug", Keys.D6);
         }
 
         void ILoadable.Unload()
@@ -34,6 +36,7 @@ namespace GenshinMod.Common.Loadables
             Character3 = null;
             Character4 = null;
             Character5 = null;
+            Debug = null;
         }
 
     }

@@ -25,7 +25,7 @@ namespace GenshinMod.Content.Characters.Barbara
 			BaseAttackMax = 159;
 			BaseDefenseMax = 669;
 
-			TryEquipWeapon(Common.ModObjects.Weapons.GenshinWeapon.GetWeapon(Terraria.ModLoader.ModContent.ItemType<Weapons.Catalyst.CatalystThrillingTales>()));
+			//TryEquipWeapon(Common.ModObjects.Weapons.GenshinWeapon.GetWeapon(Terraria.ModLoader.ModContent.ItemType<Weapons.Catalyst.CatalystThrillingTales>()));
 		}
 
         public override void SafePostUpdate()
