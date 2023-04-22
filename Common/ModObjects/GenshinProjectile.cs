@@ -40,8 +40,9 @@ namespace GenshinMod.Common.ModObjects
         public virtual void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit) { }
         public virtual void SafeModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
-        public virtual void SafePostDraw(Color lightColor, SpriteBatch spriteBatch) { }
-        public virtual void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch) { }
+        public virtual void SafePostDraw(Color lightColor, SpriteBatch spriteBatch) { } // Replaces the normal PostDraw
+        public virtual void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch) { } // Called after SafePostDraw, the spritebatch in parameter uses additive blending
+        public virtual void SafeSecondPostDraw(Color lightColor, SpriteBatch spriteBatch) { } // Called after SafePostDrawAdditive so a normal blend can be drawn above the additive one
         public bool IsLocalOwner => Projectile.owner == Main.myPlayer;
         public Player Owner => Main.player[Projectile.owner];
         public GenshinPlayer OwnerGenshinPlayer => Owner.GetModPlayer<GenshinPlayer>();
@@ -247,6 +248,7 @@ namespace GenshinMod.Common.ModObjects
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
             }
+            SafeSecondPostDraw(lightColor, spriteBatch);
         }
 
         public void PostAITrail()
