@@ -416,14 +416,12 @@ namespace GenshinMod.Common.GlobalObjets
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
 
-                    /*
-                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted) // Pyro Swirl
+                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted && !(genshinProjectile is Content.Projectiles.ProjectileSwirl)) // Pyro Swirl
                     {
                         swirlElement = GenshinElement.PYRO;
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
-                    */
                 }
 
                 if (element == GenshinElement.HYDRO)
@@ -471,14 +469,12 @@ namespace GenshinMod.Common.GlobalObjets
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
 
-                    /*
-                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted) // Hydro Swirl
+                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted && !(genshinProjectile is Content.Projectiles.ProjectileSwirl)) // Hydro Swirl
                     {
                         swirlElement = GenshinElement.HYDRO;
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
-                    */
                 }
 
                 if (element == GenshinElement.CRYO)
@@ -554,14 +550,12 @@ namespace GenshinMod.Common.GlobalObjets
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
 
-                    /*
-                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted) // Cryo Swirl
+                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted && !(genshinProjectile is Content.Projectiles.ProjectileSwirl)) // Cryo Swirl
                     {
                         swirlElement = GenshinElement.CRYO;
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
-                    */
                 }
 
                 if (element == GenshinElement.ELECTRO)
@@ -656,14 +650,12 @@ namespace GenshinMod.Common.GlobalObjets
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
 
-                    /*
-                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted) // Electro Swirl
+                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted && !(genshinProjectile is Content.Projectiles.ProjectileSwirl)) // Electro Swirl
                     {
                         swirlElement = GenshinElement.ELECTRO;
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
-                    */
                 }
 
                 if (element == GenshinElement.GEO)
