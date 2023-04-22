@@ -41,6 +41,9 @@ namespace GenshinMod.Common.GlobalObjets
         public int TimerReactionOverloaded = 0; // overloaded damage ICD
         public int TimerReactionSuperconduct = 0; // superconduct damage ICD
         public int TimerReactionElectrocharged = 0; // electrocharged damage ICD
+        public int TimerReactionSwirl = 0; // swirl damage ICD
+        public byte HitsSwirl = 0; // Swirl can hit 2 times per 0.5 sec
+        public byte HitsSuperconduct = 0; // Superconduct can hit 2 times per 0.5 sec
 
         public float ResistanceGeo = 0.1f; // 0f = 100% damage taken, 1f = immune
         public float ResistanceAnemo = 0.1f;
@@ -103,9 +106,14 @@ namespace GenshinMod.Common.GlobalObjets
             TimerElementDendro--;
             TimerElementHydro--;
             TimerElementPyro--;
+
             TimerReactionOverloaded--;
             TimerReactionSuperconduct--;
             TimerReactionElectrocharged--;
+            TimerReactionSwirl--;
+            if (TimerReactionSwirl <= 0) HitsSwirl = 0;
+            if (TimerReactionSuperconduct <= 0) HitsSuperconduct = 0;
+
             ReactionElectrocharged--;
 
             ReductionDefense = 0f;
@@ -339,6 +347,7 @@ namespace GenshinMod.Common.GlobalObjets
                 float mastery = genshinCharacter.StatElementalMastery;
                 bool reacted = false; // Individual attacks can only cause 1 reaction
                 GenshinElement crystallizeElement = GenshinElement.NONE;
+                GenshinElement swirlElement = GenshinElement.NONE;
 
                 if (element == GenshinElement.PYRO)
                 {
@@ -406,6 +415,15 @@ namespace GenshinMod.Common.GlobalObjets
                         crystallizeElement = GenshinElement.PYRO;
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
+
+                    /*
+                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted) // Pyro Swirl
+                    {
+                        swirlElement = GenshinElement.PYRO;
+                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    */
                 }
 
                 if (element == GenshinElement.HYDRO)
@@ -452,6 +470,15 @@ namespace GenshinMod.Common.GlobalObjets
                         crystallizeElement = GenshinElement.HYDRO;
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
+
+                    /*
+                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted) // Hydro Swirl
+                    {
+                        swirlElement = GenshinElement.HYDRO;
+                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    */
                 }
 
                 if (element == GenshinElement.CRYO)
@@ -481,7 +508,7 @@ namespace GenshinMod.Common.GlobalObjets
                                 if (npc.Center.Distance(target.Center) < 128f)
                                 {
                                     GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
-                                    if (genshinNPC.TimerReactionSuperconduct <= 0)
+                                    if (genshinNPC.HitsSuperconduct < 2)
                                     {
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.CRYO);
                                         if (targetDamage > 0)
@@ -490,8 +517,9 @@ namespace GenshinMod.Common.GlobalObjets
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SUPERCONDUCT), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
-                                        genshinNPC.TimerReactionSuperconduct = 30; // Reaction damage icd.
                                         genshinNPC.ReactionSuperconduct = 60 * 12; // Phys red debuff 12 sec.
+                                        if (genshinNPC.HitsSuperconduct == 0) genshinNPC.TimerReactionSuperconduct = 30; // Reaction damage icd.
+                                        genshinNPC.HitsSuperconduct++;
                                     }
                                 }
                             }
@@ -525,6 +553,15 @@ namespace GenshinMod.Common.GlobalObjets
                         crystallizeElement = GenshinElement.CRYO;
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
+
+                    /*
+                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted) // Cryo Swirl
+                    {
+                        swirlElement = GenshinElement.CRYO;
+                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    */
                 }
 
                 if (element == GenshinElement.ELECTRO)
@@ -618,6 +655,15 @@ namespace GenshinMod.Common.GlobalObjets
                         crystallizeElement = GenshinElement.ELECTRO;
                         TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
+
+                    /*
+                    if (AffectedByElement(GenshinElement.ANEMO) && !reacted) // Electro Swirl
+                    {
+                        swirlElement = GenshinElement.ELECTRO;
+                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    */
                 }
 
                 if (element == GenshinElement.GEO)
@@ -645,6 +691,73 @@ namespace GenshinMod.Common.GlobalObjets
                         crystallizeElement = GenshinElement.HYDRO;
                         TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
+                    }
+                }
+
+                if (element == GenshinElement.ANEMO)
+                {
+                    if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Pyro Swirl
+                    {
+                        swirlElement = GenshinElement.PYRO;
+                        TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Cryo Swirl
+                    {
+                        swirlElement = GenshinElement.CRYO;
+                        TimerElementCryo -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Electro Swirl
+                    {
+                        swirlElement = GenshinElement.ELECTRO;
+                        TimerElementElectro -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                    if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Hydro Swirl
+                    {
+                        swirlElement = GenshinElement.HYDRO;
+                        TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
+                        reacted = true;
+                    }
+                }
+
+                if (swirlElement != GenshinElement.NONE)
+                {
+                    Player player = genshinCharacter.Player;
+                    int type = ModContent.ProjectileType<Content.Projectiles.ProjectileSwirl>();
+                    int proj = Projectile.NewProjectile(player.GetSource_Misc("GenshinMod Elemental Reaction"), npc.Center, Vector2.Zero, type, 0, 0f);
+                    if (Main.projectile[proj].ModProjectile is Content.Projectiles.ProjectileSwirl swirl)
+                    {
+                        swirl.Element = swirlElement;
+                        float reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.SWIRL);
+                        int reactionDamage = (int)(0.6f * genshinCharacter.ReactionTransformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
+                        foreach (NPC target in Main.npc)
+                        {
+                            if (GenshinProjectile.CanHomeInto(target))
+                            {
+                                if (npc.Center.Distance(target.Center) < 128f)
+                                {
+                                    GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
+                                    if (genshinNPC.HitsSwirl < 2)
+                                    {
+                                        genshinNPC.ApplyElement(npc, swirl, genshinCharacter, swirlElement, ref reactionDamage);
+                                        int targetDamage = genshinNPC.ApplyResistance(reactionDamage, swirlElement);
+                                        if (targetDamage > 0)
+                                        {
+                                            player.ApplyDamageToNPC(target, targetDamage, 0f, -player.direction, false);
+                                            CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), targetDamage);
+                                        }
+                                        else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
+                                        if (genshinNPC.HitsSwirl == 0) genshinNPC.TimerReactionSwirl = 30; // Reaction damage icd.
+                                        genshinNPC.HitsSwirl++;
+                                    }
+                                }
+                            }
+                        }
+
+                        CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), "Swirl");
+                        application = 0;
                     }
                 }
 
