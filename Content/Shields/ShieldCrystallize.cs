@@ -29,7 +29,7 @@ namespace GenshinMod.Content.Shields
 			Vector2 drawPosition = (player.position + new Vector2(player.width * 0.5f, player.height * 0.5f + player.gfxOffY)).Floor();
 			drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
 
-			float lightFactor = ((float)Math.Sin(genshinPlayer.Timer * 0.05f) * 0.2f + 0.9f) * genshinPlayer.Shields.Count > 1 ? 0.2f : 1f;
+			float lightFactor = ((float)Math.Sin(genshinPlayer.Timer * 0.05f) * 0.2f + 0.9f) * (genshinPlayer.Shields.Count > 1 ? 0.2f : 1f);
 			float scaleMult = ((float)Math.Sin(Duration * 0.02f)) * 0.025f + 1.04f;
 			float scaleMult2 = TimeSpent < 9 ? TimeSpent / 9f : 1f;
 			spriteBatch.Draw(TextureShieldIn, drawPosition, null, GlowColor * 0.45f * lightFactor * (2f - scaleMult2), 0f, TextureShieldIn.Size() * 0.5f, 1f * scaleMult2, SpriteEffects.None, 0f);

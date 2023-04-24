@@ -138,8 +138,8 @@ namespace GenshinMod.Common.GameObjects
         public virtual bool OnHeal(int value) => true; // Return false to prevent heal
         public virtual bool OnDamage(int value) => true; // Return false to prevent damage
         public virtual bool OnDeath() => true; // Return false to prevent death
-        public virtual bool OnPartyAdd(); // Called when the character is added to the party
-        public virtual bool OnPartyRemove(); // Called when the character is removed from the party
+        public virtual void OnPartyAdd() { } // Called when the character is added to the party
+        public virtual void OnPartyRemove() { } // Called when the character is removed from the party
 		
         public GenshinCharacter Initialize(GenshinPlayer modPlayer)
         {
