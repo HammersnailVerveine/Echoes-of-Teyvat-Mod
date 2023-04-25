@@ -11,7 +11,7 @@ namespace GenshinMod.Common.ModObjects
 
 		[Label("Enable elemental burst quotes")]
 		[Tooltip("$Displays a quote when an elemental burst is used")]
-		[DefaultValue(true)]
+		[DefaultValue(false)]
 		public bool EnableBurstQuotes;
 	}
 }
