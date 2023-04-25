@@ -33,6 +33,10 @@ namespace GenshinMod.Content.Characters.Lisa
             BaseAttackMax = 232;
             BaseDefenseMax = 573;
 
+            BurstQuotes[0] = "Let's spark things up a little";
+            BurstQuotes[1] = "Surrender and I'll be gentle";
+            BurstQuotes[2] = "Try not to enjoy this too much";
+
             TextureSkill = ModContent.Request<Texture2D>("GenshinMod/Content/Characters/Lisa/Projectiles/LisaProjectileSkill", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             SkillNPCTimers = new List<LisaSkillNPCTimer>();
         }

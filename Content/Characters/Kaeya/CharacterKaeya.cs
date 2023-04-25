@@ -21,7 +21,11 @@ namespace GenshinMod.Content.Characters.Kaeya
             BaseHealthMax = 11636;
             BaseAttackMax = 223;
             BaseDefenseMax = 792;
-        }
+
+			BurstQuotes[0] = "Don't get frostbite";
+			BurstQuotes[1] = "Oh, so sorry!";
+			BurstQuotes[2] = "This moment will be frozen in time";
+		}
 
         /* INFUSIONS TEST
 		public override void SafeResetEffects()

@@ -27,6 +27,10 @@ namespace GenshinMod.Content.Characters.Albedo
             BaseHealthMax = 13226;
             BaseAttackMax = 251;
             BaseDefenseMax = 876;
+
+            BurstQuotes[0] = "Moment of birth";
+            BurstQuotes[1] = "Feel this ancient power";
+            BurstQuotes[2] = "Witness my great undertaking";
         }
 
         public override void SafeResetEffects()

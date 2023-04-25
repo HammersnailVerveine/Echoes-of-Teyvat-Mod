@@ -43,6 +43,8 @@ namespace GenshinMod.Common.GameObjects
         public WeaponType WeaponType; // Character Weapon Type
         public bool Autoswing = false; // NA autoswing
 
+        public string[] BurstQuotes;
+
         // Equipment Variables
 
         public GenshinWeapon Weapon;
@@ -159,6 +161,7 @@ namespace GenshinMod.Common.GameObjects
             GenshinPlayer = modPlayer;
             Player = modPlayer.Player;
             ICDTrackers = new List<ICDTracker>();
+            BurstQuotes = new string[3] {"", "", ""};
 
             SetDefaults();
 
@@ -327,6 +330,11 @@ namespace GenshinMod.Common.GameObjects
                 Energy -= ability.Energy;
                 AbilityCurrent = ability;
                 ability.Use();
+                if (ability == AbilityBurst && ModContent.GetInstance<GenshinConfig>().EnableBurstQuotes)
+                {
+                    CombatText.NewText(Player.Hitbox, Color.White, BurstQuotes[Main.rand.Next(3)]);
+                    Main.NewText("a");
+                }
             }
         }
 

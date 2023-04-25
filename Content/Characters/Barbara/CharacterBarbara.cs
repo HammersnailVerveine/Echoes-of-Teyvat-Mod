@@ -25,6 +25,10 @@ namespace GenshinMod.Content.Characters.Barbara
             BaseAttackMax = 159;
             BaseDefenseMax = 669;
 
+            BurstQuotes[0] = "♪La la-la-la-la~";
+            BurstQuotes[1] = "Ready, steady, go!";
+            BurstQuotes[2] = "Come on, we can do it!";
+
             //TryEquipWeapon(Common.ModObjects.Weapons.GenshinWeapon.GetWeapon(Terraria.ModLoader.ModContent.ItemType<Weapons.Catalyst.CatalystThrillingTales>()));
         }
 

@@ -23,6 +23,10 @@ namespace GenshinMod.Content.Characters.Noelle
             BaseHealthMax = 12071;
             BaseAttackMax = 191;
             BaseDefenseMax = 799;
+
+            BurstQuotes[0] = "Time to clean up";
+            BurstQuotes[1] = "As a good knight should";
+            BurstQuotes[2] = "As a dutiful maid would";
         }
 
         public override void SafePostUpdate()

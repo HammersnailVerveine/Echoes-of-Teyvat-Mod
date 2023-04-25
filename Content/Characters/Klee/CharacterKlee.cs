@@ -19,6 +19,10 @@ namespace GenshinMod.Content.Characters.Klee
             BaseHealthMax = 10287;
             BaseAttackMax = 311;
             BaseDefenseMax = 615;
+
+            BurstQuotes[0] = "Sparks 'n' Splash!";
+            BurstQuotes[1] = "Blazing Delight!";
+            BurstQuotes[2] = "Blow them aaaalll up!";
         }
     }
 }

@@ -20,6 +20,10 @@ namespace GenshinMod.Content.Characters.Jean
             BaseHealthMax = 14695;
             BaseAttackMax = 239;
             BaseDefenseMax = 769;
+
+            BurstQuotes[0] = "Wind, hear me!";
+            BurstQuotes[1] = "I swear by my sword!";
+            BurstQuotes[2] = "Barbatos, guide us";
         }
 
         public override void SafePostUpdate()
