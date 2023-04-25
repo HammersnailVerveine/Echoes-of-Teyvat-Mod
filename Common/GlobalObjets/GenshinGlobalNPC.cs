@@ -292,6 +292,8 @@ namespace GenshinMod.Common.GlobalObjets
                 GenshinElement element = genshinProjectile.Element;
 
                 damage = genshinCharacter.ApplyDamageMult(damage, element, genshinProjectile.AbilityType);
+                crit = genshinCharacter.GetProjectileCrit(genshinProjectile);
+                if (crit) damage = genshinCharacter.GetProjectileCritDamage(genshinProjectile, damage);
 
                 if (element != GenshinElement.NONE && genshinProjectile.CanReact) ApplyElement(npc, genshinProjectile, genshinCharacter, element, ref damage);
                 damage = ApplyResistance(damage, element);

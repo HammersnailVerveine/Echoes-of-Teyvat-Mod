@@ -75,6 +75,8 @@ namespace GenshinMod.Common.GameObjects
         public int StatAttackFlat = 0; // Bonus flat damage (base = 0)
         public int StatHealthFlat = 0; // Bonus flat health (base = 0)
         public int StatDefenseFlat = 0; // Bonus flat defense (base = 0)
+        public float StatCritChance = 0.05f; // Critical Strike Chance (base = 0.05f, cap = 1f = 100%)
+        public float StatCritDamage = 0.5f; // Critical Strike damage bonus (base = 0.5f)
 
         public float StatDamage = 0f; // Bonus Damage% (base = 0%)
         public float StatDamagePhysical = 0f; // Bonus Physical Damage% (base = 0%)
@@ -140,7 +142,9 @@ namespace GenshinMod.Common.GameObjects
         public virtual bool OnDeath() => true; // Return false to prevent death
         public virtual void OnPartyAdd() { } // Called when the character is added to the party
         public virtual void OnPartyRemove() { } // Called when the character is removed from the party
-		
+        public virtual bool GetProjectileCrit(GenshinProjectile genshinProjectile) => Main.rand.NextFloat(1) < StatCritChance;
+        public virtual int GetProjectileCritDamage(GenshinProjectile genshinProjectile, int damage) => (int)(damage * (1f + StatCritDamage));
+
         public GenshinCharacter Initialize(GenshinPlayer modPlayer)
         {
             string className = GetType().Name;
@@ -283,6 +287,8 @@ namespace GenshinMod.Common.GameObjects
             StatHealingBonus = 0f;
             StatHealingReceived = 0f;
             StatShieldStrength = 0f;
+            StatCritChance = 0.05f;
+            StatCritDamage = 0.5f;
             StatDamageReaction = 0f;
             StatDamageReactionVaporize = 0f;
             StatDamageReactionOverloaded = 0f;
