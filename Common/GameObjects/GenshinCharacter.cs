@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -127,7 +126,7 @@ namespace GenshinMod.Common.GameObjects
         public float EffectiveHealing => (float)(1f + StatHealingBonus);
         public float ReactionTransformativeDamage => 16.05f * Level * 10f;
 
-        public bool IsAlive => Health > 0; 
+        public bool IsAlive => Health > 0;
 
         public abstract void SetDefaults();
         public virtual void SafeUpdate() { }
@@ -160,7 +159,7 @@ namespace GenshinMod.Common.GameObjects
             GenshinPlayer = modPlayer;
             Player = modPlayer.Player;
             ICDTrackers = new List<ICDTracker>();
-            
+
             SetDefaults();
 
             if (Weapon == null) TryEquipWeapon(GenshinWeapon.GetWeakestWeapon(WeaponType));
@@ -259,7 +258,7 @@ namespace GenshinMod.Common.GameObjects
             AbilitySkill.ResetEffects();
             AbilityBurst.ResetEffects();
             Weapon.WeaponResetEffects();
-            TimerCanUse --;
+            TimerCanUse--;
             TimerVanityWeapon--;
             TimerWeaponInfusion--;
 
@@ -476,7 +475,7 @@ namespace GenshinMod.Common.GameObjects
                     value = -highestRemainingHealth;
                 }
 
-                if (value > 0) 
+                if (value > 0)
                 {
                     Health -= value;
                     if (Health <= 0)
@@ -572,7 +571,7 @@ namespace GenshinMod.Common.GameObjects
                     break;
             }
 
-            switch(abilityType)
+            switch (abilityType)
             {
                 case AbilityType.NORMAL:
                     mult += StatDamageNA;
@@ -665,7 +664,8 @@ namespace GenshinMod.Common.GameObjects
         public int Timer;
         public int HitCount;
 
-        public ICDTracker(NPC npc) {
+        public ICDTracker(NPC npc)
+        {
             this.npc = npc;
             Timer = 150;
             HitCount = 0;

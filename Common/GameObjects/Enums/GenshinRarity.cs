@@ -1,10 +1,8 @@
-using Microsoft.Xna.Framework;
-
 namespace GenshinMod.Common.GameObjects.Enums
 {
     public enum GenshinRarity : int
     {
-		NONE = 0,
+        NONE = 0,
         ONESTAR = 1,
         TWOSTAR = 2,
         THREESTAR = 3,

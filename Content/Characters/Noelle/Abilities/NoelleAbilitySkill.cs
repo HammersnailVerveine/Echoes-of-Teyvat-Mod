@@ -1,11 +1,8 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
-using GenshinMod.Content.Characters.Kaeya.Projectiles;
 using GenshinMod.Content.Characters.Noelle.Projectiles;
 using GenshinMod.Content.Characters.Noelle.Shields;
 using Microsoft.Xna.Framework;
-using System;
-using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;

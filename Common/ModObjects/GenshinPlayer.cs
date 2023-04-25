@@ -258,7 +258,8 @@ namespace GenshinMod.Common.ModObjects
                 if (GenshinKeybindsLoader.Debug.JustPressed)
                 {
                     int select = 0;
-                    for (int i = 0; i < CharacterTeam.Count ; i ++) {
+                    for (int i = 0; i < CharacterTeam.Count; i++)
+                    {
                         if (CharacterTeam[i] == CharacterCurrent)
                         {
                             select = i + 1;
@@ -380,7 +381,7 @@ namespace GenshinMod.Common.ModObjects
         public void GiveTeamEnergy(GenshinElement element, float value)
         {
             foreach (GenshinCharacter character in CharacterTeam)
-                character.GainEnergy(element, character == CharacterCurrent ? value : value * 0.6f);   
+                character.GainEnergy(element, character == CharacterCurrent ? value : value * 0.6f);
         }
 
         public void TrySwapCharacter(int slot)

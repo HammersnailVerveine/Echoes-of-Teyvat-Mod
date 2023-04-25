@@ -1,5 +1,4 @@
 ﻿using GenshinMod.Common.GameObjects;
-using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using System;

@@ -1,8 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Content.Characters.Kaeya.Projectiles;
 using Microsoft.Xna.Framework;
-using System;
-using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -25,7 +23,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Abilities
         {
             int type = ModContent.ProjectileType<KaeyaProjectileBurst>();
             int nbProjectile = 3;
-            for (int i = 0; i < nbProjectile; i ++)
+            for (int i = 0; i < nbProjectile; i++)
                 SpawnProjectile(Vector2.Zero, type, i * (360f / nbProjectile));
 
             SoundEngine.PlaySound(SoundID.Item28);

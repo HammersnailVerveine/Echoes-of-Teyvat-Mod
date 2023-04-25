@@ -1,5 +1,4 @@
 ﻿using GenshinMod.Common.GameObjects;
-using GenshinMod.Content.Characters.Kaeya.Projectiles;
 using GenshinMod.Content.Characters.Noelle.Projectiles;
 using Microsoft.Xna.Framework;
 using System;
@@ -45,7 +44,7 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
 
         public override int GetScaling()
         { // Activation Damage (with the atk buff)
-            return (int)(0.92f * (Character.EffectiveAttack + GetScaling2())* LevelScaling);
+            return (int)(0.92f * (Character.EffectiveAttack + GetScaling2()) * LevelScaling);
         }
 
         public override int GetScaling2()

@@ -2,8 +2,6 @@
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Characters.Barbara.Projectiles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -31,12 +29,12 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             offSet.Normalize();
             offSet = offSet.RotatedByRandom(MathHelper.ToRadians(5));
 
-            float rangeRand = Main.rand.NextFloat(14f, 16f); 
+            float rangeRand = Main.rand.NextFloat(14f, 16f);
             offSet *= rangeRand;
 
             Vector2 position = Player.Center;
 
-            for (int i = 0; i < 15 ; i++)
+            for (int i = 0; i < 15; i++)
             {
                 position += offSet;
                 offSet = Collision.TileCollision(position, offSet, 2, 2, true, false, (int)Player.gravDir);

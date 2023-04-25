@@ -1,8 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
-using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Characters.Lisa.Projectiles;
 using Microsoft.Xna.Framework;
-using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;

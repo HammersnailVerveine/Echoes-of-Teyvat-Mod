@@ -6,10 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace GenshinMod.Common.ModObjects
@@ -132,7 +129,8 @@ namespace GenshinMod.Common.ModObjects
         {
             int proj = Projectile.NewProjectile(Projectile.GetSource_FromThis(), position, velocity, type, damage, knockback, Projectile.owner, ai0, ai1);
             Projectile projectile = Main.projectile[proj];
-            if (projectile.ModProjectile is GenshinProjectile genshinProjectile) {
+            if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
+            {
                 genshinProjectile.OwnerCharacter = OwnerCharacter;
                 genshinProjectile.Element = element;
                 genshinProjectile.AbilityType = damageType;
@@ -174,7 +172,7 @@ namespace GenshinMod.Common.ModObjects
         public void SpawnElementalParticle(GenshinElement element, float value, int number = 1)
         {
             int type = ModContent.ProjectileType<ProjectileElementalParticle>();
-            for (int i = 0; i < number; i ++)
+            for (int i = 0; i < number; i++)
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, type, 0, 0f, Projectile.owner, (float)element, value);
             }

@@ -1,9 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
-using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Characters.Albedo.Projectiles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -34,7 +31,7 @@ namespace GenshinMod.Content.Characters.Albedo.Abilities
 
             Vector2 position = Player.Center;
 
-            for (int i = 0; i < 10 ; i++)
+            for (int i = 0; i < 10; i++)
             {
                 position += offSet;
                 offSet = Collision.TileCollision(position, offSet, 2, 2, true, false, (int)Player.gravDir);

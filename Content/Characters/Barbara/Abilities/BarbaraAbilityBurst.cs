@@ -1,8 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Content.Characters.Barbara.Projectiles;
 using Microsoft.Xna.Framework;
-using System;
-using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;

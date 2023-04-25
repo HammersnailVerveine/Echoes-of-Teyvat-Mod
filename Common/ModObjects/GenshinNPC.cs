@@ -1,5 +1,4 @@
-﻿using GenshinMod.Common.GameObjects.Enums;
-using GenshinMod.Common.GlobalObjets;
+﻿using GenshinMod.Common.GlobalObjets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

@@ -165,10 +165,10 @@ namespace GenshinMod.Common.GlobalObjets
         {
             float mult;
 
-            switch(element)
+            switch (element)
             {
                 case GenshinElement.GEO:
-                    if (ResistanceGeo >= 1f) return 0f; 
+                    if (ResistanceGeo >= 1f) return 0f;
                     mult = ResistanceGeo - ReductionResistanceGeo;
                     break;
                 case GenshinElement.ANEMO:
@@ -241,9 +241,9 @@ namespace GenshinMod.Common.GlobalObjets
             offSetY -= 24;
         }
 
-        public void DrawTexture(Texture2D texture, SpriteBatch spriteBatch, NPC npc, int nbElements,ref int offSetX, ref int offSetY, int timeLeft)
+        public void DrawTexture(Texture2D texture, SpriteBatch spriteBatch, NPC npc, int nbElements, ref int offSetX, ref int offSetY, int timeLeft)
         {
-            float colorMult = timeLeft > 120 ? 1f : (float)Math.Abs(Math.Sin((timeLeft * 0.5f)/Math.PI/4f));
+            float colorMult = timeLeft > 120 ? 1f : (float)Math.Abs(Math.Sin((timeLeft * 0.5f) / Math.PI / 4f));
             Vector2 position = new Vector2(npc.Center.X + offSetX - Main.screenPosition.X, npc.Center.Y + offSetY - Main.screenPosition.Y);
             spriteBatch.Draw(texture, position, null, Color.White * colorMult, 0f, texture.Size() * 0.5f, 0.875f, SpriteEffects.None, 0f);
             spriteBatch.Draw(texture, position, null, Color.White * 0.5f * colorMult, 0f, texture.Size() * 0.5f, 1.025f, SpriteEffects.None, 0f);
@@ -257,7 +257,7 @@ namespace GenshinMod.Common.GlobalObjets
             foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
                 if (element != GenshinElement.NONE) if (AffectedByElement(element)) nbElements++;
             if (AffectedByElement(GenshinElement.HYDRO) && ReactionFrozen) nbElements--;
-            int offSetY = - (30 + ElementSymbolDrawOffset);
+            int offSetY = -(30 + ElementSymbolDrawOffset);
             int offSetX = 0;
             setOffset(ref offSetX, ref offSetY, ref nbElements);
 
@@ -762,7 +762,7 @@ namespace GenshinMod.Common.GlobalObjets
                     Projectile second = null;
 
                     foreach (Projectile projectile in Main.projectile)
-                    { 
+                    {
                         if (projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize crystal)
                         {
                             if (first == null)
@@ -913,7 +913,7 @@ namespace GenshinMod.Common.GlobalObjets
             rect.Height += 64;
             return rect;
         }
-        
+
 
         public static Rectangle ExtendedHitboxMult(NPC npc)
         {

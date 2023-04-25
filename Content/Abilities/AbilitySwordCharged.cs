@@ -1,5 +1,4 @@
 ﻿using GenshinMod.Common.GameObjects;
-using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using System;
@@ -18,7 +17,7 @@ namespace GenshinMod.Content.Abilities
             UseTime = 70;
             Velocity = AlmostImmobile;
             AbilityType = AbilityType.CHARGED;
-			Stamina = 25;
+            Stamina = 25;
         }
 
         public override void OnUse()
@@ -37,7 +36,7 @@ namespace GenshinMod.Content.Abilities
             Character.RemoveVanityWeapon();
             if (mult * (direction.X > 0 ? 1 : -1) < 0f) GenshinPlayer.ReverseUseArmDirection = true;
         }
-		
+
         public override int GetScaling()
         {
             return (int)(0.75f * Character.EffectiveAttack * LevelScaling);

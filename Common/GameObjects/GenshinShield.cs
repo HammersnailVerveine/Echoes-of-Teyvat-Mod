@@ -2,11 +2,7 @@
 using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace GenshinMod.Common.GameObjects
 {
@@ -14,17 +10,17 @@ namespace GenshinMod.Common.GameObjects
     {
         public int Health; // Shield remaining health
         public int Duration; // Shield remaining duration
-		public int TimeSpent = 0; // Time spent active
+        public int TimeSpent = 0; // Time spent active
         public GenshinElement Element = GenshinElement.NONE; // Shield Element
         public GenshinPlayer GenshinPlayer;
         public Player Player => GenshinPlayer.Player;
 
-        public void UpdateBase() 
+        public void UpdateBase()
         {
             Update();
         }
 
-        public void OnKillBase(bool killByDamage) 
+        public void OnKillBase(bool killByDamage)
         {
             OnKill(killByDamage);
         }
@@ -32,7 +28,7 @@ namespace GenshinMod.Common.GameObjects
         public void ResetEffects()
         {
             Duration--;
-			TimeSpent++;
+            TimeSpent++;
         }
 
         public GenshinShield Initialize(GenshinPlayer genshinPlayer, int health, int duration, GenshinElement element = GenshinElement.NONE, int ai = 0) // "ai" is used to communicate more information if needed
@@ -49,5 +45,5 @@ namespace GenshinMod.Common.GameObjects
         public virtual void Update() { }
         public virtual void OnKill(bool killByDamage) { }
         public virtual void Draw(SpriteBatch spriteBatch, Color lightColor, GenshinPlayer genshinPlayer) { }
-	}
+    }
 }

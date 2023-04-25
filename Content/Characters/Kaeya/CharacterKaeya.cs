@@ -6,24 +6,24 @@ using GenshinMod.Content.Characters.Kaeya.Abilities;
 namespace GenshinMod.Content.Characters.Kaeya
 {
     public class CharacterKaeya : GenshinCharacter
-	{
+    {
         public override void SetDefaults()
-		{
-			Name = "Kaeya";
-			Element = GenshinElement.CRYO;
-			WeaponType = WeaponType.SWORD;
-			AbilityNormal = new AbilitySwordNormal().Initialize(this);
-			AbilityCharged = new AbilitySwordCharged().Initialize(this);
-			AbilitySkill = new KaeyaAbilitySkill().Initialize(this);
-			AbilityBurst = new KaeyaAbilityBurst().Initialize(this);
-			Autoswing = true;
+        {
+            Name = "Kaeya";
+            Element = GenshinElement.CRYO;
+            WeaponType = WeaponType.SWORD;
+            AbilityNormal = new AbilitySwordNormal().Initialize(this);
+            AbilityCharged = new AbilitySwordCharged().Initialize(this);
+            AbilitySkill = new KaeyaAbilitySkill().Initialize(this);
+            AbilityBurst = new KaeyaAbilityBurst().Initialize(this);
+            Autoswing = true;
 
-			BaseHealthMax = 11636;
-			BaseAttackMax = 223;
-			BaseDefenseMax = 792;
-		}
+            BaseHealthMax = 11636;
+            BaseAttackMax = 223;
+            BaseDefenseMax = 792;
+        }
 
-		/* INFUSIONS TEST
+        /* INFUSIONS TEST
 		public override void SafeResetEffects()
 		{
 			if (TimerWeaponInfusion < 2)
@@ -57,5 +57,5 @@ namespace GenshinMod.Content.Characters.Kaeya
 			GenshinPlayer.Stamina = GenshinPlayer.StaminaMax;
 		}
 		*/
-	}
+    }
 }

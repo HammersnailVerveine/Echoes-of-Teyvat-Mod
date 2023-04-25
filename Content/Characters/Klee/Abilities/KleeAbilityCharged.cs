@@ -1,9 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Content.Characters.Klee.Projectiles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -17,7 +14,7 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             KnockBack = 10f;
             UseTime = 45;
             Velocity = 10f;
-			Stamina = 50;
+            Stamina = 50;
             Cooldown = 120;
             AbilityType = AbilityType.CHARGED;
         }

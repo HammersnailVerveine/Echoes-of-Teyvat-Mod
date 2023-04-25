@@ -1,7 +1,6 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Content.Characters.Kaeya.Projectiles;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;

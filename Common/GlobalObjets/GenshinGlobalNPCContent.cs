@@ -1,15 +1,8 @@
 ﻿using GenshinMod.Common.GameObjects;
-using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System;
 using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace GenshinMod.Common.GlobalObjets
@@ -26,8 +19,8 @@ namespace GenshinMod.Common.GlobalObjets
                 foreach (GenshinCharacter character in genshinProjectile.OwnerGenshinPlayer.CharacterTeam)
                 {
                     if (character is Content.Characters.Albedo.CharacterAlbedo albedo)
-                    { 
-                        if (albedo.skillActive && albedo.skillCooldown <= 0 && projectile.type != ModContent.ProjectileType<Content.Characters.Albedo.Projectiles.AlbedoProjectileSkillMain>() 
+                    {
+                        if (albedo.skillActive && albedo.skillCooldown <= 0 && projectile.type != ModContent.ProjectileType<Content.Characters.Albedo.Projectiles.AlbedoProjectileSkillMain>()
                             && projectile.type != ModContent.ProjectileType<Content.Characters.Albedo.Projectiles.AlbedoProjectileBlast>())
                         { // Albedo E
                             foreach (Projectile proj in Main.projectile)
@@ -45,7 +38,7 @@ namespace GenshinMod.Common.GlobalObjets
                         }
                     }
 
-                    if (character is Content.Characters.Noelle.CharacterNoelle noelle && 
+                    if (character is Content.Characters.Noelle.CharacterNoelle noelle &&
                         (projectile.type == ModContent.ProjectileType<ProjectileClaymoreCharged>() || projectile.type == ModContent.ProjectileType<ProjectileClaymoreNormal>()))
                     { // Noelle E heal
                         if (Main.rand.NextBool(2) && noelle.HealTimer < 1)

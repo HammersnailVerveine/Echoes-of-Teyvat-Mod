@@ -1,14 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.ModObjects.Weapons.Projectiles;
 using System.Linq;
 using Terraria;
-using Terraria.ModLoader;
 using Terraria.ID;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.DataStructures;
-using GenshinMod.Common.GameObjects.Enums;
-using GenshinMod.Common.GameObjects;
-using GenshinMod.Common.ModObjects.Weapons.Projectiles;
+using Terraria.ModLoader;
 
 namespace GenshinMod.Common.ModObjects.Weapons
 {

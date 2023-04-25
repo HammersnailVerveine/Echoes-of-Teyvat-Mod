@@ -1,12 +1,8 @@
 ﻿using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace GenshinMod.Common.GameObjects
 {
@@ -37,8 +33,8 @@ namespace GenshinMod.Common.GameObjects
         public static float Immobile = 0f;
 
         public bool HoldCast => HoldTime == HoldTimeFull;
-        public bool HoldFull => HoldTime >= HoldTimeFull; 
-        public bool HoldMax => HoldTime >= HoldTimeMax; 
+        public bool HoldFull => HoldTime >= HoldTimeFull;
+        public bool HoldMax => HoldTime >= HoldTimeMax;
 
         public abstract void SetDefaults();
         public abstract void OnUse();

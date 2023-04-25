@@ -1,5 +1,4 @@
 ﻿using GenshinMod.Common.GameObjects;
-using GenshinMod.Common.ModObjects;
 using GenshinMod.Content.Characters.Lisa.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -32,7 +31,7 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
 
             Vector2 position = Player.Center;
 
-            for (int i = 0; i < 15 ; i++)
+            for (int i = 0; i < 15; i++)
             {
                 position += offSet;
                 offSet = Collision.TileCollision(position, offSet, 2, 2, true, false, (int)Player.gravDir);

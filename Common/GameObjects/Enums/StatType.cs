@@ -1,5 +1,3 @@
-using Microsoft.Xna.Framework;
-
 namespace GenshinMod.Common.GameObjects.Enums
 {
     public enum StatType : int
