@@ -3,6 +3,7 @@ using Terraria.ModLoader.Config;
 
 namespace GenshinMod.Common.ModObjects
 {
+    [Label("Configuration")]
     public class GenshinConfig : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
