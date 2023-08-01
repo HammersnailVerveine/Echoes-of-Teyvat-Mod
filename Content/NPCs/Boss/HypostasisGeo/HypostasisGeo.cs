@@ -65,7 +65,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
         public override void SafeSetStaticDefaults()
         {
-            DisplayName.SetDefault("Geo Hypostasis");
+            // DisplayName.SetDefault("Geo Hypostasis");
         }
 
         public override void SafeSetDefaults()
@@ -532,7 +532,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 		}
 		*/
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             if (!InCombat)
                 ChangeCombatState(1);

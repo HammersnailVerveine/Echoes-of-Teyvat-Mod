@@ -23,7 +23,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sword Slash");
+            // DisplayName.SetDefault("Sword Slash");
         }
 
         public override void SetDefaults()

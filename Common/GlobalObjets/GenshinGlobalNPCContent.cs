@@ -12,7 +12,7 @@ namespace GenshinMod.Common.GlobalObjets
         // This class is used to handle "content-specific" effects that are not common to every character or element in the mod
         // --> Albedo flower hits for example, that are specific to Albedo
 
-        public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)
+        public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
             if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
             {

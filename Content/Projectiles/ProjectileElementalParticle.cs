@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Elemental Energy");
+            // DisplayName.SetDefault("Elemental Energy");
         }
 
         public override Color? GetAlpha(Color lightColor) => GlowColor * 0.7f;

@@ -17,7 +17,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Swirl");
+            // DisplayName.SetDefault("Swirl");
         }
 
         public override void SetDefaults()

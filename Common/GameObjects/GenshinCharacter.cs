@@ -96,7 +96,6 @@ namespace GenshinMod.Common.GameObjects
         public float StatHealingReceived = 0f; // Bonus Healind Received% (base = 0%)
         public float StatShieldStrength = 0f; // Bonus Shield Strength% (base = 0%)
 
-
         public float StatDamageReaction = 0f; // Bonus Reaction Damage (base = 0%)
         public float StatDamageReactionVaporize = 0f; // Bonus Vaporize Reaction Damage (base = 0%)
         public float StatDamageReactionOverloaded = 0f; // Bonus Overloaded Reaction Damage (base = 0%)

@@ -13,7 +13,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Barbara Splash");
+            // DisplayName.SetDefault("Barbara Splash");
         }
 
         public override void SetDefaults()

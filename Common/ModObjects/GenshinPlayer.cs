@@ -136,7 +136,7 @@ namespace GenshinMod.Common.ModObjects
             return base.CanBeHitByProjectile(proj);
         }
 
-        public override void ModifyHitByNPC(NPC npc, ref int damage, ref bool crit)
+        public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
         {
             GenshinElement element = npc.GetGlobalNPC<GenshinGlobalNPC>().Element;
             CharacterCurrent.Damage(damage, element, crit);
@@ -144,7 +144,7 @@ namespace GenshinMod.Common.ModObjects
             damage = 1;
         }
 
-        public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
+        public override void ModifyHitByProjectile(Projectile proj, ref Player.HurtModifiers modifiers)
         {
             GenshinElement element = GenshinElement.NONE;
             if (proj.ModProjectile is GenshinProjectile genshinProj) element = genshinProj.Element;

@@ -28,7 +28,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
 
         public override void SafeSetStaticDefaults()
         {
-            DisplayName.SetDefault("Geo Hypostasis Pillar");
+            // DisplayName.SetDefault("Geo Hypostasis Pillar");
         }
 
         public override void SafeSetDefaults()

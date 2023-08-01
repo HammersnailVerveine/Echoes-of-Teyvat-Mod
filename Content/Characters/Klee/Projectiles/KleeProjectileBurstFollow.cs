@@ -12,7 +12,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Clover");
+            // DisplayName.SetDefault("Clover");
         }
 
         public override Color? GetAlpha(Color lightColor)

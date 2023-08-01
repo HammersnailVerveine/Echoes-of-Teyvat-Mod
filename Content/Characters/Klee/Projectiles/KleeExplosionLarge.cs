@@ -11,7 +11,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Klee Explosion");
+            // DisplayName.SetDefault("Klee Explosion");
         }
 
         public override void SetDefaults()

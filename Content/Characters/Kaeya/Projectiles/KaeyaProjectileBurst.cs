@@ -19,7 +19,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Kaeya Icicle");
+            // DisplayName.SetDefault("Kaeya Icicle");
         }
 
         public override void SetDefaults()

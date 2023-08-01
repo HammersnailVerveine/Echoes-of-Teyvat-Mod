@@ -16,7 +16,7 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Claymore Spin");
+            // DisplayName.SetDefault("Claymore Spin");
         }
 
         public override void SetDefaults()

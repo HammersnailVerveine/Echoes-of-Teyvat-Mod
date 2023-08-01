@@ -20,7 +20,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lamp");
+            // DisplayName.SetDefault("Lamp");
         }
 
         public override void SetDefaults()

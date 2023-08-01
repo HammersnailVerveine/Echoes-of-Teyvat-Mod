@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Jumpy Dumpty");
+            // DisplayName.SetDefault("Jumpy Dumpty");
         }
 
         public override Color? GetAlpha(Color lightColor)

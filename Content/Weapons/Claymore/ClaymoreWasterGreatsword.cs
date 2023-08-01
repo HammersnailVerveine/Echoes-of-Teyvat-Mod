@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Weapons.Claymore
 
         public override void SafeSetStaticDefaults()
         {
-            DisplayName.SetDefault("Waster Greatsword");
+            // DisplayName.SetDefault("Waster Greatsword");
         }
     }
 }

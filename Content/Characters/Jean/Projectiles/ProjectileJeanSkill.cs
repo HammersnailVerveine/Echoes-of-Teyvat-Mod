@@ -22,7 +22,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Jean Slash");
+            // DisplayName.SetDefault("Jean Slash");
         }
 
         public override void SetDefaults()

@@ -22,7 +22,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lizap");
+            // DisplayName.SetDefault("Lizap");
         }
 
         public override void SetDefaults()

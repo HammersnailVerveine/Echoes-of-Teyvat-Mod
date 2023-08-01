@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Overload Blast");
+            // DisplayName.SetDefault("Overload Blast");
         }
 
         public override void SetDefaults()

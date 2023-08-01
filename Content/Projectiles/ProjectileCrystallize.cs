@@ -17,7 +17,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Crytallize");
+            // DisplayName.SetDefault("Crytallize");
         }
 
         public override void SetDefaults()

@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Weapons.Catalyst
 
         public override void SafeSetStaticDefaults()
         {
-            DisplayName.SetDefault("Apprentice Notes");
+            // DisplayName.SetDefault("Apprentice Notes");
         }
     }
 }

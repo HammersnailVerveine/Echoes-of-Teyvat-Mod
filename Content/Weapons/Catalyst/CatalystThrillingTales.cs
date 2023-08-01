@@ -21,7 +21,7 @@ namespace GenshinMod.Content.Weapons.Catalyst
 
 		public override void SafeSetStaticDefaults()
 		{
-			DisplayName.SetDefault("Thrilling Tales of Dragon Slayers");
+			// DisplayName.SetDefault("Thrilling Tales of Dragon Slayers");
 		}
 
 		public override void WeaponOnSwapOut()

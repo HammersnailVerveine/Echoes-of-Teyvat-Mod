@@ -17,7 +17,7 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Shield Shatter");
+            // DisplayName.SetDefault("Shield Shatter");
         }
 
         public override void SetDefaults()

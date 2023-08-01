@@ -14,7 +14,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dodoco Bomb");
+            // DisplayName.SetDefault("Dodoco Bomb");
         }
 
         public override Color? GetAlpha(Color lightColor)

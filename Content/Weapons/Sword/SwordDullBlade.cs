@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Weapons.Sword
 
         public override void SafeSetStaticDefaults()
         {
-            DisplayName.SetDefault("Dull Blade");
+            // DisplayName.SetDefault("Dull Blade");
         }
     }
 }

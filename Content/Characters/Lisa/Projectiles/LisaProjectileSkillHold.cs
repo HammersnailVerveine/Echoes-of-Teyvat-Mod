@@ -11,7 +11,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Electro Blast");
+            // DisplayName.SetDefault("Electro Blast");
         }
 
         public override void SetDefaults()

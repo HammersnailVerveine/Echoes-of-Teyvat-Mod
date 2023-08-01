@@ -12,7 +12,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Klee Charged Flower");
+            // DisplayName.SetDefault("Klee Charged Flower");
         }
 
         public override Color? GetAlpha(Color lightColor)

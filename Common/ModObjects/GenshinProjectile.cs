@@ -85,7 +85,7 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public sealed override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public sealed override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!FirstHit && damage > 0)
             {
@@ -101,7 +101,7 @@ namespace GenshinMod.Common.ModObjects
             SafeOnHitNPC(target, damage, knockback, crit);
         }
 
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
             if (!CanDealDamage)
             {

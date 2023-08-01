@@ -32,7 +32,7 @@ namespace GenshinMod.Common.ModObjects.Weapons
 
         public sealed override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("A GenshinMod weapon");
+            // Tooltip.SetDefault("A GenshinMod weapon");
             SafeSetStaticDefaults();
         }
 

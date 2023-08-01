@@ -22,7 +22,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Claymore Slash");
+            // DisplayName.SetDefault("Claymore Slash");
         }
 
         public override void SetDefaults()

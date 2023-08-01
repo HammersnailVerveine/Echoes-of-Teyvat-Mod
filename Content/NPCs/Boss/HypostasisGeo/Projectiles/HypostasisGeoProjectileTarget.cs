@@ -26,7 +26,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hypostasis Blast");
+            // DisplayName.SetDefault("Hypostasis Blast");
         }
 
         public override void SetDefaults()

@@ -23,7 +23,7 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sweeping Time");
+            // DisplayName.SetDefault("Sweeping Time");
         }
 
         public override void SetDefaults()

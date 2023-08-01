@@ -17,7 +17,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Barbara Circle");
+            // DisplayName.SetDefault("Barbara Circle");
         }
 
         public override void SetDefaults()

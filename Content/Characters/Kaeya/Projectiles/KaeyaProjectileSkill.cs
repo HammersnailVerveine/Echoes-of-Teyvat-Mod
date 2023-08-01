@@ -17,7 +17,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Frost Blast");
+            // DisplayName.SetDefault("Frost Blast");
         }
 
         public override void SetDefaults()

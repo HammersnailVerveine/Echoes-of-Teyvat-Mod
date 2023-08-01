@@ -19,7 +19,7 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Solar Isotoma");
+            // DisplayName.SetDefault("Solar Isotoma");
         }
 
         public override void SetDefaults()

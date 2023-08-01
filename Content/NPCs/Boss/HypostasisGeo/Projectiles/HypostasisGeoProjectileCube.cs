@@ -23,7 +23,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hypostasis Cube");
+            // DisplayName.SetDefault("Hypostasis Cube");
         }
 
         public override void SetDefaults()

@@ -283,7 +283,7 @@ namespace GenshinMod.Common.GlobalObjets
             }
         }
 
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
             {

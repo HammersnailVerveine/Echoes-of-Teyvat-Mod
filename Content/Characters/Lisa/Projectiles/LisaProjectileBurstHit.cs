@@ -11,7 +11,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lamp Zap");
+            // DisplayName.SetDefault("Lamp Zap");
         }
 
         public override void SetDefaults()
