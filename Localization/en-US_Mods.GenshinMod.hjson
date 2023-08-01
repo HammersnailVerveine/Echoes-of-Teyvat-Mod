@@ -76,7 +76,7 @@ Projectiles: {
 	ProjectileClaymoreCharged.DisplayName: Projectile Claymore Charged
 	ProjectileClaymoreNormal.DisplayName: Projectile Claymore Normal
 	ProjectileCrystallize.DisplayName: Projectile Crystallize
-	ProjectileElementalParticle.DisplayName: Projectile Elemental Particle
+	ProjectileElementalParticle.DisplayName: Elemental Particle
 	ProjectileOverloaded.DisplayName: Projectile Overloaded
 	ProjectileSuperconduct.DisplayName: Projectile Superconduct
 	ProjectileSwirl.DisplayName: Projectile Swirl

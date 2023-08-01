@@ -132,7 +132,14 @@ namespace GenshinMod.Common.GlobalObjets
             if (npc.life <= npc.lifeMax / 2f && !HalfLifeParticle)
             {
                 HalfLifeParticle = true;
-                if (!Main.LocalPlayer.dead) SpawnElementalParticle(npc, Element, 1f);
+                if (!Main.LocalPlayer.dead)
+                {
+                    if (npc.ModNPC is GenshinNPC genshinNPC) {
+                        if (genshinNPC.TimeAlive > 1)
+                            SpawnElementalParticle(npc, Element, 1f);
+                    }
+                    else SpawnElementalParticle(npc, Element, 1f);
+                }
             }
 
             ProcessReactions(npc);
