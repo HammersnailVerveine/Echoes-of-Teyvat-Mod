@@ -1,6 +1,6 @@
 Keybinds: {
-	"Elemental Skill.DisplayName": Elemental  Skill
-	"Elemental Burst.DisplayName": Elemental  Burst
+	"Elemental Skill.DisplayName": Elemental Skill
+	"Elemental Burst.DisplayName": Elemental Burst
 	"Character #1.DisplayName": Character #1
 	"Character #2.DisplayName": Character #2
 	"Character #3.DisplayName": Character #3
@@ -11,29 +11,29 @@ Keybinds: {
 
 Items: {
 	CatalystApprenticeNotes: {
-		DisplayName: Catalyst Apprentice Notes
+		DisplayName: Apprentice Notes
 		Tooltip: ""
 	}
 
 	CatalystThrillingTales: {
-		DisplayName: Catalyst Thrilling Tales
+		DisplayName: Thrilling Tales of Dragon Slayers
 		Tooltip: ""
 	}
 
 	ClaymoreWasterGreatsword: {
-		DisplayName: Claymore Waster Greatsword
+		DisplayName: Waster Greatsword
 		Tooltip: ""
 	}
 
 	SwordDullBlade: {
-		DisplayName: Sword Dull Blade
+		DisplayName: Dull Blade
 		Tooltip: ""
 	}
 }
 
 NPCs: {
-	HypostasisGeo.DisplayName: Hypostasis Geo
-	HypostasisGeoPillar.DisplayName: Hypostasis Geo Pillar
+	HypostasisGeo.DisplayName: Geo Hypostasis
+	HypostasisGeoPillar.DisplayName: Geo Hypostasis Pillar
 }
 
 Projectiles: {
@@ -90,7 +90,7 @@ Configs: {
 
 		EnableBurstQuotes: {
 			Label: Enable elemental burst quotes
-			Tooltip: "{$Displays a quote when an elemental burst is used}"
+			Tooltip: Displays a quote when an elemental burst is used
 		}
 	}
 }

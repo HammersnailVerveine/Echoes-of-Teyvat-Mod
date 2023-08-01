@@ -12,11 +12,6 @@ namespace GenshinMod.Content.Weapons.Catalyst
             BaseAttack = 185;
             BaseSubstat = 0f;
         }
-
-        public override void SafeSetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Apprentice Notes");
-        }
     }
 }
 
