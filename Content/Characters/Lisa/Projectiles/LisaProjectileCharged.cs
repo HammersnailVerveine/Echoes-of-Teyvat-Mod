@@ -105,7 +105,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
                 SpawnDust<LisaDustRound>(newPosition, Vector2.Zero, 1f, 1f, 10, 1, 2);
             }
         }
-        public override void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void SafeOnHitNPC(NPC target)
         {
             if (OwnerCharacter is CharacterLisa lisa) lisa.TryApplyStackLisa(target);
         }

@@ -1,0 +1,96 @@
+Keybinds: {
+	"Elemental Skill.DisplayName": Elemental  Skill
+	"Elemental Burst.DisplayName": Elemental  Burst
+	"Character #1.DisplayName": Character #1
+	"Character #2.DisplayName": Character #2
+	"Character #3.DisplayName": Character #3
+	"Character #4.DisplayName": Character #4
+	"Character #5.DisplayName": Character #5
+	Debug.DisplayName: Debug
+}
+
+Items: {
+	CatalystApprenticeNotes: {
+		DisplayName: Catalyst Apprentice Notes
+		Tooltip: ""
+	}
+
+	CatalystThrillingTales: {
+		DisplayName: Catalyst Thrilling Tales
+		Tooltip: ""
+	}
+
+	ClaymoreWasterGreatsword: {
+		DisplayName: Claymore Waster Greatsword
+		Tooltip: ""
+	}
+
+	SwordDullBlade: {
+		DisplayName: Sword Dull Blade
+		Tooltip: ""
+	}
+}
+
+NPCs: {
+	HypostasisGeo.DisplayName: Hypostasis Geo
+	HypostasisGeoPillar.DisplayName: Hypostasis Geo Pillar
+}
+
+Projectiles: {
+	WeaponAnchor.DisplayName: Weapon Anchor
+	AlbedoBurstMain.DisplayName: Albedo Burst Main
+	AlbedoProjectileBlast.DisplayName: Albedo Projectile Blast
+	AlbedoProjectileSkillMain.DisplayName: Albedo Projectile Skill Main
+	BarbaraProjectileBurstCircle.DisplayName: Barbara Projectile Burst Circle
+	BarbaraProjectileCharged.DisplayName: Barbara Projectile Charged
+	BarbaraProjectileNormal.DisplayName: Barbara Projectile Normal
+	BarbaraProjectileSkillCircle.DisplayName: Barbara Projectile Skill Circle
+	BarbaraProjectileSkillDroplet.DisplayName: Barbara Projectile Skill Droplet
+	ProjectileJeanSkill.DisplayName: Projectile Jean Skill
+	KaeyaProjectileBurst.DisplayName: Kaeya Projectile Burst
+	KaeyaProjectileSkill.DisplayName: Kaeya Projectile Skill
+	KleeExplosionLarge.DisplayName: Klee Explosion Large
+	KleeExplosionMedium.DisplayName: Klee Explosion Medium
+	KleeExplosionSmall.DisplayName: Klee Explosion Small
+	KleeProjectileBurst.DisplayName: Klee Projectile Burst
+	KleeProjectileBurstFollow.DisplayName: Klee Projectile Burst Follow
+	KleeProjectileBurstMain.DisplayName: Klee Projectile Burst Main
+	KleeProjectileCharged.DisplayName: Klee Projectile Charged
+	KleeProjectileChargedMain.DisplayName: Klee Projectile Charged Main
+	KleeProjectileNormal.DisplayName: Klee Projectile Normal
+	KleeProjectileSkill.DisplayName: Klee Projectile Skill
+	KleeProjectileSkillBomb.DisplayName: Klee Projectile Skill Bomb
+	LisaProjectileBurst.DisplayName: Lisa Projectile Burst
+	LisaProjectileBurstHit.DisplayName: Lisa Projectile Burst Hit
+	LisaProjectileCharged.DisplayName: Lisa Projectile Charged
+	LisaProjectileNormal.DisplayName: Lisa Projectile Normal
+	LisaProjectileSkill.DisplayName: Lisa Projectile Skill
+	LisaProjectileSkillHold.DisplayName: Lisa Projectile Skill Hold
+	ProjectileNoelleBurst.DisplayName: Projectile Noelle Burst
+	ProjectileNoelleCharged.DisplayName: Projectile Noelle Charged
+	ProjectileNoelleNormal.DisplayName: Projectile Noelle Normal
+	ProjectileNoelleShield.DisplayName: Projectile Noelle Shield
+	HypostasisGeoProjectileCube.DisplayName: Hypostasis Geo Projectile Cube
+	HypostasisGeoProjectileShoot.DisplayName: Hypostasis Geo Projectile Shoot
+	HypostasisGeoProjectileTarget.DisplayName: Hypostasis Geo Projectile Target
+	ProjectileClaymoreCharged.DisplayName: Projectile Claymore Charged
+	ProjectileClaymoreNormal.DisplayName: Projectile Claymore Normal
+	ProjectileCrystallize.DisplayName: Projectile Crystallize
+	ProjectileElementalParticle.DisplayName: Projectile Elemental Particle
+	ProjectileOverloaded.DisplayName: Projectile Overloaded
+	ProjectileSuperconduct.DisplayName: Projectile Superconduct
+	ProjectileSwirl.DisplayName: Projectile Swirl
+	ProjectileSwordCharged.DisplayName: Projectile Sword Charged
+	ProjectileSwordNormal.DisplayName: Projectile Sword Normal
+}
+
+Configs: {
+	GenshinConfig: {
+		DisplayName: Configuration
+
+		EnableBurstQuotes: {
+			Label: Enable elemental burst quotes
+			Tooltip: "{$Displays a quote when an elemental burst is used}"
+		}
+	}
+}

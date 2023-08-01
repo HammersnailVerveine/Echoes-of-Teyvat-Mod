@@ -136,21 +136,28 @@ namespace GenshinMod.Common.ModObjects
             return base.CanBeHitByProjectile(proj);
         }
 
-        public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
+        public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
         {
             GenshinElement element = npc.GetGlobalNPC<GenshinGlobalNPC>().Element;
-            CharacterCurrent.Damage(damage, element, crit);
-            crit = false;
-            damage = 1;
+            CharacterCurrent.Damage(npc.damage, element);
+        }
+
+        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
+        {
+            GenshinElement element = GenshinElement.NONE;
+            if (proj.ModProjectile is GenshinProjectile genshinProj) element = genshinProj.Element;
+            CharacterCurrent.Damage(proj.damage, element);
+        }
+        public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
+        {
+            modifiers.FinalDamage *= 0f;
+            Player.statLife++; // bandaid after tmodloader 1.4.4 changes
         }
 
         public override void ModifyHitByProjectile(Projectile proj, ref Player.HurtModifiers modifiers)
         {
-            GenshinElement element = GenshinElement.NONE;
-            if (proj.ModProjectile is GenshinProjectile genshinProj) element = genshinProj.Element;
-            CharacterCurrent.Damage(damage, element, crit);
-            crit = false;
-            damage = 1;
+            modifiers.FinalDamage *= 0f;
+            Player.statLife++; // bandaid after tmodloader 1.4.4 changes
         }
 
         public override void ResetEffects()

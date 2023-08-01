@@ -94,7 +94,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
             SpawnDust<KaeyaDustFrost>(1f, 1f, 10, 8);
             SpawnDust<KaeyaDustFrostBig>(0.75f, 1f, 5, 3);
         }
-        public override void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void SafeOnHitNPC(NPC target)
         {
             HitNPC.Add(target.whoAmI);
             HitNPCTimer.Add(60);

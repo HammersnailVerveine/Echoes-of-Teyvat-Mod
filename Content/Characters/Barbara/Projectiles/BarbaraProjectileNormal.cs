@@ -60,7 +60,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
             }
         }
 
-        public override void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnFirstHitNPC(NPC target)
         {
             if (OwnerCharacter is CharacterBarbara barbara)
             {

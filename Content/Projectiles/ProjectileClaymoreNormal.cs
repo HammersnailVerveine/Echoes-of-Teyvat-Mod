@@ -84,7 +84,7 @@ namespace GenshinMod.Content.Projectiles
             }
         }
 
-        public override void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void SafeOnHitNPC(NPC target)
         {
             HitNPC.Add(target.whoAmI);
         }

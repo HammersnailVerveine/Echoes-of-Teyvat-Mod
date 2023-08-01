@@ -22,7 +22,7 @@ namespace GenshinMod.Common.ModObjects
         public int ElementApplication = ElementApplicationWeak; // Elemental application duration
         public bool IgnoreICD = false; // Will the projectile always apply its element no matter what?
         public bool CanReact = true; // Can the projectile trigger elemental reactions?
-        public bool CanDealDamage = true; // Can the projectile deal damage?
+        public bool CanDealDamage = true; // Can the projectile deal damage? Used for klee bombs for example, that should be able to hit enemies but do not deal any damage
         public bool FirstFrameDamage; // The projectile resets immunity and deals damage on its first frame only
         public GenshinCharacter OwnerCharacter; // Reference to the owner character
         public bool FirstHit = false; // Has the projectile hit a target yet ?
@@ -33,8 +33,8 @@ namespace GenshinMod.Common.ModObjects
 
         public virtual void SafeAI() { }
         public virtual void SafePostAI() { }
-        public virtual void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit) { }
-        public virtual void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit) { }
+        public virtual void SafeOnHitNPC(NPC target) { }
+        public virtual void OnFirstHitNPC(NPC target) { }
         public virtual void SafeModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
         public virtual void SafePostDraw(Color lightColor, SpriteBatch spriteBatch) { } // Replaces the normal PostDraw
@@ -87,7 +87,7 @@ namespace GenshinMod.Common.ModObjects
 
         public sealed override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (!FirstHit && damage > 0)
+            if (!FirstHit && hit.Damage > 0)
             {
                 FirstHit = true;
 
@@ -95,28 +95,10 @@ namespace GenshinMod.Common.ModObjects
                 {
                     SpawnElementalParticle(Element, 1f, ElementalParticles);
                 }
-
-                OnFirstHitNPC(target, damage, knockback, crit);
+                OnFirstHitNPC(target);
             }
-            SafeOnHitNPC(target, damage, knockback, crit);
+            SafeOnHitNPC(target);
         }
-
-        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
-        {
-            if (!CanDealDamage)
-            {
-                damage = 0;
-                target.life++;
-            }
-            SafeModifyHitNPC(target, ref damage, ref knockback, ref crit, ref hitDirection);
-        }
-
-        /*
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
-        {
-            InflictElement(target, Element, ElementApplication);
-        }
-        */
 
         // UTILITY
 

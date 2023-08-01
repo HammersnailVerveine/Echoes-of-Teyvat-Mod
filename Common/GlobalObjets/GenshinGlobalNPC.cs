@@ -89,7 +89,7 @@ namespace GenshinMod.Common.GlobalObjets
             npc.defense = 0;
             npc.value = 0;
 
-            if (npc.type == NPCID.ArmoredViking) ResistanceCryo = 1f;
+            if (npc.type == NPCID.ArmoredViking) ResistanceCryo = 1f; // test
         }
 
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
@@ -283,16 +283,16 @@ namespace GenshinMod.Common.GlobalObjets
             }
         }
 
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+        public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
         {
-            if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
+            if (projectile.ModProjectile is GenshinProjectile genshinProjectile && genshinProjectile.CanDealDamage)
             {
                 GenshinCharacter genshinCharacter = genshinProjectile.OwnerCharacter;
                 if (genshinCharacter == null) return;
                 GenshinElement element = genshinProjectile.Element;
 
-                damage = genshinCharacter.ApplyDamageMult(damage, element, genshinProjectile.AbilityType);
-                crit = genshinCharacter.GetProjectileCrit(genshinProjectile);
+                int damage = genshinCharacter.ApplyDamageMult(projectile.damage, element, genshinProjectile.AbilityType);
+                bool crit = genshinCharacter.GetProjectileCrit(genshinProjectile);
                 if (crit) damage = genshinCharacter.GetProjectileCritDamage(genshinProjectile, damage);
 
                 if (element != GenshinElement.NONE && genshinProjectile.CanReact) ApplyElement(npc, genshinProjectile, genshinCharacter, element, ref damage);
@@ -332,13 +332,19 @@ namespace GenshinMod.Common.GlobalObjets
                     CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.SHATTER), "Shatter");
                 }
 
-                if (damage > 0) CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
-                else if (genshinProjectile.CanDealDamage)
+                if (damage > 0)
                 {
-                    CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
-                    npc.life++;
+                    CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
+                    genshinCharacter.Player.ApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false);
                 }
+                else CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
             }
+        }
+
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            modifiers.FinalDamage *= 0f;
+            npc.life++; // bandaid after tmodloader 1.4.4 changes
         }
 
         public void ApplyElement(NPC npc, GenshinProjectile genshinProjectile, GenshinCharacter genshinCharacter, GenshinElement element, ref int damage)

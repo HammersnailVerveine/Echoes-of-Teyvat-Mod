@@ -87,7 +87,7 @@ namespace GenshinMod.Content.Projectiles
             if (TimeSpent % 35 == 0) HitNPC.Clear();
         }
 
-        public override void SafeOnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void SafeOnHitNPC(NPC target)
         {
             HitNPC.Add(target.whoAmI);
         }

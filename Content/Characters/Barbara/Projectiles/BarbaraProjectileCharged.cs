@@ -93,7 +93,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
                 Projectile.position = Main.npc[(int)Projectile.ai[0]].Center - Projectile.Size * 0.5f;
         }
 
-        public override void OnFirstHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void OnFirstHitNPC(NPC target)
         {
             if (OwnerCharacter is CharacterBarbara barbara)
             {
