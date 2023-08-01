@@ -35,7 +35,6 @@ namespace GenshinMod.Common.ModObjects
         public virtual void SafePostAI() { }
         public virtual void SafeOnHitNPC(NPC target) { }
         public virtual void OnFirstHitNPC(NPC target) { }
-        public virtual void SafeModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection) { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Color lightcolor) => true;
         public virtual void SafePostDraw(Color lightColor, SpriteBatch spriteBatch) { } // Replaces the normal PostDraw
         public virtual void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch) { } // Called after SafePostDraw, the spritebatch in parameter uses additive blending
