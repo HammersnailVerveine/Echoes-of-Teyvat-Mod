@@ -1,3 +1,4 @@
+using GenshinMod.Common.GameObjects.Enums;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
 
@@ -7,9 +8,16 @@ namespace GenshinMod
 	{
 		internal static GenshinMod Instance { get; private set; }
 
-		public override void Unload()
+        public override void Load()
         {
-            base.Unload();
+			GenshinElementUtils.LoadTexture();
+			base.Load();
+        }
+
+        public override void Unload()
+		{
+			GenshinElementUtils.UnloadTexture();
+			base.Unload();
 		}
 
 		public GenshinMod()

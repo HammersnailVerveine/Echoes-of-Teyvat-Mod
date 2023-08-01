@@ -114,14 +114,14 @@ namespace GenshinMod.Common.GameObjects
         public float StatDamageReactionFrozen = 0f; // Bonus Frozen Duration (base = 0%)
         public float StatDamageReactionCrystallize = 0f; // Bonus Crystallize Reaction Shield Value (base = 0%)
 
-        public float StatResistanceGeo = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
-        public float StatResistanceAnemo = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
-        public float StatResistanceCryo = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
-        public float StatResistanceElectro = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
-        public float StatResistanceDendro = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
-        public float StatResistanceHydro = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
-        public float StatResistancePyro = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
-        public float StatResistancePhysical = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+        public float StatResistanceGeo = 0f; // 0f = 100% damage taken by Geo, 1f = immune, can be negative to take more damage (base = 0%)
+        public float StatResistanceAnemo = 0f; // 0f = 100% damage taken by Anemo, 1f = immune, can be negative to take more damage (base = 0%)
+        public float StatResistanceCryo = 0f; // 0f = 100% damage taken by Cryo, 1f = immune, can be negative to take more damage (base = 0%)
+        public float StatResistanceElectro = 0f; // 0f = 100% damage taken by Electro, 1f = immune, can be negative to take more damage (base = 0%)
+        public float StatResistanceDendro = 0f; // 0f = 100% damage taken by Dendro, 1f = immune, can be negative to take more damage (base = 0%)
+        public float StatResistanceHydro = 0f; // 0f = 100% damage taken by Hydro, 1f = immune, can be negative to take more damage (base = 0%)
+        public float StatResistancePyro = 0f; // 0f = 100% damage taken by Pyro, 1f = immune, can be negative to take more damage (base = 0%)
+        public float StatResistancePhysical = 0f; // 0f = 100% damage taken by Physical (or "none"), 1f = immune, can be negative to take more damage (base = 0%)
 
         public float WeaponSize = 1f;
 

@@ -1,4 +1,7 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using Terraria.ModLoader;
 
 namespace GenshinMod.Common.GameObjects.Enums
 {
@@ -35,6 +38,32 @@ namespace GenshinMod.Common.GameObjects.Enums
     }
     public static class GenshinElementUtils
     {
+        public static Texture2D[] ElementTexture;
+
+        public static void LoadTexture()
+        {
+            ElementTexture = new Texture2D[7];
+            ElementTexture[0] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Geo", AssetRequestMode.ImmediateLoad).Value;
+            ElementTexture[1] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Anemo", AssetRequestMode.ImmediateLoad).Value;
+            ElementTexture[2] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Cryo", AssetRequestMode.ImmediateLoad).Value;
+            ElementTexture[3] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Electro", AssetRequestMode.ImmediateLoad).Value;
+            ElementTexture[4] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Dendro", AssetRequestMode.ImmediateLoad).Value;
+            ElementTexture[5] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Hydro", AssetRequestMode.ImmediateLoad).Value;
+            ElementTexture[6] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Pyro", AssetRequestMode.ImmediateLoad).Value;
+        }
+        public static void UnloadTexture()
+        {
+            ElementTexture = new Texture2D[7];
+            ElementTexture[0] = null;
+            ElementTexture[1] = null;
+            ElementTexture[2] = null;
+            ElementTexture[3] = null;
+            ElementTexture[4] = null;
+            ElementTexture[5] = null;
+            ElementTexture[6] = null;
+            ElementTexture = null;
+        }
+
         public static Color ColorImmune => new Color(168, 168, 168);
 
         public static Color GetColor(GenshinElement element)

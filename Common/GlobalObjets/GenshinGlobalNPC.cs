@@ -15,11 +15,39 @@ namespace GenshinMod.Common.GlobalObjets
 {
     public class GenshinGlobalNPC : GlobalNPC
     {
-        public static Texture2D[] ElementTexture;
+        // Not reset every frame
 
         public GenshinElement Element = GenshinElement.NONE;
+        public int Level = 1; // Enemy level (1-10)
+
+        public int ElementSymbolDrawOffset = 0; // used to offset the drawing of the element symbols above specific enemies, may be used for some bosses
+
         public bool BluntTarget = false; // is the target more susceptible to heavy attacks ?
-        public int Level = 1;
+        public bool GiveEnergyParticlesLife = true; // should the NPC release particles at half and 0 health
+        public bool GiveEnergyParticlesHit = true; // should the NPC release particles when hit by projectiles
+
+        public float ResistanceGeo = 0.1f; // 0f = 100% damage taken, 1f = immune
+        public float ResistanceAnemo = 0.1f; // 0f = 100% damage taken, 1f = immune
+        public float ResistanceCryo = 0.1f; // 0f = 100% damage taken, 1f = immune
+        public float ResistanceElectro = 0.1f; // 0f = 100% damage taken, 1f = immune 
+        public float ResistanceDendro = 0.1f; // 0f = 100% damage taken, 1f = immune
+        public float ResistanceHydro = 0.1f; // 0f = 100% damage taken, 1f = immune
+        public float ResistancePyro = 0.1f; // 0f = 100% damage taken, 1f = immune
+        public float ResistancePhysical = 0.1f; // 0f = 100% damage taken, 1f = immune
+
+        // Reset variables
+
+        public float ReductionDefense = 0f; // Add to deal more damage with all attacks
+        public float ReductionResistanceGeo = 0f; // Add to deal more damage with Geo element
+        public float ReductionResistanceAnemo = 0f; // Add to deal more damage with Anemo element
+        public float ReductionResistanceCryo = 0f; // Add to deal more damage with Cryo element
+        public float ReductionResistanceElectro = 0f; // Add to deal more damage with Electro element
+        public float ReductionResistanceDendro = 0f; // Add to deal more damage with Dendro element
+        public float ReductionResistanceHydro = 0f; // Add to deal more damage with Hydro element
+        public float ReductionResistancePyro = 0f; // Add to deal more damage with Pyro element
+        public float ReductionResistancePhysical = 0f; // Add to deal more damage with Physical (or "none") element
+
+        // Reaction-related variables
 
         public int TimerElementGeo = 0;
         public int TimerElementAnemo = 0;
@@ -45,44 +73,10 @@ namespace GenshinMod.Common.GlobalObjets
         public byte HitsSwirl = 0; // Swirl can hit 2 times per 0.5 sec
         public byte HitsSuperconduct = 0; // Superconduct can hit 2 times per 0.5 sec
 
-        public float ResistanceGeo = 0.1f; // 0f = 100% damage taken, 1f = immune
-        public float ResistanceAnemo = 0.1f;
-        public float ResistanceCryo = 0.1f;
-        public float ResistanceElectro = 0.1f;
-        public float ResistanceDendro = 0.1f;
-        public float ResistanceHydro = 0.1f;
-        public float ResistancePyro = 0.1f;
-        public float ResistancePhysical = 0.1f;
-
-        public float ReductionDefense = 0f; // Add to deal more damage with all attacks
-        public float ReductionResistanceGeo = 0f; // Add to deal more damage with X element
-        public float ReductionResistanceAnemo = 0f;
-        public float ReductionResistanceCryo = 0f;
-        public float ReductionResistanceElectro = 0f;
-        public float ReductionResistanceDendro = 0f;
-        public float ReductionResistanceHydro = 0f;
-        public float ReductionResistancePyro = 0f;
-        public float ReductionResistancePhysical = 0f;
-
-        public int ElementSymbolDrawOffset = 0; // used to offset the drawing of the element symbols above specific enemies, may be used for some bosses
-        public bool GiveEnergyParticlesLife = true; // should the NPC release particles at half and 0 health
-        public bool GiveEnergyParticlesHit = true; // should the NPC release particles when hit by projectiles
-
         private bool HalfLifeParticle = false;
 
         public static bool CanBefrozen(NPC npc) => npc.knockBackResist > 0f; //|| npc.type == NPCID.TargetDummy;
         public override bool InstancePerEntity => true;
-        public override void Load()
-        {
-            ElementTexture = new Texture2D[7];
-            ElementTexture[0] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Geo", AssetRequestMode.ImmediateLoad).Value;
-            ElementTexture[1] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Anemo", AssetRequestMode.ImmediateLoad).Value;
-            ElementTexture[2] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Cryo", AssetRequestMode.ImmediateLoad).Value;
-            ElementTexture[3] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Electro", AssetRequestMode.ImmediateLoad).Value;
-            ElementTexture[4] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Dendro", AssetRequestMode.ImmediateLoad).Value;
-            ElementTexture[5] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Hydro", AssetRequestMode.ImmediateLoad).Value;
-            ElementTexture[6] = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Element_Pyro", AssetRequestMode.ImmediateLoad).Value;
-        }
 
         public override void SetDefaults(NPC npc)
         {
@@ -268,13 +262,13 @@ namespace GenshinMod.Common.GlobalObjets
             int offSetX = 0;
             setOffset(ref offSetX, ref offSetY, ref nbElements);
 
-            if (AffectedByElement(GenshinElement.GEO)) DrawTexture(ElementTexture[0], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementGeo);
-            if (AffectedByElement(GenshinElement.ANEMO)) DrawTexture(ElementTexture[1], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementAnemo);
-            if (AffectedByElement(GenshinElement.CRYO)) DrawTexture(ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementCryo);
-            if (AffectedByElement(GenshinElement.ELECTRO)) DrawTexture(ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementElectro);
-            if (AffectedByElement(GenshinElement.DENDRO)) DrawTexture(ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementDendro);
-            if (AffectedByElement(GenshinElement.HYDRO) && !ReactionFrozen) DrawTexture(ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementHydro);
-            if (AffectedByElement(GenshinElement.PYRO)) DrawTexture(ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementPyro);
+            if (AffectedByElement(GenshinElement.GEO)) DrawTexture(GenshinElementUtils.ElementTexture[0], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementGeo);
+            if (AffectedByElement(GenshinElement.ANEMO)) DrawTexture(GenshinElementUtils.ElementTexture[1], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementAnemo);
+            if (AffectedByElement(GenshinElement.CRYO)) DrawTexture(GenshinElementUtils.ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementCryo);
+            if (AffectedByElement(GenshinElement.ELECTRO)) DrawTexture(GenshinElementUtils.ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementElectro);
+            if (AffectedByElement(GenshinElement.DENDRO)) DrawTexture(GenshinElementUtils.ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementDendro);
+            if (AffectedByElement(GenshinElement.HYDRO) && !ReactionFrozen) DrawTexture(GenshinElementUtils.ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementHydro);
+            if (AffectedByElement(GenshinElement.PYRO)) DrawTexture(GenshinElementUtils.ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementPyro);
 
             if (ReactionFrozen)
             {
