@@ -114,6 +114,15 @@ namespace GenshinMod.Common.GameObjects
         public float StatDamageReactionFrozen = 0f; // Bonus Frozen Duration (base = 0%)
         public float StatDamageReactionCrystallize = 0f; // Bonus Crystallize Reaction Shield Value (base = 0%)
 
+        public float StatResistanceGeo = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+        public float StatResistanceAnemo = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+        public float StatResistanceCryo = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+        public float StatResistanceElectro = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+        public float StatResistanceDendro = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+        public float StatResistanceHydro = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+        public float StatResistancePyro = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+        public float StatResistancePhysical = 0f; // 0f = 100% damage taken, 1f = immune (base = 0%)
+
         public float WeaponSize = 1f;
 
         public List<ICDTracker> ICDTrackers;
@@ -460,6 +469,7 @@ namespace GenshinMod.Common.GameObjects
         {
             if (OnDamage(value))
             {
+                value = (int)(value * GetResistanceMult(element));
                 value = ApplyDefense(value);
                 if (IsCurrentCharacter && combatText) CombatText.NewText(Player.Hitbox, new Color(255, 80, 80), value, crit);
                 if (GenshinPlayer.Shields.Count > 0)
@@ -518,6 +528,41 @@ namespace GenshinMod.Common.GameObjects
             if (ability == AbilitySkill) return LevelAbilitySkill;
             if (ability == AbilityBurst) return LevelAbilityBurst;
             return 1;
+        }
+        public float GetResistanceMult(GenshinElement element)
+        {
+            float mult = 1f;
+
+            switch (element)
+            {
+                case GenshinElement.GEO:
+                    mult -= StatResistanceGeo;
+                    break;
+                case GenshinElement.ANEMO:
+                    mult -= StatResistanceAnemo;
+                    break;
+                case GenshinElement.CRYO:
+                    mult -= StatResistanceCryo;
+                    break;
+                case GenshinElement.DENDRO:
+                    mult -= StatResistanceDendro;
+                    break;
+                case GenshinElement.ELECTRO:
+                    mult -= StatResistanceElectro;
+                    break;
+                case GenshinElement.HYDRO:
+                    mult -= StatResistanceHydro;
+                    break;
+                case GenshinElement.PYRO:
+                    mult -= StatResistancePyro;
+                    break;
+                default: // Physical or NONE
+                    mult -= StatResistancePhysical;
+                    break;
+            }
+
+            if (mult < 0f) mult = 0f;
+            return mult;
         }
 
         public int ApplyDefense(int value, int sourceLevel = 10) => (int)(value * (1f - (EffectiveDefense / (EffectiveDefense + 500f + sourceLevel * 50f))));
