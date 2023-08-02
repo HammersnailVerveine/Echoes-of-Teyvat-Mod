@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace GenshinMod.Common.GameObjects.Enums
@@ -62,6 +63,51 @@ namespace GenshinMod.Common.GameObjects.Enums
             ElementTexture[5] = null;
             ElementTexture[6] = null;
             ElementTexture = null;
+        }
+
+        public static void ClearCrystallizeCrystals()
+        {
+            // Might be improved : sets the timeleft of every crystal except the latest 3 (counting the one that's going to spawn right after) to 2 seconds.
+            Projectile first = null;
+            Projectile second = null;
+
+            foreach (Projectile projectile in Main.projectile)
+            {
+                if (projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize crystal)
+                {
+                    if (first == null)
+                        first = projectile;
+                    else if (second == null)
+                    {
+                        if (first.timeLeft > projectile.timeLeft)
+                            second = projectile;
+                        else
+                        {
+                            second = first;
+                            first = projectile;
+                        }
+                    }
+                    else if (projectile.timeLeft > second.timeLeft)
+                    {
+                        if (projectile.timeLeft > first.timeLeft)
+                        {
+                            second = first;
+                            first = projectile;
+                        }
+                        else
+                            second = projectile;
+                    }
+                }
+            }
+
+            if (second != null)
+            {
+                foreach (Projectile projectile in Main.projectile)
+                {
+                    if (projectile != first && projectile != second && projectile.timeLeft > 120 && projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize)
+                        projectile.timeLeft = 120;
+                }
+            }
         }
 
         public static Color ColorImmune => new Color(168, 168, 168);

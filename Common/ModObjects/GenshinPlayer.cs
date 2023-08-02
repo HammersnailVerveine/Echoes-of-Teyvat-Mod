@@ -45,6 +45,8 @@ namespace GenshinMod.Common.ModObjects
         public bool KeyBurst = false; // Is the Burst key pressed ?
         public bool KeyBurstRelease = true; // Was the Burst key released last frame ?
 
+        public byte FrozenMovementFrame = 0; // Used to display the proper animation frame when the character is frozen
+
         public int StaminaMax => StaminaBase + StaminaBonus;
 
         public bool IsUsing => TimerUse > 0;
@@ -99,6 +101,16 @@ namespace GenshinMod.Common.ModObjects
         {
             foreach (GenshinCharacter character in CharacterTeam)
                 character.PostUpdate();
+
+            if (CharacterCurrent != null)
+            {
+                if (CharacterCurrent.ReactionFrozen)
+                {
+                    Player.velocity *= 0f;
+                    Player.direction = CharacterCurrent.ReactionFrozenDirection;
+                    Player.position = CharacterCurrent.ReactionFrozenPosition;
+                }
+            }
         }
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
@@ -316,38 +328,45 @@ namespace GenshinMod.Common.ModObjects
 
             int movementFrame = 0;
             int legFrame = 0;
-            if (Player.velocity != Vector2.Zero)
-            {
-                if (Player.velocity.Y != 0)
-                {
-                    movementFrame = 5;
-                }
-                else
-                {
-                    while ((movementFrame + 1) * 10 < TimerMovement)
-                    {
-                        movementFrame++;
-                    }
-                    movementFrame += 6;
-
-                    if (IsUsing && LastUseDirection != Player.direction)
-                    {
-                        legFrame = 19 - movementFrame + 6;
-                    }
-                }
-            }
-
             int useFrame = -1;
-            if (TimerUse > 0)
+            if (!CharacterCurrent.ReactionFrozen)
             {
-                useFrame = 3;
-                while (useFrame * (TimerUseRef / 4) >= TimerUse)
+                if (Player.velocity != Vector2.Zero)
                 {
-                    useFrame--;
+                    if (Player.velocity.Y != 0)
+                    {
+                        movementFrame = 5;
+                    }
+                    else
+                    {
+                        while ((movementFrame + 1) * 10 < TimerMovement)
+                        {
+                            movementFrame++;
+                        }
+                        movementFrame += 6;
+
+                        if (IsUsing && LastUseDirection != Player.direction)
+                        {
+                            legFrame = 19 - movementFrame + 6;
+                        }
+                    }
                 }
-                useFrame = 1 + (ReverseUseArmDirection ? useFrame : (3 - useFrame));
+
+                if (TimerUse > 0)
+                {
+                    useFrame = 3;
+                    while (useFrame * (TimerUseRef / 4) >= TimerUse)
+                    {
+                        useFrame--;
+                    }
+                    useFrame = 1 + (ReverseUseArmDirection ? useFrame : (3 - useFrame));
+                }
+                if (IsHolding) useFrame = 2;
             }
-            if (IsHolding) useFrame = 2;
+            else
+            {
+                movementFrame = FrozenMovementFrame;
+            }
 
             Texture2D textureLegs = CharacterCurrent.TextureLegs;
             Rectangle rectangleLegs = textureLegs.Bounds;
@@ -355,6 +374,7 @@ namespace GenshinMod.Common.ModObjects
             rectangleLegs.Y += rectangleLegs.Height * (legFrame == 0 ? movementFrame : legFrame);
 
             if (useFrame != -1) movementFrame = useFrame;
+            FrozenMovementFrame = (byte)movementFrame;
 
             Texture2D textureBody = CharacterCurrent.TextureBody;
             Rectangle rectangleBody = textureBody.Bounds;
@@ -381,9 +401,72 @@ namespace GenshinMod.Common.ModObjects
 
             foreach (GenshinShield shield in Shields)
                 shield.Draw(spriteBatch, lightColor, this);
+
+            // Draw elements affecting the current character
+
+            if (CharacterCurrent != null)
+            {
+                int nbElements = -1;
+                foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
+                    if (element != GenshinElement.NONE) if (CharacterCurrent.AffectedByElement(element)) nbElements++;
+                if (CharacterCurrent.AffectedByElement(GenshinElement.HYDRO) && CharacterCurrent.ReactionFrozen) nbElements--;
+                int offSetY = -30;
+                int offSetX = 0;
+                setOffset(ref offSetX, ref offSetY, ref nbElements);
+
+                if (CharacterCurrent.AffectedByElement(GenshinElement.GEO)) DrawTexture(GenshinElementUtils.ElementTexture[0], spriteBatch, nbElements, ref offSetX, ref offSetY, CharacterCurrent.TimerElementGeo);
+                if (CharacterCurrent.AffectedByElement(GenshinElement.ANEMO)) DrawTexture(GenshinElementUtils.ElementTexture[1], spriteBatch, nbElements, ref offSetX, ref offSetY, CharacterCurrent.TimerElementAnemo);
+                if (CharacterCurrent.AffectedByElement(GenshinElement.CRYO)) DrawTexture(GenshinElementUtils.ElementTexture[2], spriteBatch, nbElements, ref offSetX, ref offSetY, CharacterCurrent.TimerElementCryo);
+                if (CharacterCurrent.AffectedByElement(GenshinElement.ELECTRO)) DrawTexture(GenshinElementUtils.ElementTexture[3], spriteBatch, nbElements, ref offSetX, ref offSetY, CharacterCurrent.TimerElementElectro);
+                if (CharacterCurrent.AffectedByElement(GenshinElement.DENDRO)) DrawTexture(GenshinElementUtils.ElementTexture[4], spriteBatch, nbElements, ref offSetX, ref offSetY, CharacterCurrent.TimerElementDendro);
+                if (CharacterCurrent.AffectedByElement(GenshinElement.HYDRO) && !CharacterCurrent.ReactionFrozen) DrawTexture(GenshinElementUtils.ElementTexture[5], spriteBatch, nbElements, ref offSetX, ref offSetY, CharacterCurrent.TimerElementHydro);
+                if (CharacterCurrent.AffectedByElement(GenshinElement.PYRO)) DrawTexture(GenshinElementUtils.ElementTexture[6], spriteBatch, nbElements, ref offSetX, ref offSetY, CharacterCurrent.TimerElementPyro);
+
+                if (CharacterCurrent.ReactionFrozen)
+                {
+                    Vector2 drawPositionAlt = drawPosition;
+                    Vector2 drawPositionAlt1 = new Vector2(drawPosition.X - 30 * Player.direction, drawPosition.Y + 50);
+                    Vector2 drawPositionAlt2 = new Vector2(drawPosition.X + 30 * Player.direction, drawPosition.Y + 50);
+                    spriteBatch.Draw(textureLegs, drawPositionAlt1, rectangleLegs, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureLegs.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureBody, drawPositionAlt1, rectangleBody, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureBody.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureHead, drawPositionAlt1, rectangleHead, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureHead.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureArms, drawPositionAlt1, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureArms.Size() * 0.5f, 1.1f, effect, 0f);
+
+                    spriteBatch.Draw(textureLegs, drawPositionAlt2, rectangleLegs, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureLegs.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureBody, drawPositionAlt2, rectangleBody, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureBody.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureHead, drawPositionAlt2, rectangleHead, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureHead.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureArms, drawPositionAlt2, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureArms.Size() * 0.5f, 1.1f, effect, 0f);
+
+                    spriteBatch.Draw(textureLegs, drawPosition, rectangleLegs, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0f, textureLegs.Size() * 0.5f, 1f, effect, 0f);
+                    spriteBatch.Draw(textureBody, drawPosition, rectangleBody, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0f, textureBody.Size() * 0.5f, 1f, effect, 0f);
+                    spriteBatch.Draw(textureHead, drawPosition, rectangleHead, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0f, textureHead.Size() * 0.5f, 1f, effect, 0f);
+                    spriteBatch.Draw(textureArms, drawPosition, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
+                }
+            }
         }
 
         // Methods
+
+        public void setOffset(ref int offSetX, ref int offSetY, ref int nbElements)
+        {
+            offSetX = 0;
+            while (nbElements > 0 && offSetX > -28)
+            {
+                nbElements--;
+                offSetX -= 14;
+            }
+            offSetY -= 24;
+        }
+
+        public void DrawTexture(Texture2D texture, SpriteBatch spriteBatch, int nbElements, ref int offSetX, ref int offSetY, int timeLeft)
+        {
+            float colorMult = timeLeft > 120 ? 1f : (float)Math.Abs(Math.Sin((timeLeft * 0.5f) / Math.PI / 4f));
+            Vector2 position = new Vector2(Player.Center.X + offSetX - Main.screenPosition.X, Player.Center.Y + offSetY - Main.screenPosition.Y);
+            spriteBatch.Draw(texture, position, null, Color.White * colorMult, 0f, texture.Size() * 0.5f, 0.875f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, position, null, Color.White * 0.5f * colorMult, 0f, texture.Size() * 0.5f, 1.025f, SpriteEffects.None, 0f);
+            offSetX += 24;
+            if (offSetX > 24) setOffset(ref offSetX, ref offSetY, ref nbElements);
+        }
 
         public void GiveTeamEnergy(GenshinElement element, float value)
         {
@@ -394,7 +477,7 @@ namespace GenshinMod.Common.ModObjects
         public void TrySwapCharacter(int slot)
         {
             SoundEngine.PlaySound(SoundID.MenuTick);
-            if (CharacterTeam.Count > slot && CharacterCurrent.CanUseAbility && !CharacterCurrent.IsHoldingAbility)
+            if (CharacterTeam.Count > slot && CharacterCurrent.CanUseAbility && !CharacterCurrent.IsHoldingAbility && !CharacterCurrent.ReactionFrozen)
             {
                 if (CharacterCurrent != CharacterTeam[slot] && CharacterTeam[slot].IsAlive)
                 {

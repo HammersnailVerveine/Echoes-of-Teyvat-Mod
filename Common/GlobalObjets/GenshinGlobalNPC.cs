@@ -84,6 +84,54 @@ namespace GenshinMod.Common.GlobalObjets
             npc.value = 0;
 
             if (npc.type == NPCID.ArmoredViking) ResistanceCryo = 1f; // test
+
+            if (npc.type == NPCID.Zombie)
+            {
+                if (Main.rand.NextBool(2))
+                {
+                    Element = GenshinElement.CRYO;
+                    TimerElementCryo = 9999999;
+                }
+                else
+                {
+                    Element = GenshinElement.ELECTRO;
+                    TimerElementElectro = 9999999;
+                }
+
+                /*
+                switch (Main.rand.Next(7))
+                {
+                    case 1:
+                        Element = GenshinElement.ELECTRO;
+                        TimerElementElectro = 9999999;
+                        break;
+                    case 2:
+                        Element = GenshinElement.PYRO;
+                        TimerElementPyro = 9999999;
+                        break;
+                    case 3:
+                        Element = GenshinElement.CRYO;
+                        TimerElementCryo = 9999999;
+                        break;
+                    case 4:
+                        Element = GenshinElement.DENDRO;
+                        TimerElementDendro = 9999999;
+                        break;
+                    case 5:
+                        Element = GenshinElement.ANEMO;
+                        TimerElementAnemo = 9999999;
+                        break;
+                    case 6:
+                        Element = GenshinElement.HYDRO;
+                        TimerElementHydro = 9999999;
+                        break;
+                    default:
+                        Element = GenshinElement.GEO;
+                        TimerElementGeo = 9999999;
+                        break;
+                }
+                */
+            }
         }
 
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
@@ -206,8 +254,8 @@ namespace GenshinMod.Common.GlobalObjets
             return 1f - mult;
         }
 
-        public bool AffectedByElement(GenshinElement Element)
-        {
+        public bool AffectedByElement(GenshinElement Element = GenshinElement.NONE)
+        { // Without parameters (GenshinElement.NONE), returns false if the npc is affected by ANY element
             switch (Element)
             {
                 case GenshinElement.GEO:
@@ -764,47 +812,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                 if (crystallizeElement != GenshinElement.NONE)
                 {
-                    // Might be improved : sets the timeleft of every crystal except the latest 3 (counting the one that's going to spawn right after) to 2 seconds.
-                    Projectile first = null;
-                    Projectile second = null;
-
-                    foreach (Projectile projectile in Main.projectile)
-                    {
-                        if (projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize crystal)
-                        {
-                            if (first == null)
-                                first = projectile;
-                            else if (second == null)
-                            {
-                                if (first.timeLeft > projectile.timeLeft)
-                                    second = projectile;
-                                else
-                                {
-                                    second = first;
-                                    first = projectile;
-                                }
-                            }
-                            else if (projectile.timeLeft > second.timeLeft)
-                            {
-                                if (projectile.timeLeft > first.timeLeft)
-                                {
-                                    second = first;
-                                    first = projectile;
-                                }
-                                else
-                                    second = projectile;
-                            }
-                        }
-                    }
-
-                    if (second != null)
-                    {
-                        foreach (Projectile projectile in Main.projectile)
-                        {
-                            if (projectile != first && projectile != second && projectile.timeLeft > 120 && projectile.ModProjectile is Content.Projectiles.ProjectileCrystallize)
-                                projectile.timeLeft = 120;
-                        }
-                    }
+                    GenshinElementUtils.ClearCrystallizeCrystals();
 
                     int type = ModContent.ProjectileType<Content.Projectiles.ProjectileCrystallize>();
                     CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.CRYSTALLIZE), "Crystallize");
