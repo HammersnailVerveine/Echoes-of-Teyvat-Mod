@@ -54,8 +54,6 @@ namespace GenshinMod.Common.GameObjects
 
             if (element != GenshinElement.NONE)
             { // Elemental damage on shields is multiplied
-                damageUnit *= 4;
-
                 switch (Element) // Weaknesses table
                 {
                     case GenshinElement.PYRO:

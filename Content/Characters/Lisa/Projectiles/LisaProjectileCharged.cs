@@ -36,7 +36,6 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
             Projectile.alpha = 255;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
-            ElementApplication = ElementApplicationMedium;
             IgnoreICD = true;
             AttackWeight = AttackWeight.LIGHT;
         }

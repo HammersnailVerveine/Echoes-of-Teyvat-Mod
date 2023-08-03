@@ -33,7 +33,6 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
             Projectile.penetrate = -1;
             Projectile.alpha = 255;
             Main.projFrames[Projectile.type] = 3;
-            ElementApplication = ElementApplicationMedium;
             IgnoreICD = true;
             AttackWeight = AttackWeight.LIGHT;
         }

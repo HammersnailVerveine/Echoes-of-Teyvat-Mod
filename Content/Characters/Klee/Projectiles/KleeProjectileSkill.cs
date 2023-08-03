@@ -34,7 +34,6 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             Projectile.timeLeft = 300;
             Projectile.penetrate = -1;
             ElementalParticles = 4;
-            ElementApplication = ElementApplicationMedium;
         }
 
         public override void OnSpawn(IEntitySource source)
