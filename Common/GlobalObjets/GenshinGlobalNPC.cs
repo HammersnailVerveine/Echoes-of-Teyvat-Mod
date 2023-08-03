@@ -453,7 +453,7 @@ namespace GenshinMod.Common.GlobalObjets
                 if (damage > 0)
                 {
                     CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
-                    genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false, element, genshinProjectile.ElementApplication, genshinProjectile.AttackWeight);
+                    genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false, element, genshinProjectile.ElementApplication, false, genshinProjectile.AttackWeight);
                 }
                 else CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
             }
@@ -551,7 +551,7 @@ namespace GenshinMod.Common.GlobalObjets
                     TimerElementCryo -= application * 2; // 2x modifier
                     application = 0;
                     reacted = true;
-                    if (HasShield()) Shields[0].Damage(GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1);
+                    if (HasShield()) Shields[0].Damage(4, GenshinElement.PYRO);
                 }
 
                 if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Overloaded
@@ -571,7 +571,7 @@ namespace GenshinMod.Common.GlobalObjets
                                     int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                     if (targetDamage > 0)
                                     {
-                                        if (npctarget != null) npctarget.TryApplyDamageToNPC(target, targetDamage, 15f, -npc.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1);
+                                        if (npctarget != null) npctarget.TryApplyDamageToNPC(target, targetDamage, 15f, -npc.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1, false, AttackWeight.BLUNT);
                                         CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), targetDamage);
                                     }
                                     else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -594,7 +594,7 @@ namespace GenshinMod.Common.GlobalObjets
                     if (!HasShield()) TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
                     application = 0;
                     reacted = true;
-                    if (HasShield()) Shields[0].Damage(GenshinElement.PYRO, GenshinProjectile.ElementApplicationMedium);
+                    if (HasShield()) Shields[0].Damage(2, GenshinElement.PYRO);
                 }
 
                 if (AffectedByElement(GenshinElement.GEO) && !reacted) // Pyro Crystallize
@@ -619,7 +619,7 @@ namespace GenshinMod.Common.GlobalObjets
                     if (!HasShield()) TimerElementPyro -= application * 2; // 2x modifier
                     application = 0;
                     reacted = true;
-                    if (HasShield()) Shields[0].Damage(GenshinElement.HYDRO, GenshinProjectile.ElementApplicationStrong + 1);
+                    if (HasShield()) Shields[0].Damage(4, GenshinElement.HYDRO);
                 }
 
                 if (AffectedByElement(GenshinElement.CRYO) && !reacted && !HasShield()) // Frozen
@@ -670,7 +670,7 @@ namespace GenshinMod.Common.GlobalObjets
                     if (!HasShield()) TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
                     application = 0;
                     reacted = true;
-                    if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
+                    if (HasShield()) Shields[0].Damage(GenshinShieldNPC.GetDamageUnit(GenshinProjectile.ElementApplicationMedium), GenshinElement.NONE);
                 }
 
                 if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Superconduct
@@ -760,7 +760,7 @@ namespace GenshinMod.Common.GlobalObjets
                                     int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                     if (targetDamage > 0)
                                     {
-                                        if (npctarget != null) npctarget.TryApplyDamageToNPC(target, targetDamage, 15f, -npc.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1);
+                                        if (npctarget != null) npctarget.TryApplyDamageToNPC(target, targetDamage, 15f, -npc.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1, false, AttackWeight.BLUNT);
                                         CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), targetDamage);
                                     }
                                     else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -968,7 +968,7 @@ namespace GenshinMod.Common.GlobalObjets
                         TimerElementCryo -= application * 2; // 2x modifier
                         application = 0;
                         reacted = true;
-                        if (HasShield()) Shields[0].Damage(GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1);
+                        if (HasShield()) Shields[0].Damage(4, GenshinElement.PYRO);
                     }
 
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Overloaded
@@ -990,7 +990,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                         if (targetDamage > 0)
                                         {
-                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1);
+                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1, false, AttackWeight.BLUNT);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -1016,7 +1016,7 @@ namespace GenshinMod.Common.GlobalObjets
                         if (!HasShield()) TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
                         application = 0;
                         reacted = true;
-                        if (HasShield()) Shields[0].Damage(GenshinElement.PYRO, GenshinProjectile.ElementApplicationMedium);
+                        if (HasShield()) Shields[0].Damage(2, GenshinElement.PYRO);
                     }
 
                     if (AffectedByElement(GenshinElement.GEO) && !reacted) // Pyro Crystallize
@@ -1044,7 +1044,7 @@ namespace GenshinMod.Common.GlobalObjets
                         if (!HasShield()) TimerElementPyro -= application * 2; // 2x modifier
                         application = 0;
                         reacted = true;
-                        if (HasShield()) Shields[0].Damage(GenshinElement.HYDRO, GenshinProjectile.ElementApplicationStrong + 1);
+                        if (HasShield()) Shields[0].Damage(4, GenshinElement.HYDRO);
                     }
 
                     if (AffectedByElement(GenshinElement.CRYO) && !reacted && !HasShield()) // Frozen
@@ -1100,7 +1100,7 @@ namespace GenshinMod.Common.GlobalObjets
                         if (!HasShield()) TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
                         application = 0;
                         reacted = true;
-                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
+                        if (HasShield()) Shields[0].Damage(2, GenshinElement.NONE);
                     }
 
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Superconduct
@@ -1195,7 +1195,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                         if (targetDamage > 0)
                                         {
-                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1);
+                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1, false, AttackWeight.BLUNT);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");

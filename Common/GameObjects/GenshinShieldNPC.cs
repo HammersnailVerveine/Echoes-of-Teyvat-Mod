@@ -46,13 +46,17 @@ namespace GenshinMod.Common.GameObjects
             return this;
         }
 
-        public void Damage(GenshinElement element = GenshinElement.NONE, int application = 0, AttackWeight attackWeight = AttackWeight.LIGHT)
+        public static int GetDamageUnit(int application)
         {
             int damageUnit = 1;
             if (application > GenshinProjectile.ElementApplicationWeak) damageUnit = 2;
             if (application > GenshinProjectile.ElementApplicationMedium) damageUnit = 3;
             if (application > GenshinProjectile.ElementApplicationStrong) damageUnit = 4;
+            return damageUnit;
+        }
 
+        public void Damage(int damageUnit, GenshinElement element = GenshinElement.NONE, AttackWeight attackWeight = AttackWeight.LIGHT)
+        {
             if (WeakToBlunt)
             {
                 if (attackWeight == AttackWeight.MEDIUM) damageUnit *= 2;
