@@ -21,6 +21,7 @@ namespace GenshinMod.Common.GameObjects
         public int GaugeUnit; // Shield remaining health in gauge units. Weak attacks will deal 1, strong attacks deal 2. Multiplied based on enemy element. For instance, a Cryo slime should have 32 (multiply the GU of genshin enemies by 4).
         public float ShieldResistance = 1f; // 0f = 0% to 1f = 100%, percentage of damage mitigated by the shield while active. Should de be set in OnInitialize()
         public float KnockBackResist = 0f; // Inverse of NPC.KnockBackResist. 1f means the npc takes no knockback when the shield is active, 0f means it takes full knockback. Should de be set in OnInitialize()
+        public bool WeakToBlunt; // Does the shield take bonus damage from blunt attacks?
 
         public void UpdateBase()
         {
@@ -45,12 +46,18 @@ namespace GenshinMod.Common.GameObjects
             return this;
         }
 
-        public void Damage(GenshinElement element = GenshinElement.NONE, int application = 0)
+        public void Damage(GenshinElement element = GenshinElement.NONE, int application = 0, AttackWeight attackWeight = AttackWeight.LIGHT)
         {
             int damageUnit = 1;
             if (application > GenshinProjectile.ElementApplicationWeak) damageUnit = 2;
             if (application > GenshinProjectile.ElementApplicationMedium) damageUnit = 3;
             if (application > GenshinProjectile.ElementApplicationStrong) damageUnit = 4;
+
+            if (WeakToBlunt)
+            {
+                if (attackWeight == AttackWeight.MEDIUM) damageUnit *= 2;
+                if (attackWeight == AttackWeight.BLUNT) damageUnit *= 4;
+            }
 
             if (element != GenshinElement.NONE)
             { // Elemental damage on shields is multiplied

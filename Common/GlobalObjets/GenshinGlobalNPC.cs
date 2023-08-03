@@ -453,7 +453,7 @@ namespace GenshinMod.Common.GlobalObjets
                 if (damage > 0)
                 {
                     CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
-                    genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false, element, genshinProjectile.ElementApplication);
+                    genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false, element, genshinProjectile.ElementApplication, genshinProjectile.AttackWeight);
                 }
                 else CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
             }
