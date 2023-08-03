@@ -21,22 +21,10 @@ namespace GenshinMod.Content.ShieldsNPC
             TextureShieldIn ??= ModContent.Request<Texture2D>("GenshinMod/Content/Shields/ShieldCrystallize_In", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             GlowColor = GenshinElementUtils.GetColor(element);
 
-            GaugeUnit = 16;
+            GaugeUnit = 32;
             KnockBackResist = 1f;
             ShieldResistance = 1f;
         }
-
-        /*
-        public void DrawTexture(Texture2D texture, SpriteBatch spriteBatch, NPC npc, int nbElements, ref int offSetX, ref int offSetY, int timeLeft)
-        {
-            float colorMult = timeLeft > 120 ? 1f : (float)Math.Abs(Math.Sin((timeLeft * 0.5f) / Math.PI / 4f));
-            Vector2 position = new Vector2(npc.Center.X + offSetX - Main.screenPosition.X, npc.Center.Y + offSetY - Main.screenPosition.Y);
-            spriteBatch.Draw(texture, position, null, Color.White * colorMult, 0f, texture.Size() * 0.5f, 0.875f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texture, position, null, Color.White * 0.5f * colorMult, 0f, texture.Size() * 0.5f, 1.025f, SpriteEffects.None, 0f);
-            offSetX += 24;
-            if (offSetX > 24) setOffset(ref offSetX, ref offSetY, ref nbElements);
-        }
-        */
 
         public override void Draw(SpriteBatch spriteBatch, Color lightColor, NPC npc)
         {

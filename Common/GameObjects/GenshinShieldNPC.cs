@@ -50,6 +50,7 @@ namespace GenshinMod.Common.GameObjects
             int damageUnit = 1;
             if (application > GenshinProjectile.ElementApplicationWeak) damageUnit = 2;
             if (application > GenshinProjectile.ElementApplicationMedium) damageUnit = 3;
+            if (application > GenshinProjectile.ElementApplicationStrong) damageUnit = 4;
 
             if (element != GenshinElement.NONE)
             { // Elemental damage on shields is multiplied

@@ -82,7 +82,7 @@ namespace GenshinMod.Common.GlobalObjets
 
         private bool HalfLifeParticle = false;
 
-        public static bool CanBefrozen(NPC npc) => npc.knockBackResist > 0f; //|| npc.type == NPCID.TargetDummy;
+        public bool CanBefrozen() => BaseKnockBackResist > 0f; //|| npc.type == NPCID.TargetDummy;
         public override bool InstancePerEntity => true;
 
         public override void SetDefaults(NPC npc)
@@ -95,6 +95,7 @@ namespace GenshinMod.Common.GlobalObjets
 
             if (npc.type == NPCID.Zombie)
             {
+                /*
                 if (Main.rand.NextBool(2))
                 {
                     Element = GenshinElement.CRYO;
@@ -105,6 +106,7 @@ namespace GenshinMod.Common.GlobalObjets
                     Element = GenshinElement.ELECTRO;
                     TimerElementElectro = 9999999;
                 }
+                */
 
                 int elementRand = Main.rand.Next(7);
                 /*
@@ -297,25 +299,25 @@ namespace GenshinMod.Common.GlobalObjets
             switch (Element)
             {
                 case GenshinElement.GEO:
-                    if (HasShield()) return Shields[0].Element == GenshinElement.GEO;
+                    if (HasShield() && checkShieldFirst) return Shields[0].Element == GenshinElement.GEO;
                     return TimerElementGeo > 0;
                 case GenshinElement.ANEMO:
-                    if (HasShield()) return Shields[0].Element == GenshinElement.ANEMO;
+                    if (HasShield() && checkShieldFirst) return Shields[0].Element == GenshinElement.ANEMO;
                     return TimerElementAnemo > 0;
                 case GenshinElement.CRYO:
-                    if (HasShield()) return Shields[0].Element == GenshinElement.CRYO;
+                    if (HasShield() && checkShieldFirst) return Shields[0].Element == GenshinElement.CRYO;
                     return TimerElementCryo > 0;
                 case GenshinElement.ELECTRO:
-                    if (HasShield()) return Shields[0].Element == GenshinElement.ELECTRO;
+                    if (HasShield() && checkShieldFirst) return Shields[0].Element == GenshinElement.ELECTRO;
                     return TimerElementElectro > 0;
                 case GenshinElement.DENDRO:
-                    if (HasShield()) return Shields[0].Element == GenshinElement.DENDRO;
+                    if (HasShield() && checkShieldFirst) return Shields[0].Element == GenshinElement.DENDRO;
                     return TimerElementDendro > 0;
                 case GenshinElement.HYDRO:
-                    if (HasShield()) return Shields[0].Element == GenshinElement.HYDRO;
+                    if (HasShield() && checkShieldFirst) return Shields[0].Element == GenshinElement.HYDRO;
                     return TimerElementHydro > 0;
                 case GenshinElement.PYRO:
-                    if (HasShield()) return Shields[0].Element == GenshinElement.PYRO;
+                    if (HasShield() && checkShieldFirst) return Shields[0].Element == GenshinElement.PYRO;
                     return TimerElementPyro > 0;
                 default:
                     foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
@@ -490,7 +492,7 @@ namespace GenshinMod.Common.GlobalObjets
                         TimerElementCryo -= application * 2; // 2x modifier
                         application = 0;
                         reacted = true;
-                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
+                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationStrong + 1);
                     }
 
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Overloaded
@@ -538,7 +540,7 @@ namespace GenshinMod.Common.GlobalObjets
                         if (!HasShield()) TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
                         application = 0;
                         reacted = true;
-                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
+                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationStrong + 1);
                     }
 
                     if (AffectedByElement(GenshinElement.GEO) && !reacted) // Pyro Crystallize
@@ -566,12 +568,12 @@ namespace GenshinMod.Common.GlobalObjets
                         if (!HasShield()) TimerElementPyro -= application * 2; // 2x modifier
                         application = 0;
                         reacted = true;
-                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
+                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationStrong + 1);
                     }
 
                     if (AffectedByElement(GenshinElement.CRYO) && !reacted && !HasShield()) // Frozen
                     {
-                        if (!ReactionFrozen && CanBefrozen(npc))
+                        if (!ReactionFrozen && CanBefrozen())
                         {
                             float FactorFrozen = 1f + genshinCharacter.GetReactionBonus(GenshinReaction.FROZEN); // affects freeze duration (multiplies element timer loss), not affercted by EM.
                             int minValue = (int)(MathHelper.Min(application, TimerElementCryo));
@@ -587,12 +589,14 @@ namespace GenshinMod.Common.GlobalObjets
 
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Electro-Charged
                     {
+                        //if (HasShield()) TimerElementElectro = (int)(GenshinProjectile.ElementApplicationWeak / 2f);
                         ReactionElectrocharged = 1;
                         ReactionElectrochargedPlayer = genshinCharacter.Player.whoAmI;
                         float reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.ELECTROCHARGED);
                         ReactionElectrochargedDamage = (int)(1.2f * genshinCharacter.ReactionTransformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), "Electro-Charged");
                         reacted = true;
+                        if (HasShield()) InflictElement(element, application);
                     }
 
                     if (AffectedByElement(GenshinElement.GEO) && !reacted) // Hydro Crystallize
@@ -620,7 +624,7 @@ namespace GenshinMod.Common.GlobalObjets
                         if (!HasShield()) TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
                         application = 0;
                         reacted = true;
-                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
+                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationStrong + 1);
                     }
 
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Superconduct
@@ -663,13 +667,14 @@ namespace GenshinMod.Common.GlobalObjets
 
                     if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Frozen
                     {
-                        if (!ReactionFrozen && CanBefrozen(npc))
+                        if (!ReactionFrozen && CanBefrozen())
                         {
-                            if (HasShield()) TimerElementCryo = application;
+                            //if (HasShield()) TimerElementHydro = (int)(GenshinProjectile.ElementApplicationWeak / 2f);
                             float FactorFrozen = 1f + genshinCharacter.GetReactionBonus(GenshinReaction.FROZEN); // affects freeze duration (multiplies element timer loss), not affercted by EM.
                             int minValue = (int)(MathHelper.Min(application, TimerElementHydro));
                             TimerElementHydro = (int)((MathHelper.Max(TimerElementHydro - minValue, 0) + minValue * 2) * FactorFrozen);
                             application = (int)((MathHelper.Max(application - minValue, 0) + minValue * 2) * FactorFrozen);
+                            if (HasShield()) InflictElement(element, application);
                             ReactionFrozen = true;
                             ReactionFrozenDirection = npc.direction;
                             ReactionFrozenPosition = npc.position;
@@ -770,12 +775,14 @@ namespace GenshinMod.Common.GlobalObjets
 
                     if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Electro-Charged
                     {
+                        //if (HasShield()) TimerElementHydro = (int)(GenshinProjectile.ElementApplicationWeak / 2f);
                         ReactionElectrocharged = 1;
                         ReactionElectrochargedPlayer = genshinCharacter.Player.whoAmI;
                         float reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.ELECTROCHARGED);
                         ReactionElectrochargedDamage = (int)(1.2f * genshinCharacter.ReactionTransformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), "Electro-Charged");
                         reacted = true;
+                        if (HasShield()) InflictElement(element, application);
                     }
 
                     if (AffectedByElement(GenshinElement.GEO) && !reacted) // Electro Crystallize
@@ -903,7 +910,7 @@ namespace GenshinMod.Common.GlobalObjets
                     application = 0;
                 }
 
-                InflictElement(element, application);
+                if (!HasShield()) InflictElement(element, application);
             }
         }
 
@@ -914,7 +921,7 @@ namespace GenshinMod.Common.GlobalObjets
                 npc.velocity *= 0f;
                 npc.direction = ReactionFrozenDirection;
                 npc.position = ReactionFrozenPosition;
-                if (TimerElementHydro <= 0 || TimerElementCryo <= 0) ReactionFrozen = false;
+                if (TimerElementHydro <= 0 && !AffectedByElement(GenshinElement.HYDRO) || TimerElementCryo <= 0) ReactionFrozen = false;
             }
 
             if (ReactionSuperconduct > 0)
@@ -925,7 +932,7 @@ namespace GenshinMod.Common.GlobalObjets
 
             if (ReactionElectrocharged <= 0 && ReactionElectrochargedDamage > 0)
             {
-                if (AffectedByElement(GenshinElement.HYDRO) && AffectedByElement(GenshinElement.ELECTRO))
+                if (AffectedByElement(GenshinElement.HYDRO) || AffectedByElement(GenshinElement.HYDRO, false) && AffectedByElement(GenshinElement.ELECTRO) || AffectedByElement(GenshinElement.ELECTRO, false))
                 {
                     Player player = Main.player[ReactionElectrochargedPlayer];
                     SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap, npc.Center);
