@@ -5,8 +5,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,6 +17,11 @@ namespace GenshinMod.Common.GlobalObjets
 {
     public class GenshinGlobalNPC : GlobalNPC
     {
+        // Misc
+
+        public List<GenshinShieldNPC> Shields;
+        public float BaseKnockBackResist = 1f;
+
         // Not reset every frame
 
         public GenshinElement Element = GenshinElement.NONE;
@@ -80,6 +87,7 @@ namespace GenshinMod.Common.GlobalObjets
 
         public override void SetDefaults(NPC npc)
         {
+            BaseKnockBackResist = npc.knockBackResist;
             npc.defense = 0;
             npc.value = 0;
 
@@ -98,6 +106,7 @@ namespace GenshinMod.Common.GlobalObjets
                     TimerElementElectro = 9999999;
                 }
 
+                int elementRand = Main.rand.Next(7);
                 /*
                 switch (Main.rand.Next(7))
                 {
@@ -131,6 +140,10 @@ namespace GenshinMod.Common.GlobalObjets
                         break;
                 }
                 */
+
+                GenshinShieldNPC shield = new Content.ShieldsNPC.BasicShieldNPC().Initialize(this, npc, (GenshinElement)(elementRand + 1));
+                AddShield(shield);
+                Main.NewText((GenshinElement)(elementRand + 1));
             }
         }
 
@@ -167,6 +180,21 @@ namespace GenshinMod.Common.GlobalObjets
             ReductionResistanceHydro = 0f;
             ReductionResistancePyro = 0f;
             ReductionResistancePhysical = 0f;
+
+            npc.knockBackResist = BaseKnockBackResist;
+
+            if (Shields != null)
+            {
+                for (int i = Shields.Count - 1; i >= 0; i--)
+                {
+                    Shields[i].ResetEffects();
+                    if (Shields[i].GaugeUnit < 1)
+                    {
+                        Shields[i].OnKillBase();
+                        Shields.RemoveAt(i);
+                    }
+                }
+            }
         }
 
         public override void AI(NPC npc)
@@ -181,6 +209,16 @@ namespace GenshinMod.Common.GlobalObjets
                             SpawnElementalParticle(npc, Element, 1f);
                     }
                     else SpawnElementalParticle(npc, Element, 1f);
+                }
+            }
+
+            if (Shields != null)
+            {
+                foreach (GenshinShieldNPC shield in Shields)
+                {
+                    shield.Update();
+                    npc.knockBackResist = BaseKnockBackResist - shield.KnockBackResist;
+                    if (npc.knockBackResist < 0f) npc.knockBackResist = 0f;
                 }
             }
 
@@ -254,23 +292,30 @@ namespace GenshinMod.Common.GlobalObjets
             return 1f - mult;
         }
 
-        public bool AffectedByElement(GenshinElement Element = GenshinElement.NONE)
+        public bool AffectedByElement(GenshinElement Element = GenshinElement.NONE, bool checkShieldFirst = true)
         { // Without parameters (GenshinElement.NONE), returns false if the npc is affected by ANY element
             switch (Element)
             {
                 case GenshinElement.GEO:
+                    if (HasShield()) return Shields[0].Element == GenshinElement.GEO;
                     return TimerElementGeo > 0;
                 case GenshinElement.ANEMO:
+                    if (HasShield()) return Shields[0].Element == GenshinElement.ANEMO;
                     return TimerElementAnemo > 0;
                 case GenshinElement.CRYO:
+                    if (HasShield()) return Shields[0].Element == GenshinElement.CRYO;
                     return TimerElementCryo > 0;
                 case GenshinElement.ELECTRO:
+                    if (HasShield()) return Shields[0].Element == GenshinElement.ELECTRO;
                     return TimerElementElectro > 0;
                 case GenshinElement.DENDRO:
+                    if (HasShield()) return Shields[0].Element == GenshinElement.DENDRO;
                     return TimerElementDendro > 0;
                 case GenshinElement.HYDRO:
+                    if (HasShield()) return Shields[0].Element == GenshinElement.HYDRO;
                     return TimerElementHydro > 0;
                 case GenshinElement.PYRO:
+                    if (HasShield()) return Shields[0].Element == GenshinElement.PYRO;
                     return TimerElementPyro > 0;
                 default:
                     foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
@@ -302,21 +347,31 @@ namespace GenshinMod.Common.GlobalObjets
 
         public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            // Draw shields
+
+            if (Shields != null)
+            {
+                foreach (GenshinShieldNPC shield in Shields)
+                    shield.Draw(spriteBatch, drawColor, npc);
+            }
+
+            // Draw elemental auras above NPC
+
             int nbElements = -1;
             foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
                 if (element != GenshinElement.NONE) if (AffectedByElement(element)) nbElements++;
-            if (AffectedByElement(GenshinElement.HYDRO) && ReactionFrozen) nbElements--;
+            if (AffectedByElement(GenshinElement.HYDRO, false) && ReactionFrozen) nbElements--;
             int offSetY = -(30 + ElementSymbolDrawOffset);
             int offSetX = 0;
             setOffset(ref offSetX, ref offSetY, ref nbElements);
 
-            if (AffectedByElement(GenshinElement.GEO)) DrawTexture(GenshinElementUtils.ElementTexture[0], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementGeo);
-            if (AffectedByElement(GenshinElement.ANEMO)) DrawTexture(GenshinElementUtils.ElementTexture[1], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementAnemo);
-            if (AffectedByElement(GenshinElement.CRYO)) DrawTexture(GenshinElementUtils.ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementCryo);
-            if (AffectedByElement(GenshinElement.ELECTRO)) DrawTexture(GenshinElementUtils.ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementElectro);
-            if (AffectedByElement(GenshinElement.DENDRO)) DrawTexture(GenshinElementUtils.ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementDendro);
-            if (AffectedByElement(GenshinElement.HYDRO) && !ReactionFrozen) DrawTexture(GenshinElementUtils.ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementHydro);
-            if (AffectedByElement(GenshinElement.PYRO)) DrawTexture(GenshinElementUtils.ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementPyro);
+            if (AffectedByElement(GenshinElement.GEO, false)) DrawTexture(GenshinElementUtils.ElementTexture[0], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementGeo);
+            if (AffectedByElement(GenshinElement.ANEMO, false)) DrawTexture(GenshinElementUtils.ElementTexture[1], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementAnemo);
+            if (AffectedByElement(GenshinElement.CRYO, false)) DrawTexture(GenshinElementUtils.ElementTexture[2], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementCryo);
+            if (AffectedByElement(GenshinElement.ELECTRO, false)) DrawTexture(GenshinElementUtils.ElementTexture[3], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementElectro);
+            if (AffectedByElement(GenshinElement.DENDRO, false)) DrawTexture(GenshinElementUtils.ElementTexture[4], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementDendro);
+            if (AffectedByElement(GenshinElement.HYDRO, false) && !ReactionFrozen) DrawTexture(GenshinElementUtils.ElementTexture[5], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementHydro);
+            if (AffectedByElement(GenshinElement.PYRO, false)) DrawTexture(GenshinElementUtils.ElementTexture[6], spriteBatch, npc, nbElements, ref offSetX, ref offSetY, TimerElementPyro);
 
             if (ReactionFrozen)
             {
@@ -365,7 +420,6 @@ namespace GenshinMod.Common.GlobalObjets
 
                 if (element != GenshinElement.NONE && genshinProjectile.AttackWeight == AttackWeight.BLUNT && ReactionFrozen)
                 { // Shatter reaction
-                    Player player = genshinCharacter.Player;
                     ReactionFrozen = false;
                     TimerElementCryo = 0;
                     float mastery = genshinCharacter.StatElementalMastery;
@@ -374,7 +428,7 @@ namespace GenshinMod.Common.GlobalObjets
                     int targetDamage = ApplyResistance(reactionDamage, GenshinElement.NONE);
                     if (targetDamage > 0)
                     {
-                        player.ApplyDamageToNPC(npc, targetDamage, 15f, -player.direction, false);
+                        genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(npc, targetDamage, 15f, - genshinCharacter.Player.direction, false, GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
                         CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.SHATTER), targetDamage);
                     }
                     else CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
@@ -384,7 +438,7 @@ namespace GenshinMod.Common.GlobalObjets
                 if (damage > 0)
                 {
                     CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
-                    genshinCharacter.Player.ApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false);
+                    genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false, element, genshinProjectile.ElementApplication);
                 }
                 else CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
             }
@@ -394,6 +448,25 @@ namespace GenshinMod.Common.GlobalObjets
         {
             modifiers.FinalDamage *= 0f;
             npc.life++; // bandaid after tmodloader 1.4.4 changes
+        }
+
+        public bool HasShield()
+        {
+            if (Shields == null) return false;
+            else return Shields.Count > 0;
+        }
+
+        public void AddShield(GenshinShieldNPC shield)
+        {
+            Shields ??= new List<GenshinShieldNPC>();
+
+            for (int i = Shields.Count - 1; i >= 0; i--)
+            {
+                if (Shields[i].GetType() == shield.GetType())
+                    Shields.RemoveAt(i);
+            }
+
+            Shields.Add(shield);
         }
 
         public void ApplyElement(NPC npc, GenshinProjectile genshinProjectile, GenshinCharacter genshinCharacter, GenshinElement element, ref int damage)
@@ -413,11 +486,11 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         float reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.MELT);
                         damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionBonus));
-
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.MELT), "Melt");
                         TimerElementCryo -= application * 2; // 2x modifier
                         application = 0;
                         reacted = true;
+                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
                     }
 
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Overloaded
@@ -439,7 +512,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                         if (targetDamage > 0)
                                         {
-                                            player.ApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false);
+                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationMedium);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -451,7 +524,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                         SoundEngine.PlaySound(SoundID.Item94, npc.Center);
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), "Overloaded");
-                        TimerElementElectro -= application; // 1x modifier.
+                        if (!HasShield()) TimerElementElectro -= application; // 1x modifier.
                         application = 0;
                         reacted = true;
                     }
@@ -462,21 +535,22 @@ namespace GenshinMod.Common.GlobalObjets
                         damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400))) + reactionBonus));
 
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
-                        TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
                         application = 0;
                         reacted = true;
+                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
                     }
 
                     if (AffectedByElement(GenshinElement.GEO) && !reacted) // Pyro Crystallize
                     {
                         crystallizeElement = GenshinElement.PYRO;
-                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
 
                     if (AffectedByElement(GenshinElement.ANEMO) && !reacted && !(genshinProjectile is Content.Projectiles.ProjectileSwirl)) // Pyro Swirl
                     {
                         swirlElement = GenshinElement.PYRO;
-                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                 }
@@ -489,12 +563,13 @@ namespace GenshinMod.Common.GlobalObjets
                         damage = (int)(damage * 2 * (1 + (2.78 * (mastery / (mastery + 1400))) + reactionBonus));
 
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.VAPORIZE), "Vaporize");
-                        TimerElementPyro -= application * 2; // 2x modifier
+                        if (!HasShield()) TimerElementPyro -= application * 2; // 2x modifier
                         application = 0;
                         reacted = true;
+                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
                     }
 
-                    if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Frozen
+                    if (AffectedByElement(GenshinElement.CRYO) && !reacted && !HasShield()) // Frozen
                     {
                         if (!ReactionFrozen && CanBefrozen(npc))
                         {
@@ -523,13 +598,13 @@ namespace GenshinMod.Common.GlobalObjets
                     if (AffectedByElement(GenshinElement.GEO) && !reacted) // Hydro Crystallize
                     {
                         crystallizeElement = GenshinElement.HYDRO;
-                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
 
                     if (AffectedByElement(GenshinElement.ANEMO) && !reacted && !(genshinProjectile is Content.Projectiles.ProjectileSwirl)) // Hydro Swirl
                     {
                         swirlElement = GenshinElement.HYDRO;
-                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                 }
@@ -542,9 +617,10 @@ namespace GenshinMod.Common.GlobalObjets
                         damage = (int)(damage * 1.5 * (1 + (2.78 * (mastery / (mastery + 1400)) * 1) + reactionBonus));
 
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.MELT), "Melt");
-                        TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
                         application = 0;
                         reacted = true;
+                        if (HasShield()) Shields[0].Damage(GenshinElement.NONE, GenshinProjectile.ElementApplicationMedium);
                     }
 
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Superconduct
@@ -566,7 +642,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.CRYO);
                                         if (targetDamage > 0)
                                         {
-                                            player.ApplyDamageToNPC(target, targetDamage, 0.5f, -player.direction, false);
+                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0.5f, -player.direction, false, GenshinElement.CRYO, GenshinProjectile.ElementApplicationMedium);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SUPERCONDUCT), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -580,7 +656,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                         SoundEngine.PlaySound(SoundID.DD2_BookStaffCast, npc.Center);
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.SUPERCONDUCT), "Superconduct");
-                        TimerElementElectro -= application; // 1x modifier.
+                        if (!HasShield()) TimerElementElectro -= application; // 1x modifier.
                         application = 0;
                         reacted = true;
                     }
@@ -589,6 +665,7 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         if (!ReactionFrozen && CanBefrozen(npc))
                         {
+                            if (HasShield()) TimerElementCryo = application;
                             float FactorFrozen = 1f + genshinCharacter.GetReactionBonus(GenshinReaction.FROZEN); // affects freeze duration (multiplies element timer loss), not affercted by EM.
                             int minValue = (int)(MathHelper.Min(application, TimerElementHydro));
                             TimerElementHydro = (int)((MathHelper.Max(TimerElementHydro - minValue, 0) + minValue * 2) * FactorFrozen);
@@ -604,13 +681,13 @@ namespace GenshinMod.Common.GlobalObjets
                     if (AffectedByElement(GenshinElement.GEO) && !reacted) // Cryo Crystallize
                     {
                         crystallizeElement = GenshinElement.CRYO;
-                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
 
                     if (AffectedByElement(GenshinElement.ANEMO) && !reacted && !(genshinProjectile is Content.Projectiles.ProjectileSwirl)) // Cryo Swirl
                     {
                         swirlElement = GenshinElement.CRYO;
-                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                 }
@@ -637,7 +714,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                         if (targetDamage > 0)
                                         {
-                                            player.ApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false);
+                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, -player.direction, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationMedium);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -649,7 +726,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                         SoundEngine.PlaySound(SoundID.Item94, npc.Center);
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), "Overloaded");
-                        TimerElementPyro -= application; // 1x modifier.
+                        if (!HasShield()) TimerElementPyro -= application; // 1x modifier.
                         application = 0;
                         reacted = true;
                     }
@@ -673,7 +750,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.CRYO);
                                         if (targetDamage > 0)
                                         {
-                                            player.ApplyDamageToNPC(target, targetDamage, 0.5f, -player.direction, false);
+                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0.5f, -player.direction, false, GenshinElement.CRYO, GenshinProjectile.ElementApplicationMedium);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SUPERCONDUCT), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -686,7 +763,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                         SoundEngine.PlaySound(SoundID.DD2_BookStaffCast, npc.Center);
                         CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.SUPERCONDUCT), "Superconduct");
-                        TimerElementCryo -= application; // 1x modifier.
+                        if (!HasShield()) TimerElementCryo -= application; // 1x modifier.
                         application = 0;
                         reacted = true;
                     }
@@ -704,13 +781,13 @@ namespace GenshinMod.Common.GlobalObjets
                     if (AffectedByElement(GenshinElement.GEO) && !reacted) // Electro Crystallize
                     {
                         crystallizeElement = GenshinElement.ELECTRO;
-                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                     }
 
                     if (AffectedByElement(GenshinElement.ANEMO) && !reacted && !(genshinProjectile is Content.Projectiles.ProjectileSwirl)) // Electro Swirl
                     {
                         swirlElement = GenshinElement.ELECTRO;
-                        TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                 }
@@ -720,25 +797,25 @@ namespace GenshinMod.Common.GlobalObjets
                     if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Pyro Crystallize
                     {
                         crystallizeElement = GenshinElement.PYRO;
-                        TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Cryo Crystallize
                     {
                         crystallizeElement = GenshinElement.CRYO;
-                        TimerElementCryo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementCryo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Electro Crystallize
                     {
                         crystallizeElement = GenshinElement.ELECTRO;
-                        TimerElementElectro -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementElectro -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Hydro Crystallize
                     {
                         crystallizeElement = GenshinElement.HYDRO;
-                        TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                 }
@@ -748,25 +825,25 @@ namespace GenshinMod.Common.GlobalObjets
                     if (AffectedByElement(GenshinElement.PYRO) && !reacted) // Pyro Swirl
                     {
                         swirlElement = GenshinElement.PYRO;
-                        TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Cryo Swirl
                     {
                         swirlElement = GenshinElement.CRYO;
-                        TimerElementCryo -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementCryo -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Electro Swirl
                     {
                         swirlElement = GenshinElement.ELECTRO;
-                        TimerElementElectro -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementElectro -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Hydro Swirl
                     {
                         swirlElement = GenshinElement.HYDRO;
-                        TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
+                        if (!HasShield()) TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
                         reacted = true;
                     }
                 }
@@ -794,7 +871,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, swirlElement);
                                         if (targetDamage > 0)
                                         {
-                                            player.ApplyDamageToNPC(target, targetDamage, 0f, -player.direction, false);
+                                            genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0f, -player.direction, false, GenshinElement.ANEMO, GenshinProjectile.ElementApplicationMedium);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -867,7 +944,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(ReactionElectrochargedDamage, GenshinElement.ELECTRO);
                                         if (targetDamage > 0)
                                         {
-                                            player.ApplyDamageToNPC(target, targetDamage, 0f, player.direction, false);
+                                            player.GetModPlayer<GenshinPlayer>().TryApplyDamageToNPC(target, targetDamage, 0f, player.direction, false, GenshinElement.ELECTRO, GenshinProjectile.ElementApplicationWeak);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -933,8 +1010,8 @@ namespace GenshinMod.Common.GlobalObjets
         public static Rectangle ExtendedHitboxMult(NPC npc)
         {
             Rectangle rect = npc.Hitbox;
-            rect.X -= (int)(npc.width / 2);
-            rect.Y -= (int)(npc.height / 2);
+            rect.X -= (int)(npc.width / 2f);
+            rect.Y -= (int)(npc.height / 2f);
             rect.Width += npc.width;
             rect.Height += npc.height;
             return rect;

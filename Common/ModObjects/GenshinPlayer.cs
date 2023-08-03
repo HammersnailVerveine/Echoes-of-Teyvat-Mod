@@ -315,6 +315,13 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
+        public void TryApplyDamageToNPC(NPC npc, int damage, float knockback, int direction, bool crit = false, GenshinElement element = GenshinElement.NONE, int gaugeApplication = 0, bool ignoreShields = false)
+        {
+            GenshinGlobalNPC globalNPC = npc.GetGlobalNPC<GenshinGlobalNPC>();
+            if (npc.GetGlobalNPC<GenshinGlobalNPC>().HasShield() && !ignoreShields) foreach (GenshinShieldNPC shield in globalNPC.Shields) shield.Damage(element, gaugeApplication);
+            else Player.ApplyDamageToNPC(npc, damage, knockback, direction, crit);
+        } 
+
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
             if (CharacterCurrent == null || IsDead) return;
