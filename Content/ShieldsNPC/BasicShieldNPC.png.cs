@@ -26,9 +26,9 @@ namespace GenshinMod.Content.ShieldsNPC
             ShieldResistance = 1f;
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Color lightColor, NPC npc)
+        public override void Draw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Vector2 drawPosition = (npc.position + new Vector2(npc.width * 0.5f, npc.height * 0.5f + npc.gfxOffY)).Floor();
+            Vector2 drawPosition = (NPC.position + new Vector2(NPC.width * 0.5f, NPC.height * 0.5f + NPC.gfxOffY)).Floor();
             drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
             //Vector2 drawPosition = new Vector2(npc.Center.X - Main.screenPosition.X, npc.Center.Y - Main.screenPosition.Y);
 

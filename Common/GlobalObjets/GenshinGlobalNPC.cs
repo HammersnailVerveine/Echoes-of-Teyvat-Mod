@@ -28,6 +28,7 @@ namespace GenshinMod.Common.GlobalObjets
         public int Level = 1; // Enemy level (1-10)
 
         public int ElementSymbolDrawOffset = 0; // used to offset the drawing of the element symbols above specific enemies, may be used for some bosses
+        public bool DrawShieldHealth = true; // Should a shield health bar be drawn under the npc health bar?
 
         public bool BluntTarget = false; // is the target more susceptible to heavy attacks ?
         public bool GiveEnergyParticlesLife = true; // should the NPC release particles at half and 0 health
@@ -367,7 +368,7 @@ namespace GenshinMod.Common.GlobalObjets
             if (Shields != null)
             {
                 foreach (GenshinShieldNPC shield in Shields)
-                    shield.Draw(spriteBatch, drawColor, npc);
+                    shield.DrawBase(spriteBatch, Lighting.GetColor(new Point((int)(npc.Center.X / 16), (int)(npc.Center.Y / 16))));
             }
 
             // Draw elemental auras above NPC
@@ -1408,7 +1409,7 @@ namespace GenshinMod.Common.GlobalObjets
 
             if (ReactionElectrocharged <= 0 && ReactionElectrochargedDamage > 0)
             {
-                if (AffectedByElement(GenshinElement.HYDRO) || AffectedByElement(GenshinElement.HYDRO, false) && AffectedByElement(GenshinElement.ELECTRO) || AffectedByElement(GenshinElement.ELECTRO, false))
+                if ((AffectedByElement(GenshinElement.HYDRO) || AffectedByElement(GenshinElement.HYDRO, false)) && (AffectedByElement(GenshinElement.ELECTRO) || AffectedByElement(GenshinElement.ELECTRO, false)))
                 {
                     Player player = Main.player[ReactionElectrochargedPlayer];
                     SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap, npc.Center);

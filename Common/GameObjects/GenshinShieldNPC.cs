@@ -3,18 +3,25 @@ using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace GenshinMod.Common.GameObjects
 {
     public abstract class GenshinShieldNPC
     {
+        // Static texture
+
+        public static Texture2D TextureBar;
+
         // Fields
 
         public GenshinElement Element = GenshinElement.NONE; // Shield Element
         public GenshinGlobalNPC GlobalNPC; // GlobalNPC tied to the shield
         public NPC NPC; // npc tied to the shield
         public int TimeSpent = 0; // Time spent active
+        public int GaugeUnitMax = 0;
 
         // Fields to setup in OnInitialize()
 
@@ -39,9 +46,11 @@ namespace GenshinMod.Common.GameObjects
 
         public GenshinShieldNPC Initialize(GenshinGlobalNPC globalNPC, NPC npc, GenshinElement element = GenshinElement.NONE, int ai = 0) // "ai" is used to communicate more information if needed
         {
+            TextureBar ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/ShieldNPCBar", AssetRequestMode.ImmediateLoad).Value;
             GlobalNPC = globalNPC;
             NPC = npc;
             OnInitialize(ref element, ai);
+            GaugeUnitMax = GaugeUnit;
             Element = element;
             return this;
         }
@@ -53,6 +62,37 @@ namespace GenshinMod.Common.GameObjects
             if (application > GenshinProjectile.ElementApplicationMedium) damageUnit = 3;
             if (application > GenshinProjectile.ElementApplicationStrong) damageUnit = 4;
             return damageUnit;
+        }
+
+        public void DrawBase(SpriteBatch spriteBatch, Color lightColor) {
+            Draw(spriteBatch, lightColor);
+            if (GlobalNPC.DrawShieldHealth) DrawShieldHealth(spriteBatch, lightColor);
+        }
+
+        public void DrawShieldHealth(SpriteBatch spriteBatch, Color lightColor)
+        {
+            Vector2 drawPosition = (NPC.position + new Vector2(NPC.width * 0.5f, NPC.height + NPC.gfxOffY + 29)).Floor();
+            drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+            Color healthBackgroundColor = GenshinElementUtils.GetColor(Element) * 0.25f;
+            healthBackgroundColor.A = 255;
+            Color healthColor = GenshinElementUtils.GetColor(Element);
+            healthColor = healthColor.MultiplyRGBA(lightColor);
+            spriteBatch.Draw(TextureBar, drawPosition, null, healthBackgroundColor, 0f, TextureBar.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
+            Rectangle rectangle = new Rectangle(0, 0, 0, TextureBar.Height);
+
+            if (GaugeUnit == GaugeUnitMax) rectangle.Width = TextureBar.Width;
+            else
+            {
+                float increment = GaugeUnitMax / (TextureBar.Width * 0.5f);
+                float health = 0;
+                while (health < GaugeUnit - increment)
+                {
+                    rectangle.Width += 2;
+                    health += increment;
+                }
+                if (rectangle.Width > TextureBar.Width) rectangle.Width = TextureBar.Width;
+            }
+            spriteBatch.Draw(TextureBar, drawPosition, rectangle, healthColor, 0f, TextureBar.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
         }
 
         public void Damage(int damageUnit, GenshinElement element = GenshinElement.NONE, AttackWeight attackWeight = AttackWeight.LIGHT)
@@ -276,6 +316,6 @@ namespace GenshinMod.Common.GameObjects
         public virtual void OnInitialize(ref GenshinElement element, int ai) { }
         public virtual void Update() { }
         public virtual void OnKill() { }
-        public virtual void Draw(SpriteBatch spriteBatch, Color lightColor, NPC npc) { }
+        public virtual void Draw(SpriteBatch spriteBatch, Color lightColor) { }
     }
 }
