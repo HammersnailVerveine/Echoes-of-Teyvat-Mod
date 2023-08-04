@@ -236,7 +236,7 @@ namespace GenshinMod.Common.GlobalObjets
             if (npc.type == NPCID.Zombie && timer == 180)
             {
                 int elementRand = Main.rand.Next(7);
-                GenshinShieldNPC shield = new Content.ShieldsNPC.BasicShieldNPC().Initialize(this, npc, GenshinElement.ANEMO);
+                GenshinShieldNPC shield = new Content.ShieldsNPC.BasicShieldNPC().Initialize(this, npc, GenshinElement.GEO);
                 AddShield(npc, shield); ;
             }
         }
@@ -690,7 +690,7 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         //if (HasShield()) TimerElementElectro = (int)(GenshinProjectile.ElementApplicationWeak / 2f);
                         ReactionElectrocharged = 1;
-                        ReactionElectrochargedPlayer = player != null ? player.whoAmI : npc.target;
+                        ReactionElectrochargedPlayer = player != null ? player.whoAmI : -1;
                         float reactionBonus = 0f;
                         if (genshinCharacter != null) reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.ELECTROCHARGED);
                         ReactionElectrochargedDamage = (int)(1.2f * transformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
@@ -878,7 +878,7 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         //if (HasShield()) TimerElementHydro = (int)(GenshinProjectile.ElementApplicationWeak / 2f);
                         ReactionElectrocharged = 1;
-                        ReactionElectrochargedPlayer = player != null ? player.whoAmI : npc.target;
+                        ReactionElectrochargedPlayer = player != null ? player.whoAmI : -1;
                         float reactionBonus = 0f;
                         if (genshinCharacter != null) reactionBonus = genshinCharacter.GetReactionBonus(GenshinReaction.ELECTROCHARGED);
                         ReactionElectrochargedDamage = (int)(1.2f * transformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
@@ -1009,8 +1009,8 @@ namespace GenshinMod.Common.GlobalObjets
                     velocity.Y = -Main.rand.NextFloat(2) - 2f;
                     int levelRef = genshinCharacter != null ? genshinCharacter.Level : Level;
                     float shieldValue = 200f * levelRef * (1f + (4.44f * (mastery / (mastery + 1400))));
-                    Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, velocity, type, 0, 0f, npc.target, (float)crystallizeElement, shieldValue);
-                    Main.NewText((GenshinElement)crystallizeElement);
+                    int owner = player != null ? player.whoAmI : -1;
+                    Projectile.NewProjectile(source, npc.Center, velocity, type, 0, 0f, owner, (float)crystallizeElement, shieldValue);
                     application = 0;
                 }
 
@@ -1038,7 +1038,17 @@ namespace GenshinMod.Common.GlobalObjets
             {
                 if ((AffectedByElement(GenshinElement.HYDRO) || AffectedByElement(GenshinElement.HYDRO, false)) && (AffectedByElement(GenshinElement.ELECTRO) || AffectedByElement(GenshinElement.ELECTRO, false)))
                 {
-                    Player player = Main.player[ReactionElectrochargedPlayer];
+                    Player player = null;
+                    if (ReactionElectrochargedPlayer > -1) player = Main.player[ReactionElectrochargedPlayer];
+                    else
+                    {
+                        foreach (Player p in Main.player)
+                        {
+                            if (p.active) player = p;
+                            break;
+                        }
+                    }
+
                     SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap, npc.Center);
 
                     foreach (NPC target in Main.npc)
