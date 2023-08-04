@@ -1,6 +1,7 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Abilities;
+using GenshinMod.Content.Characters.Jean.Abilities;
 
 namespace GenshinMod.Content.Characters.Jean
 {
@@ -13,7 +14,7 @@ namespace GenshinMod.Content.Characters.Jean
             WeaponType = WeaponType.SWORD;
             AbilityNormal = new AbilitySwordNormal().Initialize(this);
             AbilityCharged = new AbilitySwordCharged().Initialize(this);
-            AbilitySkill = new AbilitySwordNormal().Initialize(this);
+            AbilitySkill = new JeanAbilitySkill().Initialize(this);
             AbilityBurst = new AbilitySwordNormal().Initialize(this);
             Autoswing = true;
 
@@ -28,7 +29,7 @@ namespace GenshinMod.Content.Characters.Jean
 
         public override void SafePostUpdate()
         {
-            Infuse(GenshinElement.ANEMO, 2);
+            //Infuse(GenshinElement.ANEMO, 2);
         }
 
         public override void SafeResetEffects()

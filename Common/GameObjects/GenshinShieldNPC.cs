@@ -77,6 +77,7 @@ namespace GenshinMod.Common.GameObjects
             healthBackgroundColor.A = 255;
             Color healthColor = GenshinElementUtils.GetColor(Element);
             healthColor = healthColor.MultiplyRGBA(lightColor);
+            healthBackgroundColor = healthBackgroundColor.MultiplyRGBA(lightColor);
             spriteBatch.Draw(TextureBar, drawPosition, null, healthBackgroundColor, 0f, TextureBar.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
             Rectangle rectangle = new Rectangle(0, 0, 0, TextureBar.Height);
 

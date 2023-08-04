@@ -46,7 +46,7 @@ namespace GenshinMod.Common.ModObjects
         public Texture2D GetTexture() => ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public Texture2D GetTexture(String loc) => ModContent.Request<Texture2D>(loc, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         public Texture2D GetWeaponTexture() => ModContent.Request<Texture2D>(OwnerGenshinPlayer.CharacterCurrent.Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-        public static bool CanHomeInto(NPC npc) => npc.active && !npc.dontTakeDamage && !npc.friendly && npc.lifeMax > 5;
+        public static bool CanHomeInto(NPC npc, bool includecritter = false) => npc.active && !npc.dontTakeDamage && !npc.friendly && (includecritter || !npc.CountsAsACritter);
         public static int ElementApplicationWeak => 570; // 9.5 sec
         public static int ElementApplicationMedium => 900; // 15 sec
         public static int ElementApplicationStrong => 1200; // 20 sec
@@ -119,7 +119,7 @@ namespace GenshinMod.Common.ModObjects
             return proj;
         }
 
-        public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage, float knockback, float ai0 = 0, float ai1 = 0)
+        public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage = 0, float knockback = 0f, float ai0 = 0, float ai1 = 0)
         {
             return SpawnProjectile(position, velocity, type, damage, knockback, Element, AbilityType, ai0, ai1);
         }

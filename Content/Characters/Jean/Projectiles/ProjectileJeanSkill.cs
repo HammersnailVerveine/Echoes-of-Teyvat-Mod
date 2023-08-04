@@ -13,12 +13,11 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
     public class ProjectileJeanSkill : GenshinProjectile
     {
         public Texture2D WeaponTexture;
-        public GenshinWeapon Weapon;
-        public float acceleration = 0.8f;
 
         public List<Vector2> OldPosition;
         public List<float> OldRotation;
-        public List<int> HitNPC;
+
+        private const float Reach = 120f; // 7.5 tiles 
 
         public override void SetStaticDefaults()
         {
@@ -29,10 +28,10 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
         {
             Projectile.width = 10;
             Projectile.height = 10;
-            Projectile.friendly = true;
+            Projectile.friendly = false;
             Projectile.tileCollide = false;
             Projectile.aiStyle = 0;
-            Projectile.timeLeft = 70;
+            Projectile.timeLeft = 300;
             Projectile.scale = 1f;
             ProjectileTrail = true;
             Projectile.alpha = 255;
@@ -43,65 +42,83 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
         public override void OnSpawn(IEntitySource source)
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
-            Weapon = ownerPlayer.CharacterCurrent.Weapon;
-            WeaponTexture = ModContent.Request<Texture2D>(Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            WeaponTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             Projectile.width = (int)(WeaponTexture.Width * ownerPlayer.CharacterCurrent.WeaponSize);
             Projectile.height = (int)(WeaponTexture.Height * ownerPlayer.CharacterCurrent.WeaponSize);
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
-            HitNPC = new List<int>();
         }
 
         public override void SafeAI()
         {
-            Projectile.scale = OwnerCharacter.WeaponSize;
-            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
-            Projectile.position = position;
-
-            Vector2 direction = Projectile.Center - Owner.Center;
-            Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
-
-            Projectile.ai[0] += Projectile.ai[1] * acceleration;
-            if (TimeSpent > 42) acceleration *= 0.8f;
-            if (TimeSpent < 6) acceleration *= 1.85f;
-
-            AttackWeight = Element == GenshinElement.GEO ? AttackWeight.BLUNT : AttackWeight.MEDIUM;
+            // position & rotation
+            Vector2 direction = Vector2.Zero;
+            Projectile.scale = OwnerCharacter.WeaponSize * 0.8f;
+            if (IsLocalOwner)
+            {
+                Vector2 target = Main.MouseWorld;
+                direction = target - Owner.Center;
+                direction.Normalize();
+                Projectile.position = Owner.Center + (direction * TileLength * 3.5f * Projectile.scale) - Projectile.Size * 0.5f;
+                Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
+            }
+            else
+            {
+                // mp sync : todo
+            }
 
             // Afterimages
-            if (TimeSpent < 50)
+            if (TimeSpent % 2 == 0)
             {
                 OldPosition.Add(Projectile.Center);
                 OldRotation.Add(Projectile.rotation);
-                if (OldPosition.Count > 10)
+                if (OldPosition.Count > 5)
                 {
                     OldPosition.RemoveAt(0);
                     OldRotation.RemoveAt(0);
                 }
             }
-            else if (OldPosition.Count > 1)
+
+            // Enemy attraction
+
+            Vector2 attactionPos = Projectile.Center + direction * TileLength * 4f;
+            if (TimeSpent % 6 == 0)
             {
-                OldPosition.RemoveAt(0);
-                OldRotation.RemoveAt(0);
+                int type = ModContent.ProjectileType<ProjectileJeanSkillSwirlEffect>();
+                SpawnProjectile(attactionPos, Vector2.Zero, type, 0, 0f, GenshinElement.ANEMO, Common.GameObjects.AbilityType.SKILL);
             }
 
-            if (TimeSpent == 30) HitNPC.Clear();
-        }
+            foreach (NPC npc in Main.npc)
+            {
+                if (CanHomeInto(npc, true) && npc.knockBackResist > 0f)
+                {
+                    float distance = npc.Center.Distance(attactionPos);
+                    bool veryClose = false;
 
-        public override void SafeOnHitNPC(NPC target)
-        {
-            HitNPC.Add(target.whoAmI);
-        }
+                    if (distance < 1f)
+                    {
+                        distance = 1f;
+                        veryClose = true;
+                    }
 
-
-        public override bool? CanHitNPC(NPC target)
-        {
-            if (HitNPC.Contains(target.whoAmI)) return false;
-            return base.CanHitNPC(target);
+                    if (distance < Reach)
+                    { // todo : implement npc kb resist in the equation 
+                        npc.velocity *= 0.5f / (Reach / distance);
+                        if (!veryClose)
+                        {
+                            Vector2 attractionDirection = attactionPos - npc.Center;
+                            attractionDirection.Normalize();
+                            float attractionMult = (Reach / distance);
+                            if (attractionMult > 5f) attractionMult = 5f;
+                            npc.velocity += attractionDirection * attractionMult;
+                        }
+                    }
+                }
+            }
         }
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
-            GenshinElement infusion = OwnerCharacter.WeaponInfusion;
             Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
             SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 

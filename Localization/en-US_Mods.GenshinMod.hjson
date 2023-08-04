@@ -82,6 +82,7 @@ Projectiles: {
 	ProjectileSwirl.DisplayName: Projectile Swirl
 	ProjectileSwordCharged.DisplayName: Projectile Sword Charged
 	ProjectileSwordNormal.DisplayName: Projectile Sword Normal
+	ProjectileJeanSkillSwirlEffect.DisplayName: Projectile Jean Skill Swirl Effect
 }
 
 Configs: {

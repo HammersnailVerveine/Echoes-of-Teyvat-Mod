@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Noelle.Abilities
 {
-    public class AbilityNoelleCharged : GenshinAbility
+    public class NoelleAbilityCharged : GenshinAbility
     {
         private int LinkedProjectile = -1; // Set to the id of the projectile spawned. -1 if projectile isn't spawned.
 

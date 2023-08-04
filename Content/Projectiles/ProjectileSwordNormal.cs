@@ -100,7 +100,6 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
-            GenshinElement infusion = OwnerCharacter.WeaponInfusion;
             Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
             SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 

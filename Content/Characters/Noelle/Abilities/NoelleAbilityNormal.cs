@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Noelle.Abilities
 {
-    public class AbilityNoelleNormal : GenshinAbility
+    public class NoelleAbilityNormal : GenshinAbility
     {
         public override void SetDefaults()
         {
