@@ -15,19 +15,58 @@ namespace GenshinMod.Content.Characters.Jean.Abilities
 
         public override void SetDefaults()
         {
-            KnockBack = 1f;
+            KnockBack = 5f;
             UseTime = 40;
-            Velocity = AlmostImmobile;
+            Velocity = 1f;
             AbilityType = AbilityType.SKILL;
-            HoldTimeMax = 360;
+            HoldTimeMax = 370;
             HoldTimeFull = 0;
-            Cooldown = 60;
-            CooldownHeld = 60;
+            Cooldown = 60 * 6;
+            CooldownHeld = 60 * 6;
         }
 
         public override bool CanUse() => ChargesCurrent > 0 && (GenshinPlayer.Stamina >= 20 || LinkedProjectile != -1);
 
         public override void OnUse()
+        {
+            int type = ModContent.ProjectileType<ProjectileJeanSkillStab>();
+            Vector2 velocity = VelocityToCursor();
+            int projID = SpawnProjectile(Player.Center, velocity * 20f, type);
+            Projectile proj = Main.projectile[projID];
+            proj.position = Player.Center + velocity * 48f + new Vector2(proj.width, proj.height) * Character.WeaponSize * 0.5f - new Vector2(proj.width, proj.height);
+            proj.netUpdate = true;
+            SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing);
+        }
+
+        public override void OnHold()
+        {
+            if (HoldTime > 10)
+            {
+                if (LinkedProjectile == -1)
+                { // Spawn the projectile if it isn't there already
+                    Vector2 direction = Main.MouseWorld - Player.Center;
+                    direction.Normalize();
+
+                    int type = ModContent.ProjectileType<ProjectileJeanSkill>();
+                    LinkedProjectile = SpawnProjectile(VelocityToCursor(), type, Character.WeaponInfusion);
+                    SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing);
+                }
+
+                else if (HoldTime < HoldTimeMax)
+                { // Try to consume stamina every second
+                    if (HoldTime % 3 == 0)
+                    { // Consumes 20 per second
+                        if (!GenshinPlayer.TryUseStamina(1))
+                            HoldTime = HoldTimeMax - 1; // Hold time ends on next frame
+                    }
+                    if (HoldTime % 25 == 0)
+                        SoundEngine.PlaySound(SoundID.DD2_BookStaffCast);
+                }
+            }
+            Character.RemoveVanityWeapon();
+        }
+
+        public override void OnHoldReset()
         {
             if (LinkedProjectile != -1)
             {
@@ -41,37 +80,14 @@ namespace GenshinMod.Content.Characters.Jean.Abilities
             }
         }
 
-        public override void OnHold()
-        {
-            if (LinkedProjectile == -1)
-            { // Start swinging
-                Vector2 direction = Main.MouseWorld - Player.Center;
-                direction.Normalize();
-
-                int type = ModContent.ProjectileType<ProjectileJeanSkill>();
-                LinkedProjectile = SpawnProjectile(VelocityToCursor(), type, Character.WeaponInfusion);
-                SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing);
-            }
-            else if (HoldTime < 360)
-            { // Try to consume stamina every second
-                if (HoldTime % 20 == 0) // %3
-                { // Consumes 20 per second
-                    if (!GenshinPlayer.TryUseStamina(1))
-                        HoldTime = HoldTimeMax - 1; // Hold time ends on next frame
-                }
-                if (HoldTime % 25 == 0)
-                    SoundEngine.PlaySound(SoundID.DD2_BookStaffCast);
-            }
-            Character.RemoveVanityWeapon();
-        }
-
-        public override void OnHoldReset()
-        {
-        }
-
         public override int GetScaling()
         {
-            return (int)(0.85f * Character.EffectiveAttack * LevelScaling);
+            return (int)(2.92f * Character.EffectiveAttack * LevelScaling);
+        }
+
+        public override int GetScaling2()
+        {
+            return (int)(2.3f * Character.EffectiveAttack * LevelScaling);
         }
     }
 }
