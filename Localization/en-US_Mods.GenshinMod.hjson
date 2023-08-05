@@ -29,6 +29,11 @@ Items: {
 		DisplayName: Dull Blade
 		Tooltip: ""
 	}
+
+	BowHuntersBow: {
+		DisplayName: Bow Hunters Bow
+		Tooltip: ""
+	}
 }
 
 NPCs: {

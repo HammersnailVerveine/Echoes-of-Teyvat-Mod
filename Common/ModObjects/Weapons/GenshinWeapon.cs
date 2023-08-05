@@ -76,6 +76,7 @@ namespace GenshinMod.Common.ModObjects.Weapons
             switch (weaponType)
             {
                 case WeaponType.BOW:
+                    return GetWeapon(ModContent.ItemType<Content.Weapons.Bow.BowHuntersBow>());
                     return null;
                 case WeaponType.CATALYST:
                     return GetWeapon(ModContent.ItemType<Content.Weapons.Catalyst.CatalystApprenticeNotes>());

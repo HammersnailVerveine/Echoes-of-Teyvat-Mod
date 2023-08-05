@@ -10,7 +10,7 @@ namespace GenshinMod.Content.Characters.Amber
         {
             Name = "Amber";
             Element = GenshinElement.PYRO;
-            WeaponType = WeaponType.SWORD;
+            WeaponType = WeaponType.BOW;
             AbilityNormal = new AbilitySwordNormal().Initialize(this);
             AbilityCharged = new AbilitySwordNormal().Initialize(this);
             AbilitySkill = new AbilitySwordNormal().Initialize(this);
