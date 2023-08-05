@@ -30,6 +30,11 @@ namespace GenshinMod.Content.Characters.Jean.Abilities
         public override void OnUse()
         {
             int type = ModContent.ProjectileType<ProjectileJeanSkillStab>();
+
+            foreach (Projectile p in Main.projectile)
+                if (p.active && p.owner == Player.whoAmI && (p.type == type || p.type == ModContent.ProjectileType<ProjectileJeanCharged>()))
+                    p.Kill();
+
             Vector2 velocity = VelocityToCursor();
             int projID = SpawnProjectile(Player.Center, velocity * 20f, type);
             Projectile proj = Main.projectile[projID];
