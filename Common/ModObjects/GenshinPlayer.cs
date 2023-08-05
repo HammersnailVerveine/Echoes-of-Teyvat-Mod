@@ -23,6 +23,7 @@ namespace GenshinMod.Common.ModObjects
         public List<GenshinCharacter> CharacterTeam; // Current team of characters
         public List<GenshinShield> Shields;
 
+        public byte TimerWet = 0;
         public int TimerMovement = 0; // Used for animations
         public int TimerUse = 0; // Used for animations (swing)
         public bool IsHolding = false; // Used for hold animation
@@ -110,6 +111,17 @@ namespace GenshinMod.Common.ModObjects
                     Player.direction = CharacterCurrent.ReactionFrozenDirection;
                     Player.position = CharacterCurrent.ReactionFrozenPosition;
                 }
+
+                if (Player.wet)
+                {
+                    TimerWet++;
+                    if (TimerWet == 150) // Rain follows a 2.5 sec icd for hydro application
+                    {
+                        TimerWet = 0;
+                        CharacterCurrent.ApplyElement(GenshinElement.HYDRO);
+                    }
+                }
+                else TimerWet = 149;
             }
         }
 

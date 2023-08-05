@@ -21,6 +21,7 @@ namespace GenshinMod.Common.GlobalObjets
 
         public List<GenshinShieldNPC> Shields;
         public float BaseKnockBackResist = 1f;
+        public byte TimerWet = 0;
 
         // Not reset every frame
 
@@ -229,6 +230,18 @@ namespace GenshinMod.Common.GlobalObjets
                     if (npc.knockBackResist < 0f) npc.knockBackResist = 0f;
                 }
             }
+
+            if (npc.wet)
+            {
+                TimerWet++;
+                if (TimerWet == 150) // Rain follows a 2.5 sec icd for hydro application
+                {
+                    TimerWet = 0;
+                    int damage = 0;
+                    ApplyElement(npc, null, null, GenshinElement.HYDRO, ref damage, GenshinProjectile.ElementApplicationWeak);
+                }
+            }
+            else TimerWet = 149;
 
             ProcessReactions(npc);
 
