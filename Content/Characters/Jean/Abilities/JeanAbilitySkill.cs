@@ -25,8 +25,6 @@ namespace GenshinMod.Content.Characters.Jean.Abilities
             CooldownHeld = 60 * 6;
         }
 
-        public override bool CanUse() => ChargesCurrent > 0 && (GenshinPlayer.Stamina >= 20 || LinkedProjectile != -1);
-
         public override void OnUse()
         {
             int type = ModContent.ProjectileType<ProjectileJeanSkillStab>();

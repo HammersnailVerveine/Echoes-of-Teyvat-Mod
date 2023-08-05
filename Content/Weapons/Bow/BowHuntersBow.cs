@@ -11,6 +11,9 @@ namespace GenshinMod.Content.Weapons.Bow
             SubstatType = StatType.ATTACK;
             BaseAttack = 185;
             BaseSubstat = 0f;
+
+            StringOffSet = new Microsoft.Xna.Framework.Vector2(5, 14);
+            StringColor = new Microsoft.Xna.Framework.Color(229, 217, 197);
         }
     }
 }

@@ -9,6 +9,9 @@ namespace GenshinMod.Common.ModObjects.Weapons
 {
     public abstract class WeaponBow : GenshinWeapon
     {
+        public Vector2 StringOffSet = Vector2.Zero;
+        public Color StringColor = Color.Black * 0.5f;
+
         public sealed override void SafeSetDefaultsWeaponType()
         {
             WeaponType = WeaponType.BOW;

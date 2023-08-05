@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace GenshinMod.Common.UI
 
         private static readonly List<GenshinUIState> uiStates = new();
         private static readonly List<UserInterface> userInterfaces = new();
+		
+		public static Texture2D PixelTexture;
 
         public static readonly RasterizerState OverflowHiddenRasterizerState = new()
         {
@@ -77,6 +80,8 @@ namespace GenshinMod.Common.UI
             Terraria.On_Player.ScrollHotbar += ModifyScrollHotbar;
             Main.OnResolutionChanged += OnResolutionChanged;
             Main.OnPreDraw += ResetVariables;
+
+            PixelTexture = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Pixel", AssetRequestMode.ImmediateLoad).Value;
         }
 
         public override void Unload()
@@ -93,6 +98,8 @@ namespace GenshinMod.Common.UI
 
             uiStates.Clear();
             userInterfaces.Clear();
+
+            PixelTexture = null;
         }
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)

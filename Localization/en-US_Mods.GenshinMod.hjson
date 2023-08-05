@@ -90,6 +90,7 @@ Projectiles: {
 	ProjectileJeanSkillSwirlEffect.DisplayName: Projectile Jean Skill Swirl Effect
 	ProjectileJeanSkillStab.DisplayName: Projectile Jean Skill Stab
 	ProjectileJeanCharged.DisplayName: Projectile Jean Charged
+	ProjectileBowCharged.DisplayName: Projectile Bow Charged
 }
 
 Configs: {
