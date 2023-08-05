@@ -11,10 +11,13 @@ namespace GenshinMod.Common.ModObjects
     {
         public GenshinGlobalNPC GenshinGlobalNPC;
         public Vector2 TargetPosition = Vector2.Zero;
+        public Vector2 TargetPositionForced = Vector2.Zero;
 
         public bool NoBestiaryEntry = true;
 
         public bool TargetLocalPlayer => NPC.target == Main.myPlayer;
+        public Vector2 GetTargetPosition => TargetPositionForced != Vector2.Zero ? TargetPositionForced : TargetPosition;
+
         public Player PlayerTarget => Main.player[NPC.target];
 
         public int TimeAlive = 0;
