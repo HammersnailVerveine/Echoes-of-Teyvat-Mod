@@ -16,7 +16,7 @@ namespace GenshinMod.Content.Characters.Jean.Abilities
         public override void SetDefaults()
         {
             KnockBack = 5f;
-            UseTime = 40;
+            UseTime = 25;
             Velocity = 1f;
             AbilityType = AbilityType.SKILL;
             HoldTimeMax = 370;

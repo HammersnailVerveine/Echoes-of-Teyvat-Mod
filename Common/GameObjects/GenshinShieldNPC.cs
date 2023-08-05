@@ -267,7 +267,7 @@ namespace GenshinMod.Common.GameObjects
                                 damageUnit = (int)(damageUnit * 0f);
                                 break;
                             case GenshinElement.GEO:
-                                damageUnit = (int)(damageUnit * 0f);
+                                damageUnit = (int)(damageUnit * 1f);
                                 break;
                             case GenshinElement.ANEMO:
                                 damageUnit = (int)(damageUnit * 0f);
