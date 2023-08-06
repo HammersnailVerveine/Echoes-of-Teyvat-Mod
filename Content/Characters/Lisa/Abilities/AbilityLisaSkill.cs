@@ -37,7 +37,7 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
                     foreach (NPC npc in Main.npc)
                     {
                         Vector2 dir = npc.Center - Player.Center;
-                        if (GenshinProjectile.CanHomeInto(npc) && dir.Length() < Range)
+                        if (GenshinProjectile.IsValidTarget(npc) && dir.Length() < Range)
                         {
                             dir.Normalize();
                             SpawnProjectileSpecific(GetSource(), npc.Center, dir, type, GetScalingCharged(lisa.GetNPCStacks(npc)), 5f, Character.Player.whoAmI, Character.Element, AbilityType, firstHit ? 1f : 0f);

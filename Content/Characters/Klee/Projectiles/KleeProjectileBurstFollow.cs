@@ -56,7 +56,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
                     for (int k = 0; k < Main.npc.Length; k++) // Select target
                     {
                         NPC npc = Main.npc[k];
-                        if (CanHomeInto(npc))
+                        if (IsValidTarget(npc))
                         {
                             Vector2 newMove = Main.npc[k].Center - Projectile.Center;
                             float distanceTo = newMove.Length();

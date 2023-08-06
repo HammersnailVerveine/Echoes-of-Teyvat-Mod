@@ -93,6 +93,8 @@ Projectiles: {
 	ProjectileBowCharged.DisplayName: Projectile Bow Charged
 	ProjectileBowArrow.DisplayName: Projectile Bow Arrow
 	ProjectileBowNormal.DisplayName: Projectile Bow Normal
+	AmberProjectileSkillDoll.DisplayName: Amber Projectile Skill Doll
+	AmberProjectileExplosion.DisplayName: Amber Projectile Explosion
 }
 
 Configs: {

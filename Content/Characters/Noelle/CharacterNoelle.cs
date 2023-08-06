@@ -18,7 +18,6 @@ namespace GenshinMod.Content.Characters.Noelle
             AbilityCharged = new AbilityNoelleCharged().Initialize(this);
             AbilitySkill = new AbilityNoelleSkill().Initialize(this);
             AbilityBurst = new AbilityNoelleBurst().Initialize(this);
-            Autoswing = true;
 
             BaseHealthMax = 12071;
             BaseAttackMax = 191;

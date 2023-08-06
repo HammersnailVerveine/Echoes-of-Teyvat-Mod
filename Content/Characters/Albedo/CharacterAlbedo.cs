@@ -22,7 +22,6 @@ namespace GenshinMod.Content.Characters.Albedo
             AbilityCharged = new AbilitySwordCharged().Initialize(this);
             AbilitySkill = new AbilityAlbedoSkill().Initialize(this);
             AbilityBurst = new AbilityAlbedoBurst().Initialize(this);
-            Autoswing = true;
 
             BaseHealthMax = 13226;
             BaseAttackMax = 251;

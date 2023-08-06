@@ -42,8 +42,8 @@ namespace GenshinMod.Content.Projectiles
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             TrailTexture ??= GetTexture();
             ArrowTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture + "_Arrow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Projectile.width = (int)(ArrowTexture.Width * 0.5f);
-            Projectile.height = ArrowTexture.Height;
+            Projectile.width = (int)(ArrowTexture.Width * 0.25f);
+            Projectile.height = 4;
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
         }
@@ -102,7 +102,6 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
         {
-            SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             float rotation = Projectile.rotation;
 
             if (!Disappearing)
@@ -110,18 +109,17 @@ namespace GenshinMod.Content.Projectiles
                 if (Element != GenshinElement.NONE)
                 {
                     Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-                    spriteBatch.Draw(ArrowTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
+                    spriteBatch.Draw(ArrowTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale * 1.15f, SpriteEffects.None, 0f);
                 }
             }
 
             for (int i = 0; i < OldPosition.Count; i++)
             {
                 Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-                float rotation2 = Projectile.rotation;
                 if (Element == GenshinElement.NONE)
-                    spriteBatch.Draw(TrailTexture, drawPosition2, null, lightColor * 0.03f * i, rotation2, TrailTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+                    spriteBatch.Draw(TrailTexture, drawPosition2, null, lightColor * 0.03f * i, Projectile.rotation, TrailTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
                 else
-                    spriteBatch.Draw(TrailTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.05f * i, rotation2, TrailTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+                    spriteBatch.Draw(TrailTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.05f * i, Projectile.rotation, TrailTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
             }
         }
     }

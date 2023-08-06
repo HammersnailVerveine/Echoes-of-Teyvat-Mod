@@ -614,7 +614,7 @@ namespace GenshinMod.Common.GlobalObjets
                         int reactionDamage = (int)(2f * transformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         foreach (NPC target in Main.npc)
                         {
-                            if (GenshinProjectile.CanHomeInto(target))
+                            if (GenshinProjectile.IsValidTarget(target))
                             {
                                 if (npc.Center.Distance(target.Center) < 128f)
                                 {
@@ -750,7 +750,7 @@ namespace GenshinMod.Common.GlobalObjets
                         int reactionDamage = (int)(0.5f * transformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         foreach (NPC target in Main.npc)
                         {
-                            if (GenshinProjectile.CanHomeInto(target))
+                            if (GenshinProjectile.IsValidTarget(target))
                             {
                                 if (npc.Center.Distance(target.Center) < 128f)
                                 {
@@ -823,7 +823,7 @@ namespace GenshinMod.Common.GlobalObjets
                         int reactionDamage = (int)(2f * transformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         foreach (NPC target in Main.npc)
                         {
-                            if (GenshinProjectile.CanHomeInto(target))
+                            if (GenshinProjectile.IsValidTarget(target))
                             {
                                 if (npc.Center.Distance(target.Center) < 128f)
                                 {
@@ -859,7 +859,7 @@ namespace GenshinMod.Common.GlobalObjets
                         int reactionDamage = (int)(0.5f * transformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         foreach (NPC target in Main.npc)
                         {
-                            if (GenshinProjectile.CanHomeInto(target))
+                            if (GenshinProjectile.IsValidTarget(target))
                             {
                                 if (npc.Center.Distance(target.Center) < 128f)
                                 {
@@ -982,7 +982,7 @@ namespace GenshinMod.Common.GlobalObjets
                         int reactionDamage = (int)(0.6f * transformativeDamage * (1f + ((16f * mastery) / (2000f + mastery)) + reactionBonus));
                         foreach (NPC target in Main.npc)
                         {
-                            if (GenshinProjectile.CanHomeInto(target))
+                            if (GenshinProjectile.IsValidTarget(target))
                             {
                                 if (npc.Center.Distance(target.Center) < 128f)
                                 {
@@ -1066,7 +1066,7 @@ namespace GenshinMod.Common.GlobalObjets
 
                     foreach (NPC target in Main.npc)
                     {
-                        if (GenshinProjectile.CanHomeInto(target))
+                        if (GenshinProjectile.IsValidTarget(target))
                         {
                             if (npc.Center.Distance(target.Center) < 128f)
                             {

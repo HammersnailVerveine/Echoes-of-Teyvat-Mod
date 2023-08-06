@@ -90,7 +90,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
 
             foreach (NPC npc in Main.npc)
             {
-                if (CanHomeInto(npc, true) && npc.knockBackResist > 0f)
+                if (IsValidTarget(npc, true) && npc.knockBackResist > 0f)
                 {
                     float distance = npc.Center.Distance(attactionPos);
                     bool veryClose = false;

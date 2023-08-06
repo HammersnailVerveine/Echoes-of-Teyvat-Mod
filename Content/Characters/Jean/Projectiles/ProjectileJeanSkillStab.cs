@@ -100,7 +100,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
             for (int i = HitNPCPending.Count - 1; i >= 0; i--)
             {
                 NPC npc = Main.npc[HitNPCPending[i]];
-                if (CanHomeInto(npc, true) && npc.knockBackResist > 0f && TimeSpent < 30f)
+                if (IsValidTarget(npc, true) && npc.knockBackResist > 0f && TimeSpent < 30f)
                 {
                     npc.velocity *= 0.5f;
                     npc.velocity += pushDirection * 5f * npc.knockBackResist;

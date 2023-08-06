@@ -65,7 +65,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
                 foreach (NPC npc in Main.npc)
                 {
                     Vector2 dir = npc.Center - Projectile.Center;
-                    if (CanHomeInto(npc) && dir.Length() < range)
+                    if (IsValidTarget(npc) && dir.Length() < range)
                     {
                         target = npc;
                         range = dir.Length();
@@ -85,7 +85,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
                 foreach (NPC npc in Main.npc)
                 {
                     Vector2 dir = npc.Center - Projectile.Center;
-                    if (CanHomeInto(npc) && dir.Length() < Range)
+                    if (IsValidTarget(npc) && dir.Length() < Range)
                     {
                         int type = ModContent.ProjectileType<LisaProjectileBurstHit>();
                         SpawnProjectile(npc.Center, Vector2.Zero, type, Projectile.damage, Projectile.knockBack, 1f);

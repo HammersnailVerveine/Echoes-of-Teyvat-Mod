@@ -42,7 +42,8 @@ namespace GenshinMod.Common.GameObjects
         public float BaseDefenseMax = 1000f; // Max defense no modifiers
         public float BaseAttackMax = 1000f; // Max attack no modifiers
         public WeaponType WeaponType; // Character Weapon Type
-        public bool Autoswing = false; // NA autoswing
+        public bool Autoswing = true; // NA autoswing
+        public bool AutoswingCA = false; // CA autoswing
 
         public string[] BurstQuotes;
 
@@ -257,7 +258,7 @@ namespace GenshinMod.Common.GameObjects
                     {
                         if (AbilityCharged.HoldTimeMax > 0)
                             TryHoldAbility(AbilityCharged, Main.mouseRightRelease);
-                        else if (Main.mouseRightRelease || Autoswing)
+                        else if (Main.mouseRightRelease || AutoswingCA)
                             TryUseAbility(AbilityCharged);
                     }
 

@@ -46,7 +46,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
                 for (int k = 0; k < Main.npc.Length; k++)
                 {
                     NPC npc = Main.npc[k];
-                    if (GenshinProjectile.CanHomeInto(npc))
+                    if (GenshinProjectile.IsValidTarget(npc))
                     {
                         if (position.Distance(npc.Center) < npc.width + 32f) // if the NPC is close to the projectile path, snaps to it.
                         {

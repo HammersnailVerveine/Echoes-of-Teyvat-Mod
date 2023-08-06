@@ -16,7 +16,6 @@ namespace GenshinMod.Content.Characters.Kaeya
             AbilityCharged = new AbilitySwordCharged().Initialize(this);
             AbilitySkill = new AbilityKaeyaSkill().Initialize(this);
             AbilityBurst = new AbilityKaeyaBurst().Initialize(this);
-            Autoswing = true;
 
             BaseHealthMax = 11636;
             BaseAttackMax = 223;

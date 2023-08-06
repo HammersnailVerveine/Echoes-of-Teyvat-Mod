@@ -1,6 +1,7 @@
 ﻿using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Abilities;
+using GenshinMod.Content.Characters.Amber.Abilities;
 
 namespace GenshinMod.Content.Characters.Amber
 {
@@ -13,9 +14,8 @@ namespace GenshinMod.Content.Characters.Amber
             WeaponType = WeaponType.BOW;
             AbilityNormal = new AbilityBowNormal().Initialize(this);
             AbilityCharged = new AbilityBowCharged().Initialize(this);
-            AbilitySkill = new AbilitySwordNormal().Initialize(this);
+            AbilitySkill = new AbilityAmberSkill().Initialize(this);
             AbilityBurst = new AbilitySwordNormal().Initialize(this);
-            Autoswing = true;
 
             BaseHealthMax = 9461;
             BaseAttackMax = 223;

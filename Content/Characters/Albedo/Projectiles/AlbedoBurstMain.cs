@@ -80,7 +80,7 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
                                 bool hit = false;
                                 foreach (NPC npc in Main.npc)
                                 {
-                                    if (CanHomeInto(npc) && !HitNPC.Contains(npc.whoAmI) && npc.Center.Distance(proj.Center) < AlbedoProjectileSkillMain.Range)
+                                    if (IsValidTarget(npc) && !HitNPC.Contains(npc.whoAmI) && npc.Center.Distance(proj.Center) < AlbedoProjectileSkillMain.Range)
                                     {
                                         SpawnProjectile(npc.Center, Vector2.Zero, ModContent.ProjectileType<AlbedoProjectileBlast>(), OwnerCharacter.AbilitySkill.GetScaling2(), 1f, 1f);
                                         HitNPC.Add(npc.whoAmI);

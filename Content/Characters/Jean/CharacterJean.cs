@@ -16,7 +16,6 @@ namespace GenshinMod.Content.Characters.Jean
             AbilityCharged = new AbilityJeanCharged().Initialize(this);
             AbilitySkill = new AbilityJeanSkill().Initialize(this);
             AbilityBurst = new AbilitySwordNormal().Initialize(this);
-            Autoswing = true;
 
             BaseHealthMax = 14695;
             BaseAttackMax = 239;
