@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Jean.Abilities
 {
-    public class JeanAbilityCharged : GenshinAbility
+    public class AbilityJeanCharged : GenshinAbility
     {
         public override void SetDefaults()
         {

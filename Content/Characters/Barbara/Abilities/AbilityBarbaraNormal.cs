@@ -9,21 +9,20 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Barbara.Abilities
 {
-    public class BarbaraAbilityCharged : GenshinAbility
+    public class AbilityBarbaraNormal : GenshinAbility
     {
         public override void SetDefaults()
         {
-            KnockBack = 4f;
-            UseTime = 50;
-            Stamina = 50;
+            KnockBack = 1f;
+            UseTime = 22;
             Velocity = AlmostImmobile;
-            AbilityType = AbilityType.CHARGED;
+            AbilityType = AbilityType.NORMAL;
         }
 
         public override void OnUse()
         {
-            SoundEngine.PlaySound(SoundID.Splash);
-            int type = ModContent.ProjectileType<BarbaraProjectileCharged>();
+            SoundEngine.PlaySound(SoundID.SplashWeak);
+            int type = ModContent.ProjectileType<BarbaraProjectileNormal>();
 
             Vector2 target = Main.MouseWorld;
             Vector2 offSet = target - Player.Center;
@@ -51,7 +50,7 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
                     {
                         if (position.Distance(npc.Center) < npc.width + 32f) // if the NPC is close to the projectile path, snaps to it.
                         {
-                            SpawnProjectile(npc.Center, VelocityToTarget(npc.Center), type, npc.whoAmI);
+                            SpawnProjectile(npc.Center, VelocityToTarget(npc.Center), type);
                             return;
                         }
                     }
@@ -61,9 +60,9 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             SpawnProjectile(position, VelocityToCursor(), type);
         }
 
-        public override int GetScaling() // Continuous Regeneration
+        public override int GetScaling()
         {
-            return (int)(1.5f * Character.EffectiveAttack * LevelScaling);
+            return (int)(0.3f * Character.EffectiveAttack * LevelScaling);
         }
     }
 }

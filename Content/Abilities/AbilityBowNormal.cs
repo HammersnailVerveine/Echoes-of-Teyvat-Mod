@@ -32,6 +32,11 @@ namespace GenshinMod.Content.Abilities
             Character.RemoveVanityWeapon();
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.75f;
+        }
+
         public override int GetScaling()
         { // average damage of fischl atk string
             return (int)(0.556f * Character.EffectiveAttack * LevelScaling);

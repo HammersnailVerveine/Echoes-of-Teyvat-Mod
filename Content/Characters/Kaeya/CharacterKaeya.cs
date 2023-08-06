@@ -14,8 +14,8 @@ namespace GenshinMod.Content.Characters.Kaeya
             WeaponType = WeaponType.SWORD;
             AbilityNormal = new AbilitySwordNormal().Initialize(this);
             AbilityCharged = new AbilitySwordCharged().Initialize(this);
-            AbilitySkill = new KaeyaAbilitySkill().Initialize(this);
-            AbilityBurst = new KaeyaAbilityBurst().Initialize(this);
+            AbilitySkill = new AbilityKaeyaSkill().Initialize(this);
+            AbilityBurst = new AbilityKaeyaBurst().Initialize(this);
             Autoswing = true;
 
             BaseHealthMax = 11636;

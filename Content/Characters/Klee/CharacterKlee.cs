@@ -11,10 +11,10 @@ namespace GenshinMod.Content.Characters.Klee
             Name = "Klee";
             Element = GenshinElement.PYRO;
             WeaponType = WeaponType.CATALYST;
-            AbilityNormal = new KleeAbilityNormal().Initialize(this);
-            AbilityCharged = new KleeAbilityCharged().Initialize(this);
-            AbilitySkill = new KleeAbilitySkill().Initialize(this);
-            AbilityBurst = new KleeAbilityBurst().Initialize(this);
+            AbilityNormal = new AbilityKleeNormal().Initialize(this);
+            AbilityCharged = new AbilityKleeCharged().Initialize(this);
+            AbilitySkill = new AbilityKleeSkill().Initialize(this);
+            AbilityBurst = new AbilityKleeBurst().Initialize(this);
 
             BaseHealthMax = 10287;
             BaseAttackMax = 311;

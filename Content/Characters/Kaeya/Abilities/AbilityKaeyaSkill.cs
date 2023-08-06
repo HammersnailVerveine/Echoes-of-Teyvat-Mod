@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Kaeya.Abilities
 {
-    public class KaeyaAbilitySkill : GenshinAbility
+    public class AbilityKaeyaSkill : GenshinAbility
     {
         public override void SetDefaults()
         {

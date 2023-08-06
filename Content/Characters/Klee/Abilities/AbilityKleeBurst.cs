@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Klee.Abilities
 {
-    public class KleeAbilityBurst : GenshinAbility
+    public class AbilityKleeBurst : GenshinAbility
     {
         public override void SetDefaults()
         {

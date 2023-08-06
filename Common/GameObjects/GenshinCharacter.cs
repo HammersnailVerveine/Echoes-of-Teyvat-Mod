@@ -200,6 +200,9 @@ namespace GenshinMod.Common.GameObjects
         {
             SafePreUpdate();
             Weapon.WeaponUpdate();
+
+            if (AbilityCurrent != null)
+                AbilityCurrent.OnUsePreUpdate();
         }
 
         public void Update() // Use to setup character stats. No active effects

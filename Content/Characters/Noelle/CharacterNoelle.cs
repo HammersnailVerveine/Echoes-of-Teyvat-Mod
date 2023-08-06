@@ -14,10 +14,10 @@ namespace GenshinMod.Content.Characters.Noelle
             Name = "Noelle";
             Element = GenshinElement.GEO;
             WeaponType = WeaponType.CLAYMORE;
-            AbilityNormal = new NoelleAbilityNormal().Initialize(this);
-            AbilityCharged = new NoelleAbilityCharged().Initialize(this);
-            AbilitySkill = new NoelleAbilitySkill().Initialize(this);
-            AbilityBurst = new NoelleAbilityBurst().Initialize(this);
+            AbilityNormal = new AbilityNoelleNormal().Initialize(this);
+            AbilityCharged = new AbilityNoelleCharged().Initialize(this);
+            AbilitySkill = new AbilityNoelleSkill().Initialize(this);
+            AbilityBurst = new AbilityNoelleBurst().Initialize(this);
             Autoswing = true;
 
             BaseHealthMax = 12071;

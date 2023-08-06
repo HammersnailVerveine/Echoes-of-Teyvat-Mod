@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Albedo.Abilities
 {
-    public class AlbedoAbilityBurst : GenshinAbility
+    public class AbilityAlbedoBurst : GenshinAbility
     {
         public override void SetDefaults()
         {

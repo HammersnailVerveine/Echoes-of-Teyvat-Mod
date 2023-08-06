@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Lisa.Abilities
 {
-    public class LisaAbilityBurst : GenshinAbility
+    public class AbilityLisaBurst : GenshinAbility
     {
         public static float Range = 256f;
 

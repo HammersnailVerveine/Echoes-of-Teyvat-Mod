@@ -16,10 +16,10 @@ namespace GenshinMod.Content.Characters.Barbara
             Name = "Barbara";
             Element = GenshinElement.HYDRO;
             WeaponType = WeaponType.CATALYST;
-            AbilityNormal = new BarbaraAbilityNormal().Initialize(this);
-            AbilityCharged = new BarbaraAbilityCharged().Initialize(this);
-            AbilitySkill = new BarbaraAbilitySkill().Initialize(this);
-            AbilityBurst = new BarbaraAbilityBurst().Initialize(this);
+            AbilityNormal = new AbilityBarbaraNormal().Initialize(this);
+            AbilityCharged = new AbilityBarbaraCharged().Initialize(this);
+            AbilitySkill = new AbilityBarbaraSkill().Initialize(this);
+            AbilityBurst = new AbilityBarbaraBurst().Initialize(this);
 
             BaseHealthMax = 9787;
             BaseAttackMax = 159;

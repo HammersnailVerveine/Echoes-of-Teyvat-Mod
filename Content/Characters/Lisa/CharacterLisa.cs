@@ -24,10 +24,10 @@ namespace GenshinMod.Content.Characters.Lisa
             Name = "Lisa";
             Element = GenshinElement.ELECTRO;
             WeaponType = WeaponType.CATALYST;
-            AbilityNormal = new LisaAbilityNormal().Initialize(this);
-            AbilityCharged = new LisaAbilityCharged().Initialize(this);
-            AbilitySkill = new LisaAbilitySkill().Initialize(this);
-            AbilityBurst = new LisaAbilityBurst().Initialize(this);
+            AbilityNormal = new AbilityLisaNormal().Initialize(this);
+            AbilityCharged = new AbilityLisaCharged().Initialize(this);
+            AbilitySkill = new AbilityLisaSkill().Initialize(this);
+            AbilityBurst = new AbilityLisaBurst().Initialize(this);
 
             BaseHealthMax = 9570;
             BaseAttackMax = 232;
@@ -91,7 +91,7 @@ namespace GenshinMod.Content.Characters.Lisa
             {
                 for (int i = 0; i < nbDots; i++)
                 {
-                    Vector2 position = Player.Center + (Vector2.UnitY * LisaAbilitySkill.Range).RotatedBy(segment * i + rotationBonus);
+                    Vector2 position = Player.Center + (Vector2.UnitY * AbilityLisaSkill.Range).RotatedBy(segment * i + rotationBonus);
                     Vector2 drawPosition = Vector2.Transform(position - Main.screenPosition + new Vector2(0f, Player.gfxOffY), Main.GameViewMatrix.EffectMatrix);
                     //float sizeFactor = ((float)Math.Sin(TimeSpent * 0.125f)) * 0.33f + 0.8f;
                     //spriteBatch.Draw(TextureSkill, drawPosition, null, Color.White * lightFactor, Main.rand.NextFloat(3.14f), TextureSkill.Size() * 0.5f, 1.75f, SpriteEffects.None, 0f);
@@ -103,12 +103,12 @@ namespace GenshinMod.Content.Characters.Lisa
 
                 for (int i = 0; i < nbDots; i++)
                 {
-                    Vector2 position = (Vector2.UnitY * LisaAbilitySkill.Range).RotatedBy(segment * i + rotationBonus);
+                    Vector2 position = (Vector2.UnitY * AbilityLisaSkill.Range).RotatedBy(segment * i + rotationBonus);
 
                     if (!AbilitySkill.HoldFull)
                     {
                         position.Normalize();
-                        position *= (LisaAbilitySkill.Range / (AbilitySkill.HoldTimeFull - 15)) * (AbilitySkill.HoldTime - 15);
+                        position *= (AbilityLisaSkill.Range / (AbilitySkill.HoldTimeFull - 15)) * (AbilitySkill.HoldTime - 15);
                     }
 
                     position = Player.Center + position;
@@ -122,7 +122,7 @@ namespace GenshinMod.Content.Characters.Lisa
 
                 if (Main.rand.NextBool(10))
                 {
-                    Vector2 position = Player.Center + (Vector2.UnitY * Main.rand.NextFloat(100f, LisaAbilitySkill.Range)).RotatedByRandom(MathHelper.ToRadians(360));
+                    Vector2 position = Player.Center + (Vector2.UnitY * Main.rand.NextFloat(100f, AbilityLisaSkill.Range)).RotatedByRandom(MathHelper.ToRadians(360));
                     GenshinProjectile.SpawnDust<LisaDustRound>(position, Vector2.Zero, 1f, 1f, 10);
                 }
 

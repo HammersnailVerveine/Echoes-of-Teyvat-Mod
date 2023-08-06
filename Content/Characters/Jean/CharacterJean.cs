@@ -13,8 +13,8 @@ namespace GenshinMod.Content.Characters.Jean
             Element = GenshinElement.ANEMO;
             WeaponType = WeaponType.SWORD;
             AbilityNormal = new AbilitySwordNormal().Initialize(this);
-            AbilityCharged = new JeanAbilityCharged().Initialize(this);
-            AbilitySkill = new JeanAbilitySkill().Initialize(this);
+            AbilityCharged = new AbilityJeanCharged().Initialize(this);
+            AbilitySkill = new AbilityJeanSkill().Initialize(this);
             AbilityBurst = new AbilitySwordNormal().Initialize(this);
             Autoswing = true;
 

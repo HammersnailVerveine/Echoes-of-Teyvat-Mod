@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Jean.Abilities
 {
-    public class JeanAbilitySkill : GenshinAbility
+    public class AbilityJeanSkill : GenshinAbility
     {
         private int LinkedProjectile = -1; // Set to the id of the projectile spawned. -1 if projectile isn't spawned.
 

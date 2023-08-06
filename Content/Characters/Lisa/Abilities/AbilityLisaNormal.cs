@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Lisa.Abilities
 {
-    public class LisaAbilityNormal : GenshinAbility
+    public class AbilityLisaNormal : GenshinAbility
     {
         public override void SetDefaults()
         {

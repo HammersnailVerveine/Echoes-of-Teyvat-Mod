@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Barbara.Abilities
 {
-    public class BarbaraAbilityBurst : GenshinAbility
+    public class AbilityBarbaraBurst : GenshinAbility
     {
         public override void SetDefaults()
         {

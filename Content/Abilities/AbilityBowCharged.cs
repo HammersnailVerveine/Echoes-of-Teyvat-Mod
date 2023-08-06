@@ -47,6 +47,11 @@ namespace GenshinMod.Content.Abilities
             SoundEngine.PlaySound(SoundID.Item5);
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.75f;
+        }
+
         public override void OnHold()
         {
             if (LinkedProjectile == -1)
@@ -62,6 +67,7 @@ namespace GenshinMod.Content.Abilities
             if (HoldTime > HoldTimeFull) HoldTime = HoldTimeFull;
 
             Character.RemoveVanityWeapon();
+            Player.velocity.X *= 0.9f;
         }
 
         public override void OnHoldReset()

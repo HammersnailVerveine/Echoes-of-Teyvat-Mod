@@ -20,8 +20,8 @@ namespace GenshinMod.Content.Characters.Albedo
             WeaponType = WeaponType.SWORD;
             AbilityNormal = new AbilitySwordNormal().Initialize(this);
             AbilityCharged = new AbilitySwordCharged().Initialize(this);
-            AbilitySkill = new AlbedoAbilitySkill().Initialize(this);
-            AbilityBurst = new AlbedoAbilityBurst().Initialize(this);
+            AbilitySkill = new AbilityAlbedoSkill().Initialize(this);
+            AbilityBurst = new AbilityAlbedoBurst().Initialize(this);
             Autoswing = true;
 
             BaseHealthMax = 13226;

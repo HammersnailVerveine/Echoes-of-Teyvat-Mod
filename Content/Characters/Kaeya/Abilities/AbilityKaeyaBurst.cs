@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Kaeya.Abilities
 {
-    public class KaeyaAbilityBurst : GenshinAbility
+    public class AbilityKaeyaBurst : GenshinAbility
     {
         public override void SetDefaults()
         {

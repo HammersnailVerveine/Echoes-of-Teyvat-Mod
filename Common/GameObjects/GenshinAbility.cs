@@ -39,6 +39,7 @@ namespace GenshinMod.Common.GameObjects
         public abstract void SetDefaults();
         public abstract void OnUse();
         public virtual void OnUseUpdate() { }
+        public virtual void OnUsePreUpdate() { }
         public virtual void OnUseEnd() { }
         public virtual void SafeResetEffects() { }
         public virtual void OnHold() { } // Called every frame while holding the ability
