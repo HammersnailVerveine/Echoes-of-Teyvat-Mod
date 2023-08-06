@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Abilities
 
         public override void SetDefaults()
         {
-            KnockBack = 5f;
+            KnockBack = 2f;
             UseTime = 20;
             Velocity = 1f;
             AbilityType = AbilityType.CHARGED;
@@ -38,10 +38,11 @@ namespace GenshinMod.Content.Abilities
             }
 
             GenshinElement element = HoldFull ? Character.Element : GenshinElement.NONE;
+            int damage = HoldFull ? GetScaling2() : GetScaling();
             
-            int projID = SpawnProjectile(velocity, type, element);
+            int projID = SpawnProjectile(velocity, type, damage, element);
             Projectile proj = Main.projectile[projID];
-            proj.position = Player.Center + velocity + new Vector2(proj.width, proj.height) * Character.WeaponSize * 0.5f - new Vector2(proj.width, proj.height);
+            proj.position = Player.Center + velocity + new Vector2(proj.width, proj.height) * 0.5f - new Vector2(proj.width, proj.height);
             proj.netUpdate = true;
             SoundEngine.PlaySound(SoundID.Item5);
         }
@@ -54,7 +55,7 @@ namespace GenshinMod.Content.Abilities
                 direction.Normalize();
 
                 int type = ModContent.ProjectileType<ProjectileBowCharged>();
-                LinkedProjectile = SpawnProjectile(VelocityToCursor(), type, Character.WeaponInfusion);
+                LinkedProjectile = SpawnProjectile(VelocityToCursor(), type);
                 SoundEngine.PlaySound(SoundID.Item1);
             }
 
@@ -78,13 +79,13 @@ namespace GenshinMod.Content.Abilities
         }
 
         public override int GetScaling()
-        {
-            return (int)(2.92f * Character.EffectiveAttack * LevelScaling);
+        { // 55.6f NA
+            return (int)(0.439f * Character.EffectiveAttack * LevelScaling);
         }
 
         public override int GetScaling2()
         {
-            return (int)(2.3f * Character.EffectiveAttack * LevelScaling);
+            return (int)(1.24 * Character.EffectiveAttack * LevelScaling);
         }
     }
 }

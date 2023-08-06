@@ -1,5 +1,6 @@
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects.Weapons;
+using Microsoft.Xna.Framework;
 
 namespace GenshinMod.Content.Weapons.Bow
 {
@@ -12,8 +13,8 @@ namespace GenshinMod.Content.Weapons.Bow
             BaseAttack = 185;
             BaseSubstat = 0f;
 
-            StringOffSet = new Microsoft.Xna.Framework.Vector2(5, 14);
-            StringColor = new Microsoft.Xna.Framework.Color(229, 217, 197);
+            StringOffSet = new Vector2(4, 10);
+            StringColor = new Color(229, 217, 197);
         }
     }
 }

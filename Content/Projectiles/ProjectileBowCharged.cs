@@ -23,11 +23,6 @@ namespace GenshinMod.Content.Projectiles
         public List<Vector2> OldPosition;
         public List<float> OldRotation;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Jean Slash");
-        }
-
         public override void SetDefaults()
         {
             Projectile.width = 10;
@@ -152,7 +147,7 @@ namespace GenshinMod.Content.Projectiles
             {
                 Texture2D PixelTexture = GenshinSystemUI.PixelTexture;
 
-                Vector2 texturepos = - new Vector2(WeaponTexture.Width, WeaponTexture.Height) * 0.5f + bow.StringOffSet;
+                Vector2 texturepos = (- new Vector2(WeaponTexture.Width, WeaponTexture.Height) * 0.5f + bow.StringOffSet) * Projectile.scale;
                 texturepos = texturepos.RotatedBy(rotation);
                 Vector2 stringDirection = drawPosition - toOwner * (ArrowTexture.Width * 0.5f - 2f) + texturepos - arrowDrawPosition;
                 stringDirection = stringDirection.RotatedBy(MathHelper.ToRadians(180f));

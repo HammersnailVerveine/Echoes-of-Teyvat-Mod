@@ -140,6 +140,11 @@ namespace GenshinMod.Common.GameObjects
             return SpawnProjectileSpecific(GetSource(), Character.Player.Center, velocity, type, GetScaling(), KnockBack, Character.Player.whoAmI, element, AbilityType, ai0, ai1);
         }
 
+        public int SpawnProjectile(Vector2 velocity, int type, int damage, GenshinElement element, float ai0 = 0, float ai1 = 0)
+        {
+            return SpawnProjectileSpecific(GetSource(), Character.Player.Center, velocity, type, damage, KnockBack, Character.Player.whoAmI, element, AbilityType, ai0, ai1);
+        }
+
         public Vector2 VelocityToCursor() => VelocityToTarget(Main.MouseWorld);
 
         public Vector2 VelocityToTarget(Vector2 target)
