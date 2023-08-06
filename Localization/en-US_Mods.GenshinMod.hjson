@@ -91,6 +91,7 @@ Projectiles: {
 	ProjectileJeanSkillStab.DisplayName: Projectile Jean Skill Stab
 	ProjectileJeanCharged.DisplayName: Projectile Jean Charged
 	ProjectileBowCharged.DisplayName: Projectile Bow Charged
+	ProjectileBowArrow.DisplayName: Projectile Bow Arrow
 }
 
 Configs: {

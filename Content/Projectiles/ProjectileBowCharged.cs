@@ -17,6 +17,8 @@ namespace GenshinMod.Content.Projectiles
         public Texture2D WeaponTexture;
         public Texture2D ArrowTexture;
         public float ArrowOffsetMult = 0f;
+        public float syncedRotation = 0f;
+        bool Loaded = false;
 
         public List<Vector2> OldPosition;
         public List<float> OldRotation;
@@ -33,7 +35,7 @@ namespace GenshinMod.Content.Projectiles
             Projectile.friendly = false;
             Projectile.tileCollide = false;
             Projectile.aiStyle = 0;
-            Projectile.timeLeft = 3600;
+            Projectile.timeLeft = 60;
             Projectile.scale = 1f;
             ProjectileTrail = true;
             Projectile.alpha = 255;
@@ -55,19 +57,27 @@ namespace GenshinMod.Content.Projectiles
         public override void SafeAI()
         {
             // position & rotation
-            Vector2 direction = Vector2.Zero;
+            Vector2 direction;
             Projectile.scale = OwnerCharacter.WeaponSize * 0.8f;
-            if (IsLocalOwner)
+
+            if (Projectile.timeLeft > 15 && IsLocalOwner)
             {
                 Vector2 target = Main.MouseWorld;
                 direction = target - Owner.Center;
                 direction.Normalize();
+                Projectile.ai[0] = direction.ToRotation() - MathHelper.PiOver2;
+                if (Math.Abs(syncedRotation - Projectile.ai[0]) > 0.15f)
+                {
+                    syncedRotation = Projectile.ai[0];
+                    Projectile.netUpdate = true;
+                }
             }
             else
             {
-                // mp sync : todo
+                direction = Vector2.UnitY.RotatedBy(Projectile.ai[0]);
             }
-            Projectile.position = Owner.Center + (direction * TileLength * 3.5f * Projectile.scale) - Projectile.Size * 0.5f;
+
+            Projectile.position = Owner.Center + (direction * TileLength * 2.5f * Projectile.scale) - Projectile.Size * 0.5f;
             Projectile.rotation = direction.ToRotation();
 
             // Afterimages
@@ -82,11 +92,18 @@ namespace GenshinMod.Content.Projectiles
                 }
             }
 
-            if (OwnerCharacter.AbilityCharged.HoldTime >= 30)
+            if (OwnerCharacter.AbilityCharged.HoldTime >= 20 && Projectile.timeLeft > 15)
             {
-                ArrowOffsetMult = (float)(OwnerCharacter.AbilityCharged.HoldTime - 30) / (float)(OwnerCharacter.AbilityCharged.HoldTimeFull - 90);
+                ArrowOffsetMult = (float)(OwnerCharacter.AbilityCharged.HoldTime - 20) / (float)(OwnerCharacter.AbilityCharged.HoldTimeFull - 60);
                 if (ArrowOffsetMult > 1f) ArrowOffsetMult = 1f;
             }
+            else
+            {
+                ArrowOffsetMult *= 0.3f;
+            }
+
+            if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull) Loaded = true;
+            if (Projectile.timeLeft == 16) Projectile.timeLeft++;
 
             Owner.direction = Projectile.Center.X > Owner.Center.X ? 1 : -1;
         }
@@ -95,13 +112,13 @@ namespace GenshinMod.Content.Projectiles
         {
             // Draw the Bow
             Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-            SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            SpriteEffects effect = SpriteEffects.None;
             Color elementColor = GenshinElementUtils.GetColor(OwnerCharacter.Element);
-            if (OwnerCharacter.AbilityCharged.HoldTime < OwnerCharacter.AbilityCharged.HoldTimeFull) elementColor *= (float)(OwnerCharacter.AbilityCharged.HoldTime - (OwnerCharacter.AbilityCharged.HoldTimeFull - 15)) / (OwnerCharacter.AbilityCharged.HoldTimeFull - (OwnerCharacter.AbilityCharged.HoldTimeFull - 15));
+            if (OwnerCharacter.AbilityCharged.HoldTime < OwnerCharacter.AbilityCharged.HoldTimeFull && !Loaded) elementColor *= (float)(OwnerCharacter.AbilityCharged.HoldTime - (OwnerCharacter.AbilityCharged.HoldTimeFull - 15)) / (OwnerCharacter.AbilityCharged.HoldTimeFull - (OwnerCharacter.AbilityCharged.HoldTimeFull - 15));
             float scaleMult = (((float)Math.Sin(TimeSpent * 0.05f)) * 0.115f + 1.115f);
-            float rotation = Projectile.rotation + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
+            float rotation = Projectile.rotation;
 
-            if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull - 15)
+            if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull - 15 || Loaded)
             {
                 spriteBatch.Draw(WeaponTexture, drawPosition, null, elementColor * 0.2f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * scaleMult, effect, 0f);
                 spriteBatch.Draw(WeaponTexture, drawPosition, null, elementColor * 0.15f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * scaleMult * 1.05f, effect, 0f);
@@ -112,18 +129,21 @@ namespace GenshinMod.Content.Projectiles
 
             Vector2 toOwner = Owner.Center - Projectile.Center;
             toOwner.Normalize();
-
             Vector2 direction = toOwner;
             Vector2 arrowDrawPosition = drawPosition;
-            arrowDrawPosition -= direction * (ArrowTexture.Width * 0.25f - 1f);
+            arrowDrawPosition -= direction * (ArrowTexture.Width * 0.25f + 3f);
             direction *= ArrowOffsetMult * (ArrowTexture.Width * 0.5f + 2f);
             arrowDrawPosition += direction;
-            spriteBatch.Draw(ArrowTexture, arrowDrawPosition, null, lightColor * 1.5f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 
-            if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull - 15)
+            if (Projectile.timeLeft > 15)
             {
-                spriteBatch.Draw(ArrowTexture, arrowDrawPosition, null, elementColor * 0.4f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
-                spriteBatch.Draw(ArrowTexture, arrowDrawPosition, null, elementColor * 0.35f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale * scaleMult, effect, 0f);
+                spriteBatch.Draw(ArrowTexture, arrowDrawPosition, null, lightColor * 1.5f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+
+                if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull - 15 || Loaded)
+                {
+                    spriteBatch.Draw(ArrowTexture, arrowDrawPosition, null, elementColor * 0.4f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+                    spriteBatch.Draw(ArrowTexture, arrowDrawPosition, null, elementColor * 0.35f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale * scaleMult, effect, 0f);
+                }
             }
 
             // Draw the string
@@ -147,7 +167,7 @@ namespace GenshinMod.Content.Projectiles
                     stringDirection -= directionNormalized;
                 }
 
-                if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull - 15)
+                if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull - 15 || Loaded)
                 {
                     stringDirection = drawPosition - toOwner * (ArrowTexture.Width * 0.5f - 2f) + texturepos - arrowDrawPosition;
                     stringDirection = stringDirection.RotatedBy(MathHelper.ToRadians(180f));
@@ -163,16 +183,16 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
         {
-            SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            float rotation = Projectile.rotation + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
+            SpriteEffects effect = SpriteEffects.None;
             float colormult = 1f;
-            if (OwnerCharacter.AbilityCharged.HoldTime < OwnerCharacter.AbilityCharged.HoldTimeFull) colormult *= (float)(OwnerCharacter.AbilityCharged.HoldTime - (OwnerCharacter.AbilityCharged.HoldTimeFull - 15)) / (OwnerCharacter.AbilityCharged.HoldTimeFull - (OwnerCharacter.AbilityCharged.HoldTimeFull - 15));
+            if (OwnerCharacter.AbilityCharged.HoldTime < OwnerCharacter.AbilityCharged.HoldTimeFull && !Loaded) 
+                colormult *= (float)(OwnerCharacter.AbilityCharged.HoldTime - (OwnerCharacter.AbilityCharged.HoldTimeFull - 15)) / (OwnerCharacter.AbilityCharged.HoldTimeFull - (OwnerCharacter.AbilityCharged.HoldTimeFull - 15));
 
             for (int i = 0; i < OldPosition.Count; i++)
             {
                 Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-                float rotation2 = OldRotation[i] + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
-                GenshinElement element = OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull - 15 ? OwnerCharacter.Element : GenshinElement.NONE;
+                float rotation2 = OldRotation[i];
+                GenshinElement element = OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull - 15 || Loaded ? OwnerCharacter.Element : GenshinElement.NONE;
                 if (element == GenshinElement.NONE)
                     spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
                 else

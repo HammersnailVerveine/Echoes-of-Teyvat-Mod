@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -19,13 +20,29 @@ namespace GenshinMod.Content.Abilities
             Velocity = 1f;
             AbilityType = AbilityType.CHARGED;
             HoldTimeMax = 150;
-            HoldTimeFull = 120;
+            HoldTimeFull = 90;
             Cooldown = 0;
             CooldownHeld = 0;
         }
 
         public override void OnUse()
         {
+            int type = ModContent.ProjectileType<ProjectileBowArrow>();
+
+            Vector2 velocity = VelocityToCursor() * 15f;
+            if (HoldTime > 20)
+            {
+                float velocityMult = ((HoldTime - 20) / (HoldTimeFull - 60)) * 0.33f;
+                if (velocityMult > 0.5f) velocityMult = 0.5f;
+                velocity *= 1f + velocityMult;
+            }
+
+            GenshinElement element = HoldFull ? Character.Element : GenshinElement.NONE;
+            
+            int projID = SpawnProjectile(velocity, type, element);
+            Projectile proj = Main.projectile[projID];
+            proj.position = Player.Center + velocity + new Vector2(proj.width, proj.height) * Character.WeaponSize * 0.5f - new Vector2(proj.width, proj.height);
+            proj.netUpdate = true;
             SoundEngine.PlaySound(SoundID.Item5);
         }
 
@@ -53,7 +70,7 @@ namespace GenshinMod.Content.Abilities
                 Projectile projectile = Main.projectile[LinkedProjectile];
                 if (projectile.type == ModContent.ProjectileType<ProjectileBowCharged>() && projectile.timeLeft > 0)
                 {
-                    projectile.timeLeft = 0;
+                    projectile.timeLeft = 15;
                     projectile.netUpdate = true;
                 }
                 LinkedProjectile = -1;
