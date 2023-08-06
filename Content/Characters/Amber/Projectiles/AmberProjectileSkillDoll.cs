@@ -121,7 +121,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         {
             if (Projectile.velocity.X < 0.5f && TimeSpent > 60)
             {
-                float scaleMult = (((float)Math.Sin(TimeSpent * 0.05f)) * 0.115f + 1.12f);
+                float scaleMult = (((float)Math.Cos((Projectile.timeLeft - 480) * 0.05f)) * 0.115f + 1.12f);
                 Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
                 spriteBatch.Draw(ProjectileTexture, drawPosition, null, GenshinElementUtils.GetColor(GenshinElement.PYRO) * 0.75f, Projectile.rotation, ProjectileTexture.Size() * 0.5f, Projectile.scale * scaleMult, SpriteEffects.None, 0f);
             }
