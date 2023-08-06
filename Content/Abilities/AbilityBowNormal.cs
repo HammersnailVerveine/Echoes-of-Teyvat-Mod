@@ -14,7 +14,7 @@ namespace GenshinMod.Content.Abilities
         public override void SetDefaults()
         {
             KnockBack = 1f;
-            UseTime = 1;
+            UseTime = 30;
             Velocity = 1f;
             AbilityType = AbilityType.NORMAL;
             Cooldown = 0;
