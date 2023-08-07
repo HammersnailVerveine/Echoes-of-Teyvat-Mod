@@ -16,7 +16,7 @@ namespace GenshinMod.Common.ModObjects
         public bool ProjectileTrail = false; // Will the projectile leave a trail of afterimages ?
         public float ProjectileTrailOffset = 0f; // Offcenters the afterimages a bit. useless without projectileTrail activated. Looks terrible on most projectiles.
         public int ElementalParticles = 0; // Number of particles (value : 1) spawned on first hit
-        public int ElementalParticleChance = 100; // % chance of ElementalParticles spawning on first hit
+        public int ElementalParticleBonusChance = 0; // % chance of spawning one bonus Elemental Particle on first hit
         public GenshinElement Element = GenshinElement.NONE; // Projectile element
         public AbilityType AbilityType = AbilityType.NONE; // Bonus damage type for multipliers
         public int ElementApplication = ElementApplicationWeak; // Elemental application duration
@@ -90,10 +90,15 @@ namespace GenshinMod.Common.ModObjects
             {
                 FirstHit = true;
 
-                if (ElementalParticles > 0 && Main.rand.Next(100) < ElementalParticleChance && target.GetGlobalNPC<GenshinGlobalNPC>().GiveEnergyParticlesHit)
+                if (target.GetGlobalNPC<GenshinGlobalNPC>().GiveEnergyParticlesHit)
                 {
-                    SpawnElementalParticle(Element, 1f, ElementalParticles);
+                    if (ElementalParticles > 0)
+                        SpawnElementalParticle(Element, 1f, ElementalParticles);
+
+                    if (Main.rand.Next(100) < ElementalParticleBonusChance)
+                        SpawnElementalParticle(Element, 1f);
                 }
+
                 OnFirstHitNPC(target);
             }
             SafeOnHitNPC(target);

@@ -36,7 +36,6 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
             Projectile.penetrate = -1;
             IgnoreICD = true;
             FirstFrameDamage = true;
-            ElementalParticles = 1;
             AttackWeight = AttackWeight.BLUNT;
         }
 

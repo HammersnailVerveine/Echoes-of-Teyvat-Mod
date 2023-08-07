@@ -33,25 +33,29 @@ namespace GenshinMod.Content.Characters.Amber.Abilities
             offSet *= RangeRef;
 
             Vector2 position = Player.Center;
+            bool foundTarget = false;
 
             for (int i = 0; i < 20; i++)
             {
-                position += offSet;
-                offSet = Collision.TileCollision(position, offSet, 2, 2, true, false, (int)Player.gravDir);
-                if (offSet.Length() < RangeRef)
+                if (!foundTarget)
                 {
-                    break;
-                }
-
-                for (int k = 0; k < Main.npc.Length; k++)
-                {
-                    NPC npc = Main.npc[k];
-                    if (GenshinProjectile.IsValidTarget(npc))
+                    position += offSet;
+                    offSet = Collision.TileCollision(position, offSet, 2, 2, true, false, (int)Player.gravDir);
+                    if (offSet.Length() < RangeRef)
                     {
-                        if (position.Distance(npc.Center) < npc.width + 32f) // if the NPC is close to the projectile path, snaps to it.
+                        break;
+                    }
+
+                    for (int k = 0; k < Main.npc.Length; k++)
+                    {
+                        NPC npc = Main.npc[k];
+                        if (GenshinProjectile.IsValidTarget(npc))
                         {
-                            SpawnProjectile(npc.Center, VelocityToTarget(npc.Center), type, npc.whoAmI);
-                            return;
+                            if (position.Distance(npc.Center) < npc.width + 32f) // if the NPC is close to the projectile path, snaps to it.
+                            {
+                                foundTarget = true;
+                                position = npc.Center;
+                            }
                         }
                     }
                 }

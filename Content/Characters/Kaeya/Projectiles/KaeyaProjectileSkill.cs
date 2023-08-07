@@ -32,7 +32,8 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
             Projectile.penetrate = -1;
             IgnoreICD = true;
             ElementApplication = ElementApplicationMedium;
-            ElementalParticles = 3;
+            ElementalParticles = 2;
+            ElementalParticleBonusChance = 67;
         }
 
         public override void OnSpawn(IEntitySource source)

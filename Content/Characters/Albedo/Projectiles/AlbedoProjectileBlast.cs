@@ -30,8 +30,7 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
             Projectile.timeLeft = 20;
             Projectile.alpha = 255;
             Projectile.penetrate = -1;
-            ElementalParticles = 1;
-            ElementalParticleChance = 67;
+            ElementalParticleBonusChance = 67;
             AttackWeight = AttackWeight.BLUNT;
         }
 
@@ -57,7 +56,7 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
             Projectile.spriteDirection = Main.rand.NextBool() ? 1 : -1;
             Projectile.scale = 0.2f;
 
-            if (Projectile.ai[0] != 0f) ElementalParticles = 0;
+            if (Projectile.ai[0] != 0f) ElementalParticleBonusChance = 0;
         }
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)

@@ -37,7 +37,8 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
             Projectile.alpha = 255;
             Projectile.penetrate = -1;
             PostDrawAdditive = true;
-            ElementalParticles = 3;
+            ElementalParticles = 2;
+            ElementalParticleBonusChance = 67;
             AttackWeight = AttackWeight.MEDIUM;
         }
 
