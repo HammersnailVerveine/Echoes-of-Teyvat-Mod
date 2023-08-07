@@ -28,6 +28,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
             IgnoreICD = true;
             AttackWeight = AttackWeight.BLUNT;
             PostDrawAdditive = true;
+            ElementalParticles = 4;
         }
 
         public override void OnSpawn(IEntitySource source)

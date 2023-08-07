@@ -2,15 +2,13 @@
 using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ModLoader;
 
-namespace GenshinMod.Content.Projectiles
+namespace GenshinMod.Content.Characters.Amber.Projectiles
 {
-    public class ProjectileBowArrow : GenshinProjectile
+    public class AmberProjectileBurstArrow : GenshinProjectile
     {
         public static Texture2D TrailTexture;
         public Texture2D ArrowTexture;
@@ -19,106 +17,85 @@ namespace GenshinMod.Content.Projectiles
         public List<float> OldRotation;
 
         public bool Disappearing;
+        public float ColorMult = 0f;
 
         public override void SetDefaults()
         {
             Projectile.width = 10;
             Projectile.height = 10;
-            Projectile.friendly = true;
             Projectile.tileCollide = true;
             Projectile.aiStyle = 0;
-            Projectile.timeLeft = 300;
+            Projectile.timeLeft = 30;
             Projectile.scale = 1f;
             Projectile.alpha = 255;
-            Projectile.penetrate = 1;
+            Projectile.penetrate = -1;
             PostDrawAdditive = true;
-            AttackWeight = AttackWeight.LIGHT;
-            ElementApplication = ElementApplicationMedium;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             TrailTexture ??= GetTexture();
-            ArrowTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture + "_Arrow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Projectile.width = (int)(ArrowTexture.Width * 0.25f);
-            Projectile.height = 4;
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
-        }
-
-        public override void SafeOnHitNPC(NPC target)
-        {
-            Disappearing = true;
-            Projectile.friendly = false;
-            Projectile.timeLeft = 30;
-            Projectile.penetrate = -1;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Disappearing = true;
             Projectile.friendly = false;
-            Projectile.timeLeft = 30;
+            Projectile.timeLeft = 10;
             Projectile.penetrate = -1;
             return false;
         }
 
         public override void SafeAI()
         {
+            Projectile.scale = 0.75f;
+            if (Projectile.timeLeft <= 10) Disappearing = true;
+
             if (!Disappearing)
             {
                 // Gravity
-                Projectile.velocity.Y += 0.25f;
                 Projectile.rotation = Projectile.velocity.ToRotation();
 
                 // Afterimages
                 OldPosition.Add(Projectile.Center);
                 OldRotation.Add(Projectile.rotation);
-
-                ResetImmunity();
-            }
-            else
-            {
-                Projectile.velocity *= 0f;
             }
 
-            if (OldPosition.Count > 15 || (Disappearing && OldPosition.Count > 0))
+            if (OldPosition.Count > 10 || (Disappearing && OldPosition.Count > 0))
             {
                 OldPosition.RemoveAt(0);
                 OldRotation.RemoveAt(0);
             }
+
+            if (ColorMult < 1f) ColorMult += 0.1f;
         }
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
-            if (!Disappearing)
+            if (!Disappearing && ArrowTexture != null)
             {
                 Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
-                spriteBatch.Draw(ArrowTexture, drawPosition, null, lightColor * 1.5f, Projectile.rotation, ArrowTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(ArrowTexture, drawPosition, null, lightColor * 1.5f * ColorMult, Projectile.rotation, ArrowTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
             }
         }
 
         public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
         {
+            if (ArrowTexture == null) return;
             float rotation = Projectile.rotation;
 
             if (!Disappearing)
             {
-                if (Element != GenshinElement.NONE)
-                {
-                    Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-                    spriteBatch.Draw(ArrowTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale * 1.15f, SpriteEffects.None, 0f);
-                }
+                Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+                spriteBatch.Draw(ArrowTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f * ColorMult, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale * 1.15f, SpriteEffects.None, 0f);
             }
 
             for (int i = 0; i < OldPosition.Count; i++)
             {
                 Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
-                if (Element == GenshinElement.NONE)
-                    spriteBatch.Draw(TrailTexture, drawPosition2, null, lightColor * 0.03f * i, Projectile.rotation, TrailTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
-                else
-                    spriteBatch.Draw(TrailTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.05f * i, Projectile.rotation, TrailTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(TrailTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.08f * i * ColorMult, Projectile.rotation, TrailTexture.Size() * 0.5f, Projectile.scale * 1.1f, SpriteEffects.None, 0f);
             }
         }
     }

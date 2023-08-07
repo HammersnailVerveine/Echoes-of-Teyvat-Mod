@@ -95,6 +95,8 @@ Projectiles: {
 	ProjectileBowNormal.DisplayName: Projectile Bow Normal
 	AmberProjectileSkillDoll.DisplayName: Amber Projectile Skill Doll
 	AmberProjectileExplosion.DisplayName: Amber Projectile Explosion
+	AmberProjectileBurstArrow.DisplayName: Amber Projectile Burst Arrow
+	AmberProjectileBurstMain.DisplayName: Amber Projectile Burst Main
 }
 
 Configs: {

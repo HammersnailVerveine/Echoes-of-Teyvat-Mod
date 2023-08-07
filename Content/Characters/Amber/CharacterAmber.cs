@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Characters.Amber
             AbilityNormal = new AbilityBowNormal().Initialize(this);
             AbilityCharged = new AbilityBowCharged().Initialize(this);
             AbilitySkill = new AbilityAmberSkill().Initialize(this);
-            AbilityBurst = new AbilitySwordNormal().Initialize(this);
+            AbilityBurst = new AbilityAmberBurst().Initialize(this);
 
             BaseHealthMax = 9461;
             BaseAttackMax = 223;
