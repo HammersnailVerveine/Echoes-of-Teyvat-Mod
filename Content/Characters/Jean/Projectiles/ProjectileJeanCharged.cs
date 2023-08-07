@@ -129,8 +129,8 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
                 {
                     for (int i = stab.HitNPCPending.Count - 1; i >= 0; i--)
                     {
-                        if (stab.HitNPCPending[i] == target.whoAmI) ;
-                        stab.HitNPCPending.RemoveAt(i);
+                        if (stab.HitNPCPending[i] == target.whoAmI)
+                            stab.HitNPCPending.RemoveAt(i);
                     }
                 }
             }
