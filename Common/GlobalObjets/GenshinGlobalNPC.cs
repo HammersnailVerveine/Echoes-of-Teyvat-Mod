@@ -84,8 +84,6 @@ namespace GenshinMod.Common.GlobalObjets
 
         private bool HalfLifeParticle = false;
 
-        int timer = 0; // NEED DELETE
-
         public bool CanBefrozen() => BaseKnockBackResist > 0f; //|| npc.type == NPCID.TargetDummy;
         public float ReactionTransformativeDamage => 16.05f * Level * 10f;
         public override bool InstancePerEntity => true;
@@ -100,21 +98,12 @@ namespace GenshinMod.Common.GlobalObjets
 
             if (npc.type == NPCID.Zombie)
             {
-                /*
-                if (Main.rand.NextBool(2))
-                {
-                    Element = GenshinElement.CRYO;
-                    TimerElementCryo = 9999999;
-                }
-                else
-                {
-                    Element = GenshinElement.ELECTRO;
-                    TimerElementElectro = 9999999;
-                }
-                */
+                GenshinShieldNPC shield = new Content.ShieldsNPC.BasicShieldNPC().Initialize(this, npc, (GenshinElement)(Main.rand.Next(7) + 1));
+                AddShield(npc, shield); ;
+            }
 
-                int elementRand = Main.rand.Next(7);
-                /*
+            if (npc.type == NPCID.ArmoredSkeleton)
+            {
                 switch (Main.rand.Next(7))
                 {
                     case 1:
@@ -146,12 +135,6 @@ namespace GenshinMod.Common.GlobalObjets
                         TimerElementGeo = 9999999;
                         break;
                 }
-                */
-                /*
-                GenshinShieldNPC shield = new Content.ShieldsNPC.BasicShieldNPC().Initialize(this, npc, (GenshinElement)(elementRand + 1));
-                AddShield(npc, shield); ;
-                Main.NewText((GenshinElement)(elementRand + 1));
-                */
             }
         }
 
@@ -244,14 +227,6 @@ namespace GenshinMod.Common.GlobalObjets
             else TimerWet = 149;
 
             ProcessReactions(npc);
-
-            timer++; // delete timer
-            if (npc.type == NPCID.Zombie && timer == 180)
-            {
-                int elementRand = Main.rand.Next(7);
-                GenshinShieldNPC shield = new Content.ShieldsNPC.BasicShieldNPC().Initialize(this, npc, GenshinElement.GEO);
-                AddShield(npc, shield); ;
-            }
         }
 
         public override void OnKill(NPC npc)
