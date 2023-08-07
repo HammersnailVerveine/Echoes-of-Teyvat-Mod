@@ -98,6 +98,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
                     {
                         if (arrow.Projectile.Center.Distance(Projectile.Center) < 32f && arrow.OwnerCharacter is CharacterAmber && arrow.Element == GenshinElement.PYRO && !arrow.Disappearing)
                         {
+                            Projectile.damage *= 3;
                             Projectile.Kill();
                             arrow.Disappearing = true;
                         }
