@@ -40,13 +40,15 @@ namespace GenshinMod.Content.Projectiles
             PostDrawAdditive = true;
         }
 
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI) => overPlayers.Add(index);
+
         public override void OnSpawn(IEntitySource source)
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             Weapon = ownerPlayer.CharacterCurrent.Weapon;
             WeaponTexture = ModContent.Request<Texture2D>(Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Projectile.width = (int)(WeaponTexture.Width * ownerPlayer.CharacterCurrent.WeaponSize);
-            Projectile.height = (int)(WeaponTexture.Height * ownerPlayer.CharacterCurrent.WeaponSize);
+            Projectile.width = (int)(WeaponTexture.Width * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
+            Projectile.height = (int)(WeaponTexture.Height * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
             HitNPC = new List<int>();
@@ -55,7 +57,7 @@ namespace GenshinMod.Content.Projectiles
         public override void SafeAI()
         {
             Projectile.scale = OwnerCharacter.WeaponSize;
-            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 3f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
             Projectile.position = position;
 
             Vector2 direction = Projectile.Center - Owner.Center;

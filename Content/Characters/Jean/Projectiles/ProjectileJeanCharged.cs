@@ -42,6 +42,8 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
             PostDrawAdditive = true;
         }
 
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI) => overPlayers.Add(index);
+
         public override void OnSpawn(IEntitySource source)
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
@@ -57,7 +59,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
 
         public override void SafeAI()
         {
-            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f * Projectile.scale * DistanceToCharacter).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 3.5f * Projectile.scale * DistanceToCharacter).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
             Projectile.position = position;
 
             Vector2 direction = Projectile.Center - Owner.Center;

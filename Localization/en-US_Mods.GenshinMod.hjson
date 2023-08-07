@@ -39,6 +39,7 @@ Items: {
 NPCs: {
 	HypostasisGeo.DisplayName: Geo Hypostasis
 	HypostasisGeoPillar.DisplayName: Geo Hypostasis Pillar
+	SlimeHydro.DisplayName: Slime Hydro
 }
 
 Projectiles: {

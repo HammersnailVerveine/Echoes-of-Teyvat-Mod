@@ -38,6 +38,8 @@ namespace GenshinMod.Content.Projectiles
             PostDrawAdditive = true;
         }
 
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI) => overPlayers.Add(index);
+
         public override void OnSpawn(IEntitySource source)
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
@@ -72,7 +74,7 @@ namespace GenshinMod.Content.Projectiles
                 direction = Vector2.UnitY.RotatedBy(Projectile.ai[0]);
             }
 
-            Projectile.position = Owner.Center + (direction * TileLength * 2.5f * Projectile.scale) - Projectile.Size * 0.5f;
+            Projectile.position = Owner.Center + (direction * TileLength * Projectile.scale) - Projectile.Size * 0.5f;
             Projectile.rotation = direction.ToRotation();
 
             // Afterimages
