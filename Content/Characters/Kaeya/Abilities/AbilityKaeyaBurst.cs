@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Abilities
             UseTime = 45;
             Velocity = Immobile;
             Cooldown = 15 * 60;
-            Energy = 60;
+            Energy = 80;
             AbilityType = AbilityType.BURST;
         }
 
