@@ -76,7 +76,7 @@ namespace GenshinMod.Content.Projectiles
                 direction = Vector2.UnitY.RotatedBy(Projectile.ai[0]);
             }
 
-            Projectile.position = Owner.Center + (direction * TileLength * 1.225f * Projectile.scale) - Projectile.Size * 0.5f;
+            Projectile.position = Owner.Center.Floor() + (direction * TileLength * 1.225f * Projectile.scale) - Projectile.Size * 0.5f;
             Projectile.rotation = direction.ToRotation();
 
             // Afterimages

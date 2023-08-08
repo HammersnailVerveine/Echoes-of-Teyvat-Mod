@@ -56,7 +56,7 @@ namespace GenshinMod.Content.Projectiles
 
             Vector2 velNormalized = Projectile.velocity;
             velNormalized.Normalize();
-            Projectile.position = Owner.Center + (velNormalized * TileLength * 1.225f * Projectile.scale) - Projectile.Size * 0.5f;
+            Projectile.position = Owner.Center.Floor() + (velNormalized * TileLength * 1.225f * Projectile.scale) - Projectile.Size * 0.5f;
             Projectile.rotation = Projectile.velocity.ToRotation();
 
             // Afterimages
