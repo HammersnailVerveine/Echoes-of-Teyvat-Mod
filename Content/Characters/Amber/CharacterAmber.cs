@@ -24,6 +24,8 @@ namespace GenshinMod.Content.Characters.Amber
             BurstQuotes[0] = "No one escapes my sights!";
             BurstQuotes[1] = "Let it rain!";
             BurstQuotes[2] = "No escape!";
+
+            HeightOffset = -2;
         }
 
         public override void SafePostUpdate()

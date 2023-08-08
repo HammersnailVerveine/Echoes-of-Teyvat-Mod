@@ -23,6 +23,8 @@ namespace GenshinMod.Content.Projectiles
         public List<Vector2> OldPosition;
         public List<float> OldRotation;
 
+        public Vector2 LastCompositeArmPosition = Vector2.Zero;
+
         public override void SetDefaults()
         {
             Projectile.width = 10;
@@ -74,7 +76,7 @@ namespace GenshinMod.Content.Projectiles
                 direction = Vector2.UnitY.RotatedBy(Projectile.ai[0]);
             }
 
-            Projectile.position = Owner.Center + (direction * TileLength * Projectile.scale) - Projectile.Size * 0.5f;
+            Projectile.position = Owner.Center + (direction * TileLength * 1.25f * Projectile.scale) - Projectile.Size * 0.5f;
             Projectile.rotation = direction.ToRotation();
 
             // Afterimages
@@ -143,6 +145,12 @@ namespace GenshinMod.Content.Projectiles
                 }
             }
 
+            // Composite arm stuff
+
+            if (Projectile.timeLeft > 15) LastCompositeArmPosition = direction - toOwner * 8f;
+            OwnerGenshinPlayer.CompositeArmOffset = LastCompositeArmPosition;
+            OwnerGenshinPlayer.CompositeArmAngle = toOwner.ToRotation() + MathHelper.Pi;
+
             // Draw the string
 
             if (OwnerCharacter.Weapon is WeaponBow bow)
@@ -196,5 +204,7 @@ namespace GenshinMod.Content.Projectiles
                 spriteBatch.Draw(WeaponTexture, drawPosition2, null, GenshinElementUtils.GetColor(element) * 0.125f * i * colormult, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
             }
         }
+
+        public override void SafeSecondPostDraw(Color lightColor, SpriteBatch spriteBatch) => OwnerGenshinPlayer.DrawCompositeArm(spriteBatch, false, true);
     }
 }

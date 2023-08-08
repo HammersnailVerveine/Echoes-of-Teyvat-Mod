@@ -53,10 +53,11 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
         {
             Element = OwnerCharacter.WeaponInfusion;
             Projectile.scale = OwnerCharacter.WeaponSize;
-            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 4f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+            Vector2 position = Owner.Center + GetOwnerArmOffset() + (Vector2.UnitY * TileLength * 3.75f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
             Projectile.position = position;
 
             Vector2 direction = Projectile.Center - Owner.Center;
+            direction.Normalize();
             Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
 
             Projectile.ai[0] += Projectile.ai[1] * acceleration;
@@ -88,6 +89,9 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
             }
 
             if (TimeSpent % 35 == 0) HitNPC.Clear();
+
+            OwnerGenshinPlayer.CompositeArmOffset = direction * 8f;
+            OwnerGenshinPlayer.CompositeArmAngle = direction.ToRotation();
         }
 
         public override void SafeOnHitNPC(NPC target)
@@ -178,5 +182,7 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
                     spriteBatch.Draw(WeaponTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.125f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
             }
         }
+
+        public override void SafeSecondPostDraw(Color lightColor, SpriteBatch spriteBatch) => OwnerGenshinPlayer.DrawCompositeArm(spriteBatch);
     }
 }

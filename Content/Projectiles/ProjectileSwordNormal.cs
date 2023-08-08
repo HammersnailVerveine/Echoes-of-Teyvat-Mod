@@ -50,7 +50,6 @@ namespace GenshinMod.Content.Projectiles
             WeaponTexture = ModContent.Request<Texture2D>(Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             Projectile.width = (int)(WeaponTexture.Width * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
             Projectile.height = (int)(WeaponTexture.Height * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
-            Projectile.scale = ownerPlayer.CharacterCurrent.WeaponSize;
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
             HitNPC = new List<int>();
@@ -58,10 +57,12 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafeAI()
         {
-            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 3f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+            Projectile.scale = OwnerGenshinPlayer.CharacterCurrent.WeaponSize;
+            Vector2 position = Owner.Center + GetOwnerArmOffset() + (Vector2.UnitY * TileLength * 3f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
             Projectile.position = position;
 
             Vector2 direction = Projectile.Center - Owner.Center;
+            direction.Normalize();
             Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
 
             Projectile.ai[0] += Projectile.ai[1] * acceleration;
@@ -86,6 +87,9 @@ namespace GenshinMod.Content.Projectiles
                 OldPosition.RemoveAt(0);
                 OldRotation.RemoveAt(0);
             }
+
+            OwnerGenshinPlayer.CompositeArmOffset = direction * 8f;
+            OwnerGenshinPlayer.CompositeArmAngle = direction.ToRotation();
         }
 
         public override void SafeOnHitNPC(NPC target)
@@ -130,5 +134,7 @@ namespace GenshinMod.Content.Projectiles
                     spriteBatch.Draw(WeaponTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.125f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
             }
         }
+
+        public override void SafeSecondPostDraw(Color lightColor, SpriteBatch spriteBatch) => OwnerGenshinPlayer.DrawCompositeArm(spriteBatch);
     }
 }

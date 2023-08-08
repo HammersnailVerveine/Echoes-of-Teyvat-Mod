@@ -195,6 +195,8 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
+        public Vector2 GetOwnerArmOffset() => new Vector2(-6f * (OwnerGenshinPlayer.IsUsing ? OwnerGenshinPlayer.LastUseDirection : Owner.direction), - OwnerCharacter.HeightOffset);
+
         // DRAW
 
         public sealed override bool PreDraw(ref Color lightColor)

@@ -26,6 +26,8 @@ namespace GenshinMod.Content.Characters.Noelle
             BurstQuotes[0] = "Time to clean up";
             BurstQuotes[1] = "As a good knight should";
             BurstQuotes[2] = "As a dutiful maid would";
+
+            HeightOffset = -4;
         }
 
         public override void SafePostUpdate()

@@ -39,6 +39,8 @@ namespace GenshinMod.Content.Characters.Lisa
 
             TextureSkill = ModContent.Request<Texture2D>("GenshinMod/Content/Characters/Lisa/Projectiles/LisaProjectileSkill", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             SkillNPCTimers = new List<LisaSkillNPCTimer>();
+
+            HeightOffset = 0;
         }
 
         public override void SafeResetEffects()

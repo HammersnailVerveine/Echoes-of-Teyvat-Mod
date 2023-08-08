@@ -29,6 +29,8 @@ namespace GenshinMod.Content.Characters.Barbara
             BurstQuotes[1] = "Ready, steady, go!";
             BurstQuotes[2] = "Come on, we can do it!";
 
+            HeightOffset = -4;
+
             //TryEquipWeapon(Common.ModObjects.Weapons.GenshinWeapon.GetWeapon(Terraria.ModLoader.ModContent.ItemType<Weapons.Catalyst.CatalystThrillingTales>()));
         }
 

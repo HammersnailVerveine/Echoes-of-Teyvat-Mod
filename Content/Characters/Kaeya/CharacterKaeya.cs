@@ -24,6 +24,8 @@ namespace GenshinMod.Content.Characters.Kaeya
 			BurstQuotes[0] = "Don't get frostbite";
 			BurstQuotes[1] = "Oh, so sorry!";
 			BurstQuotes[2] = "This moment will be frozen in time";
+
+			HeightOffset = 4;
 		}
 
         /* INFUSIONS TEST

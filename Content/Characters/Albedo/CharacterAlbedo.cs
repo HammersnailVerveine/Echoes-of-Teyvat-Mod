@@ -30,6 +30,8 @@ namespace GenshinMod.Content.Characters.Albedo
             BurstQuotes[0] = "Moment of birth";
             BurstQuotes[1] = "Feel this ancient power";
             BurstQuotes[2] = "Witness my great undertaking";
+
+            HeightOffset = 2;
         }
 
         public override void SafeResetEffects()

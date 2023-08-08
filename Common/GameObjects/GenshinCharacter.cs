@@ -24,6 +24,7 @@ namespace GenshinMod.Common.GameObjects
         public Texture2D TextureBody;
         public Texture2D TextureLegs;
         public Texture2D TextureArms;
+        public Texture2D TextureCompositeArm;
         public Texture2D TextureAbilitySkill;
         public Texture2D TextureAbilityBurst;
         public Texture2D TextureIcon;
@@ -37,6 +38,7 @@ namespace GenshinMod.Common.GameObjects
 
         public string Name;
         public GenshinElement Element;
+        public int HeightOffset = 0; // Used for composite arms height. Try and pick whatever looks good for the character
 
         public float BaseHealthMax = 1000f; // Max health no modifiers
         public float BaseDefenseMax = 1000f; // Max defense no modifiers
@@ -182,6 +184,7 @@ namespace GenshinMod.Common.GameObjects
             TextureBody ??= ModContent.Request<Texture2D>(location + "_Body", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureLegs ??= ModContent.Request<Texture2D>(location + "_Legs", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureArms ??= ModContent.Request<Texture2D>(location + "_Arms", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            TextureCompositeArm ??= ModContent.Request<Texture2D>(location + "_CompositeArm", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureIcon ??= ModContent.Request<Texture2D>(location + "_Icon", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureAbilitySkill ??= ModContent.Request<Texture2D>(location + "_Ability_Skill", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureAbilityBurst ??= ModContent.Request<Texture2D>(location + "_Ability_Burst", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;

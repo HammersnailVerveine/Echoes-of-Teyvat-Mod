@@ -23,6 +23,8 @@ namespace GenshinMod.Content.Characters.Klee
             BurstQuotes[0] = "Sparks 'n' Splash!";
             BurstQuotes[1] = "Blazing Delight!";
             BurstQuotes[2] = "Blow them aaaalll up!";
+
+            HeightOffset = -6;
         }
     }
 }

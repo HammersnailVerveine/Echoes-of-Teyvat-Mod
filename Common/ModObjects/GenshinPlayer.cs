@@ -48,6 +48,10 @@ namespace GenshinMod.Common.ModObjects
 
         public byte FrozenMovementFrame = 0; // Used to display the proper animation frame when the character is frozen
 
+        public float CompositeArmAngle = 0f; // Composite arm rotation
+        public Vector2 CompositeArmOffset = Vector2.Zero; // Composite arm position relative to the center of the model player. The arm is not drawn "if == Vector.Zero"
+        public bool CompositeArm => CompositeArmOffset != Vector2.Zero;
+
         public int StaminaMax => StaminaBase + StaminaBonus;
 
         public bool IsUsing => TimerUse > 0;
@@ -249,6 +253,9 @@ namespace GenshinMod.Common.ModObjects
                 }
             }
 
+            CompositeArmOffset = Vector2.Zero;
+            CompositeArmAngle = 0f;
+
             TimerStamina--;
             if (Stamina < StaminaMax && TimerStamina <= 0)
             {
@@ -339,7 +346,7 @@ namespace GenshinMod.Common.ModObjects
                 if (damage > 0) CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage);
                 else CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
             }
-        } 
+        }
 
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
@@ -348,6 +355,8 @@ namespace GenshinMod.Common.ModObjects
 
             Vector2 drawPosition = (Player.position + new Vector2(Player.width * 0.5f, Player.gfxOffY + 20 + 530)).Floor();
             drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+            Vector2 drawPositionBody = drawPosition;
+            drawPositionBody.Y += 28;
             Point coord = new Point((int)(Player.position.X / 16), (int)(Player.position.Y / 16));
             Color lightColor = Lighting.GetColor(coord);
             SpriteEffects effect = (IsUsing ? LastUseDirection : Player.direction) == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
@@ -404,23 +413,27 @@ namespace GenshinMod.Common.ModObjects
 
             Texture2D textureBody = CharacterCurrent.TextureBody;
             Rectangle rectangleBody = textureBody.Bounds;
-            rectangleBody.Height /= 20;
-            rectangleBody.Y += rectangleBody.Height * movementFrame;
+            rectangleBody.Height /= 21;
+            if (CompositeArm) rectangleBody.Y = 0;
+            else rectangleBody.Y += rectangleBody.Height * (movementFrame + 1);
 
             Texture2D textureHead = CharacterCurrent.TextureHead;
             Rectangle rectangleHead = textureHead.Bounds;
             rectangleHead.Height /= 20;
             rectangleHead.Y += rectangleHead.Height * movementFrame;
 
+            spriteBatch.Draw(textureLegs, drawPosition, rectangleLegs, lightColor, 0f, textureLegs.Size() * 0.5f, 1f, effect, 0f);
+            spriteBatch.Draw(textureBody, drawPositionBody, rectangleBody, lightColor, 0f, textureBody.Size() * 0.5f, 1f, effect, 0f);
+            spriteBatch.Draw(textureHead, drawPosition, rectangleHead, lightColor, 0f, textureHead.Size() * 0.5f, 1f, effect, 0f);
+
             Texture2D textureArms = CharacterCurrent.TextureArms;
             Rectangle rectangleArms = textureArms.Bounds;
-            rectangleArms.Height /= 20;
-            rectangleArms.Y += rectangleArms.Height * movementFrame;
-
-            spriteBatch.Draw(textureLegs, drawPosition, rectangleLegs, lightColor, 0f, textureLegs.Size() * 0.5f, 1f, effect, 0f);
-            spriteBatch.Draw(textureBody, drawPosition, rectangleBody, lightColor, 0f, textureBody.Size() * 0.5f, 1f, effect, 0f);
-            spriteBatch.Draw(textureHead, drawPosition, rectangleHead, lightColor, 0f, textureHead.Size() * 0.5f, 1f, effect, 0f);
-            spriteBatch.Draw(textureArms, drawPosition, rectangleArms, lightColor, 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
+            if (!CompositeArm)
+            {
+                rectangleArms.Height /= 20;
+                rectangleArms.Y += rectangleArms.Height * movementFrame;
+                spriteBatch.Draw(textureArms, drawPosition, rectangleArms, lightColor, 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
+            }
 
             foreach (GenshinCharacter character in CharacterTeam)
                 character.DrawEffects(spriteBatch, lightColor);
@@ -433,7 +446,7 @@ namespace GenshinMod.Common.ModObjects
             if (CharacterCurrent != null)
             {
                 int nbElements = -1;
-                foreach (GenshinElement element in System.Enum.GetValues(typeof(GenshinElement)))
+                foreach (GenshinElement element in Enum.GetValues(typeof(GenshinElement)))
                     if (element != GenshinElement.NONE) if (CharacterCurrent.AffectedByElement(element)) nbElements++;
                 if (CharacterCurrent.AffectedByElement(GenshinElement.HYDRO) && CharacterCurrent.ReactionFrozen) nbElements--;
                 int offSetY = -30;
@@ -450,18 +463,19 @@ namespace GenshinMod.Common.ModObjects
 
                 if (CharacterCurrent.ReactionFrozen)
                 {
-                    Vector2 drawPositionAlt = drawPosition;
-                    Vector2 drawPositionAlt1 = new Vector2(drawPosition.X - 30 * Player.direction, drawPosition.Y + 50);
-                    Vector2 drawPositionAlt2 = new Vector2(drawPosition.X + 30 * Player.direction, drawPosition.Y + 50);
-                    spriteBatch.Draw(textureLegs, drawPositionAlt1, rectangleLegs, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureLegs.Size() * 0.5f, 1.1f, effect, 0f);
-                    spriteBatch.Draw(textureBody, drawPositionAlt1, rectangleBody, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureBody.Size() * 0.5f, 1.1f, effect, 0f);
-                    spriteBatch.Draw(textureHead, drawPositionAlt1, rectangleHead, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureHead.Size() * 0.5f, 1.1f, effect, 0f);
-                    spriteBatch.Draw(textureArms, drawPositionAlt1, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureArms.Size() * 0.5f, 1.1f, effect, 0f);
+                    Vector2 drawPositionAlt = new Vector2(drawPosition.X - 30 * Player.direction, drawPosition.Y + 50);
 
-                    spriteBatch.Draw(textureLegs, drawPositionAlt2, rectangleLegs, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureLegs.Size() * 0.5f, 1.1f, effect, 0f);
-                    spriteBatch.Draw(textureBody, drawPositionAlt2, rectangleBody, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureBody.Size() * 0.5f, 1.1f, effect, 0f);
-                    spriteBatch.Draw(textureHead, drawPositionAlt2, rectangleHead, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureHead.Size() * 0.5f, 1.1f, effect, 0f);
-                    spriteBatch.Draw(textureArms, drawPositionAlt2, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureArms.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureLegs, drawPositionAlt, rectangleLegs, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureLegs.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureBody, drawPositionAlt, rectangleBody, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureBody.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureHead, drawPositionAlt, rectangleHead, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureHead.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureArms, drawPositionAlt, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0.05f * Player.direction, textureArms.Size() * 0.5f, 1.1f, effect, 0f);
+
+                    drawPositionAlt = new Vector2(drawPosition.X + 30 * Player.direction, drawPosition.Y + 50);
+
+                    spriteBatch.Draw(textureLegs, drawPositionAlt, rectangleLegs, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureLegs.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureBody, drawPositionAlt, rectangleBody, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureBody.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureHead, drawPositionAlt, rectangleHead, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureHead.Size() * 0.5f, 1.1f, effect, 0f);
+                    spriteBatch.Draw(textureArms, drawPositionAlt, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, -0.05f * Player.direction, textureArms.Size() * 0.5f, 1.1f, effect, 0f);
 
                     spriteBatch.Draw(textureLegs, drawPosition, rectangleLegs, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0f, textureLegs.Size() * 0.5f, 1f, effect, 0f);
                     spriteBatch.Draw(textureBody, drawPosition, rectangleBody, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0f, textureBody.Size() * 0.5f, 1f, effect, 0f);
@@ -469,6 +483,23 @@ namespace GenshinMod.Common.ModObjects
                     spriteBatch.Draw(textureArms, drawPosition, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
                 }
             }
+        }
+
+        public void DrawCompositeArm(SpriteBatch spritebatch, bool offsetRotation = true, bool shortArm = false)
+        {
+            Texture2D textureCompositeArm = CharacterCurrent.TextureCompositeArm;
+            Rectangle rectangleArm = textureCompositeArm.Bounds;
+            rectangleArm.Height /= 2;
+            if (shortArm) rectangleArm.Y += rectangleArm.Height;
+
+            Vector2 drawPosition = (Player.position + new Vector2(Player.width * 0.5f, Player.gfxOffY + 20)).Floor();
+            if (offsetRotation) drawPosition += new Vector2(-6f * (IsUsing ? LastUseDirection : Player.direction), - CharacterCurrent.HeightOffset);
+            drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix) + CompositeArmOffset;
+
+            Color lightColor = Lighting.GetColor(new Point((int)(Player.Center.X / 16), (int)(Player.Center.Y / 16)));
+            SpriteEffects effect = (IsUsing ? LastUseDirection : Player.direction) == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
+
+            spritebatch.Draw(textureCompositeArm, drawPosition, rectangleArm, lightColor, CompositeArmAngle, rectangleArm.Size() * 0.5f, 1f, effect, 0f);
         }
 
         // Methods

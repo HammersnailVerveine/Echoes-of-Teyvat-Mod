@@ -24,6 +24,8 @@ namespace GenshinMod.Content.Characters.Jean
             BurstQuotes[0] = "Wind, hear me!";
             BurstQuotes[1] = "I swear by my sword!";
             BurstQuotes[2] = "Barbatos, guide us";
+
+            HeightOffset = 0;
         }
 
         public override void SafePostUpdate()

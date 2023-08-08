@@ -39,6 +39,8 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
             PostDrawAdditive = true;
         }
 
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI) => overPlayers.Add(index);
+
         public override void OnSpawn(IEntitySource source)
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
@@ -59,7 +61,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
                 Vector2 target = Main.MouseWorld;
                 direction = target - Owner.Center;
                 direction.Normalize();
-                Projectile.position = Owner.Center + (direction * TileLength * 3.5f * Projectile.scale) - Projectile.Size * 0.5f;
+                Projectile.position = Owner.Center + GetOwnerArmOffset() + (direction * TileLength * 3.25f * Projectile.scale) - Projectile.Size * 0.5f;
                 Projectile.rotation = direction.ToRotation() + MathHelper.ToRadians(45f);
             }
             else
@@ -115,6 +117,9 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
                     }
                 }
             }
+
+            OwnerGenshinPlayer.CompositeArmOffset = direction * 8f;
+            OwnerGenshinPlayer.CompositeArmAngle = direction.ToRotation();
         }
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
@@ -147,5 +152,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
                     spriteBatch.Draw(WeaponTexture, drawPosition2, null, GenshinElementUtils.GetColor(Element) * 0.125f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
             }
         }
+
+        public override void SafeSecondPostDraw(Color lightColor, SpriteBatch spriteBatch) => OwnerGenshinPlayer.DrawCompositeArm(spriteBatch);
     }
 }
