@@ -48,6 +48,7 @@ namespace GenshinMod.Content.Projectiles
             Projectile.height = (int)(WeaponTexture.Height * Projectile.scale);
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
+            Projectile.rotation = Projectile.velocity.ToRotation();
         }
 
         public override void SafeAI()
@@ -57,7 +58,6 @@ namespace GenshinMod.Content.Projectiles
             Vector2 velNormalized = Projectile.velocity;
             velNormalized.Normalize();
             Projectile.position = Owner.Center.Floor() + (velNormalized * TileLength * 1.225f * Projectile.scale) - Projectile.Size * 0.5f;
-            Projectile.rotation = Projectile.velocity.ToRotation();
 
             // Afterimages
             if (TimeSpent % 2 == 0)
