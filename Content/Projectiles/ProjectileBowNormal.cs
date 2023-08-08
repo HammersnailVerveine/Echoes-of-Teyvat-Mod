@@ -110,7 +110,7 @@ namespace GenshinMod.Content.Projectiles
                 while (stringDirection.Length() > 1)
                 {
                     spriteBatch.Draw(PixelTexture, drawPosition + texturepos + stringDirection, null, stringColor, Projectile.rotation, PixelTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
-                    spriteBatch.Draw(PixelTexture, drawPosition - Vector2.Reflect(texturepos + stringDirection, toOwner) , null, stringColor, Projectile.rotation, PixelTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(PixelTexture, drawPosition - Vector2.Reflect(texturepos + stringDirection, Projectile.velocity) , null, stringColor, Projectile.rotation, PixelTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
                     stringDirection -= directionNormalized;
                 }
             }

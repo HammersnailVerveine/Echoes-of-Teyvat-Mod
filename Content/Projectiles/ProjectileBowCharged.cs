@@ -168,10 +168,11 @@ namespace GenshinMod.Content.Projectiles
                 directionNormalized.Normalize();
                 directionNormalized *= 1.5f;
                 Color stringColor = bow.StringColor.MultiplyRGB(lightColor);
+                Vector2 reflectionVector = Vector2.UnitY.RotatedBy(Projectile.ai[0]);
                 while (stringDirection.Length() > 1)
                 {
                     spriteBatch.Draw(PixelTexture, drawPosition + texturepos + stringDirection, null, stringColor, rotation, PixelTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
-                    spriteBatch.Draw(PixelTexture, drawPosition - Vector2.Reflect(texturepos + stringDirection, toOwner) , null, stringColor, rotation, PixelTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
+                    spriteBatch.Draw(PixelTexture, drawPosition - Vector2.Reflect(texturepos + stringDirection, reflectionVector) , null, stringColor, rotation, PixelTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
                     stringDirection -= directionNormalized;
                 }
 
@@ -182,7 +183,7 @@ namespace GenshinMod.Content.Projectiles
                     while (stringDirection.Length() > 1)
                     {
                         spriteBatch.Draw(PixelTexture, drawPosition + texturepos + stringDirection, null, elementColor * 0.5f, rotation, PixelTexture.Size() * 0.5f, Projectile.scale * 1.25f * scaleMult, effect, 0f);
-                        spriteBatch.Draw(PixelTexture, drawPosition - Vector2.Reflect(texturepos + stringDirection, toOwner), null, elementColor * 0.5f, rotation, PixelTexture.Size() * 0.5f, Projectile.scale * 1.25f * scaleMult, effect, 0f);
+                        spriteBatch.Draw(PixelTexture, drawPosition - Vector2.Reflect(texturepos + stringDirection, reflectionVector), null, elementColor * 0.5f, rotation, PixelTexture.Size() * 0.5f, Projectile.scale * 1.25f * scaleMult, effect, 0f);
                         stringDirection -= directionNormalized;
                     }
                 }
