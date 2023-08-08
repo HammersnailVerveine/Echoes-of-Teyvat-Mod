@@ -485,7 +485,7 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public void DrawCompositeArm(SpriteBatch spritebatch, bool offsetRotation = true, bool shortArm = false, float offsetX = 0f, float offsetY = 0f, float rotation = float.MaxValue)
+        public void DrawCompositeArm(SpriteBatch spritebatch, bool offsetPosition = true, bool shortArm = false, float offsetX = 0f, float offsetY = 0f, float rotation = float.MaxValue)
         {
             Vector2 offset = CompositeArmOffset;
             if (offsetX != 0f || offsetY != 0f) offset = new Vector2(offsetX, offsetY);
@@ -498,7 +498,7 @@ namespace GenshinMod.Common.ModObjects
             if (shortArm) rectangleArm.Y += rectangleArm.Height;
 
             Vector2 drawPosition = (Player.position + new Vector2(Player.width * 0.5f, Player.gfxOffY + 20)).Floor();
-            if (offsetRotation) drawPosition += new Vector2(-6f * (IsUsing ? LastUseDirection : Player.direction), - CharacterCurrent.HeightOffset);
+            if (offsetPosition) drawPosition += new Vector2(-6f * (IsUsing ? LastUseDirection : Player.direction), - CharacterCurrent.HeightOffset);
             drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix) + offset;
 
             Color lightColor = Lighting.GetColor(new Point((int)(Player.Center.X / 16), (int)(Player.Center.Y / 16)));
