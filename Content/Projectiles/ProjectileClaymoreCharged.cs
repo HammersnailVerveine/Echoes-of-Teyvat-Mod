@@ -59,7 +59,7 @@ namespace GenshinMod.Content.Projectiles
         {
             Element = OwnerCharacter.WeaponInfusion;
             Projectile.scale = OwnerCharacter.WeaponSize;
-            Vector2 position = Owner.Center + GetOwnerArmOffset() + (Vector2.UnitY * TileLength * 3.75f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 3.625f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
             Projectile.position = position;
 
             Vector2 direction = Projectile.Center - Owner.Center;
@@ -107,7 +107,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
-            Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+            Vector2 drawPosition = Vector2.Transform(Projectile.Center + GetOwnerArmOffset() - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
             SpriteEffects effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             float rotation = Projectile.rotation + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
@@ -121,13 +121,13 @@ namespace GenshinMod.Content.Projectiles
 
             if (Element != GenshinElement.NONE)
             {
-                Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+                Vector2 drawPosition = Vector2.Transform(Projectile.Center + GetOwnerArmOffset() - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
                 spriteBatch.Draw(WeaponTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
             }
 
             for (int i = 0; i < OldPosition.Count; i++)
             {
-                Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+                Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] + GetOwnerArmOffset() - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
                 float rotation2 = OldRotation[i] + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
                 if (Element == GenshinElement.NONE)
                     spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);

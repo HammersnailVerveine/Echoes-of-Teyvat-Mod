@@ -35,7 +35,7 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
 
         public override void SafeAI()
         {
-            Vector2 position = Owner.Center + GetOwnerArmOffset() + (Vector2.UnitY * TileLength * 3.75f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
+            Vector2 position = Owner.Center + (Vector2.UnitY * TileLength * 3.625f * Projectile.scale).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) - Projectile.Size * 0.5f;
             Projectile.position = position;
 
             Vector2 direction = Projectile.Center - Owner.Center;
@@ -96,7 +96,7 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
             { // Burst visuals
                 if (noelle.BurstTimer > 0)
                 {
-                    drawPosition = Vector2.Transform(Owner.Center + (Vector2.UnitY * TileLength * 4.5f).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) + new Vector2(Projectile.width, Projectile.height) * 0.5f - Projectile.Size * 0.5f - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+                    drawPosition = Vector2.Transform(Owner.Center + GetOwnerArmOffset() + (Vector2.UnitY * TileLength * 4.5f).RotatedBy(MathHelper.ToRadians(Projectile.ai[0])) + new Vector2(Projectile.width, Projectile.height) * 0.5f - Projectile.Size * 0.5f - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
                     effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
                     rotation = Projectile.rotation + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
@@ -106,7 +106,7 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
             }
 
             // Other visuals
-            drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+            drawPosition = Vector2.Transform(Projectile.Center + GetOwnerArmOffset() - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
             effect = (Projectile.ai[1] < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             rotation = Projectile.rotation + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
@@ -124,14 +124,14 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
                 {
                     if (Element != GenshinElement.NONE)
                     {
-                        Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+                        Vector2 drawPosition = Vector2.Transform(Projectile.Center + GetOwnerArmOffset() - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
                         spriteBatch.Draw(WeaponTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
                         spriteBatch.Draw(WeaponTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.25f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.2f, effect, 0f);
                     }
 
                     for (int i = 0; i < OldPosition.Count; i++)
                     {
-                        Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+                        Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] + GetOwnerArmOffset() - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
                         float rotation2 = OldRotation[i] + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
                         if (Element == GenshinElement.NONE)
                             spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
@@ -148,13 +148,13 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
             // Other infusion visuals
             if (Element != GenshinElement.NONE)
             {
-                Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+                Vector2 drawPosition = Vector2.Transform(Projectile.Center + GetOwnerArmOffset() - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
                 spriteBatch.Draw(WeaponTexture, drawPosition, null, GenshinElementUtils.GetColor(Element) * 0.75f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale * 1.15f, effect, 0f);
             }
 
             for (int i = 0; i < OldPosition.Count; i++)
             {
-                Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+                Vector2 drawPosition2 = Vector2.Transform(OldPosition[i] + GetOwnerArmOffset() - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
                 float rotation2 = OldRotation[i] + (effect == SpriteEffects.None ? 0f : MathHelper.ToRadians(90f));
                 if (Element == GenshinElement.NONE)
                     spriteBatch.Draw(WeaponTexture, drawPosition2, null, lightColor * 0.075f * i, rotation2, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);

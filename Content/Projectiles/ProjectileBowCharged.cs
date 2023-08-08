@@ -47,8 +47,9 @@ namespace GenshinMod.Content.Projectiles
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             WeaponTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             ArrowTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture + "_Arrow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Projectile.width = (int)(WeaponTexture.Width * ownerPlayer.CharacterCurrent.WeaponSize);
-            Projectile.height = (int)(WeaponTexture.Height * ownerPlayer.CharacterCurrent.WeaponSize);
+            Projectile.scale = ownerPlayer.CharacterCurrent.WeaponSize * 0.8f;
+            Projectile.width = (int)(WeaponTexture.Width * Projectile.scale);
+            Projectile.height = (int)(WeaponTexture.Height * Projectile.scale);
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
         }
@@ -57,7 +58,6 @@ namespace GenshinMod.Content.Projectiles
         {
             // position & rotation
             Vector2 direction;
-            Projectile.scale = OwnerCharacter.WeaponSize * 0.8f;
 
             if (Projectile.timeLeft > 15 && IsLocalOwner)
             {
