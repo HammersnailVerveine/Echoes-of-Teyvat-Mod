@@ -59,7 +59,7 @@ namespace GenshinMod.Content.Projectiles
             // position & rotation
             Vector2 direction;
 
-            if (Projectile.timeLeft > 15 && IsLocalOwner)
+            if (Projectile.timeLeft > 20 && IsLocalOwner)
             {
                 Vector2 target = Main.MouseWorld;
                 direction = target - Owner.Center;
@@ -76,7 +76,7 @@ namespace GenshinMod.Content.Projectiles
                 direction = Vector2.UnitY.RotatedBy(Projectile.ai[0]);
             }
 
-            Projectile.position = Owner.Center + (direction * TileLength * 1.25f * Projectile.scale) - Projectile.Size * 0.5f;
+            Projectile.position = Owner.Center + (direction * TileLength * 1.225f * Projectile.scale) - Projectile.Size * 0.5f;
             Projectile.rotation = direction.ToRotation();
 
             // Afterimages
@@ -91,7 +91,7 @@ namespace GenshinMod.Content.Projectiles
                 }
             }
 
-            if (OwnerCharacter.AbilityCharged.HoldTime >= 20 && Projectile.timeLeft > 15)
+            if (OwnerCharacter.AbilityCharged.HoldTime >= 20 && Projectile.timeLeft > 20)
             {
                 ArrowOffsetMult = (float)(OwnerCharacter.AbilityCharged.HoldTime - 20) / (float)(OwnerCharacter.AbilityCharged.HoldTimeFull - 60);
                 if (ArrowOffsetMult > 1f) ArrowOffsetMult = 1f;
@@ -102,13 +102,19 @@ namespace GenshinMod.Content.Projectiles
             }
 
             if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull) Loaded = true;
-            if (Projectile.timeLeft == 16) Projectile.timeLeft++;
+            if (Projectile.timeLeft == 21) Projectile.timeLeft++;
 
             Owner.direction = Projectile.Center.X > Owner.Center.X ? 1 : -1;
         }
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
+            // Draw background composite arm
+
+            Vector2 toOwner = Owner.Center - Projectile.Center;
+            toOwner.Normalize();
+            if (Math.Abs(toOwner.X) > toOwner.Y) OwnerGenshinPlayer.DrawCompositeArm(spriteBatch, false, true, - toOwner.X * 8f, - toOwner.Y * 8f, toOwner.ToRotation() + MathHelper.Pi);
+
             // Draw the Bow
             Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Owner.gfxOffY), Main.GameViewMatrix.EffectMatrix);
             SpriteEffects effect = SpriteEffects.None;
@@ -125,16 +131,13 @@ namespace GenshinMod.Content.Projectiles
             spriteBatch.Draw(WeaponTexture, drawPosition, null, lightColor * 1.5f, rotation, WeaponTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 
             // Draw the Arrow
-
-            Vector2 toOwner = Owner.Center - Projectile.Center;
-            toOwner.Normalize();
             Vector2 direction = toOwner;
             Vector2 arrowDrawPosition = drawPosition;
             arrowDrawPosition -= direction * (ArrowTexture.Width * 0.25f + 3f);
             direction *= ArrowOffsetMult * (ArrowTexture.Width * 0.5f + 2f);
             arrowDrawPosition += direction;
 
-            if (Projectile.timeLeft > 15)
+            if (Projectile.timeLeft > 20)
             {
                 spriteBatch.Draw(ArrowTexture, arrowDrawPosition, null, lightColor * 1.5f, rotation, ArrowTexture.Size() * 0.5f, Projectile.scale, effect, 0f);
 
@@ -147,7 +150,7 @@ namespace GenshinMod.Content.Projectiles
 
             // Composite arm stuff
 
-            if (Projectile.timeLeft > 15) LastCompositeArmPosition = direction - toOwner * 8f;
+            if (Projectile.timeLeft > 20) LastCompositeArmPosition = direction - toOwner * 8f;
             OwnerGenshinPlayer.CompositeArmOffset = LastCompositeArmPosition;
             OwnerGenshinPlayer.CompositeArmAngle = toOwner.ToRotation() + MathHelper.Pi;
 

@@ -16,7 +16,7 @@ namespace GenshinMod.Content.Abilities
         public override void SetDefaults()
         {
             KnockBack = 2f;
-            UseTime = 20;
+            UseTime = 15;
             Velocity = 1f;
             AbilityType = AbilityType.CHARGED;
             HoldTimeMax = 150;
@@ -49,7 +49,7 @@ namespace GenshinMod.Content.Abilities
 
         public override void OnUsePreUpdate()
         {
-            Player.velocity.X *= 0.75f;
+            Player.velocity.X *= 0.9f;
         }
 
         public override void OnHold()
@@ -77,7 +77,7 @@ namespace GenshinMod.Content.Abilities
                 Projectile projectile = Main.projectile[LinkedProjectile];
                 if (projectile.type == ModContent.ProjectileType<ProjectileBowCharged>() && projectile.timeLeft > 0)
                 {
-                    projectile.timeLeft = 15;
+                    projectile.timeLeft = 20;
                     projectile.netUpdate = true;
                 }
                 LinkedProjectile = -1;

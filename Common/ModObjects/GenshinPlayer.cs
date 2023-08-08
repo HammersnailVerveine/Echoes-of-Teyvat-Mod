@@ -485,8 +485,13 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public void DrawCompositeArm(SpriteBatch spritebatch, bool offsetRotation = true, bool shortArm = false)
+        public void DrawCompositeArm(SpriteBatch spritebatch, bool offsetRotation = true, bool shortArm = false, float offsetX = 0f, float offsetY = 0f, float rotation = float.MaxValue)
         {
+            Vector2 offset = CompositeArmOffset;
+            if (offsetX != 0f || offsetY != 0f) offset = new Vector2(offsetX, offsetY);
+            float angle = CompositeArmAngle;
+            if (rotation != float.MaxValue) angle = rotation;
+
             Texture2D textureCompositeArm = CharacterCurrent.TextureCompositeArm;
             Rectangle rectangleArm = textureCompositeArm.Bounds;
             rectangleArm.Height /= 2;
@@ -494,12 +499,12 @@ namespace GenshinMod.Common.ModObjects
 
             Vector2 drawPosition = (Player.position + new Vector2(Player.width * 0.5f, Player.gfxOffY + 20)).Floor();
             if (offsetRotation) drawPosition += new Vector2(-6f * (IsUsing ? LastUseDirection : Player.direction), - CharacterCurrent.HeightOffset);
-            drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix) + CompositeArmOffset;
+            drawPosition = Vector2.Transform(drawPosition - Main.screenPosition, Main.GameViewMatrix.EffectMatrix) + offset;
 
             Color lightColor = Lighting.GetColor(new Point((int)(Player.Center.X / 16), (int)(Player.Center.Y / 16)));
             SpriteEffects effect = (IsUsing ? LastUseDirection : Player.direction) == 1 ? SpriteEffects.None : SpriteEffects.FlipVertically;
 
-            spritebatch.Draw(textureCompositeArm, drawPosition, rectangleArm, lightColor, CompositeArmAngle, rectangleArm.Size() * 0.5f, 1f, effect, 0f);
+            spritebatch.Draw(textureCompositeArm, drawPosition, rectangleArm, lightColor, angle, rectangleArm.Size() * 0.5f, 1f, effect, 0f);
         }
 
         // Methods

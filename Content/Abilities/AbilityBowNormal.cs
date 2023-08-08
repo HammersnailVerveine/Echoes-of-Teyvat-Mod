@@ -34,7 +34,7 @@ namespace GenshinMod.Content.Abilities
 
         public override void OnUsePreUpdate()
         {
-            Player.velocity.X *= 0.75f;
+            Player.velocity.X *= 0.9f;
         }
 
         public override int GetScaling()

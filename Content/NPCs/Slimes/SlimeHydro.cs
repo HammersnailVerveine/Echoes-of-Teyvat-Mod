@@ -1,14 +1,9 @@
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.ModObjects;
-using GenshinMod.Content.Dusts;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace GenshinMod.Content.NPCs.Slimes
 {
@@ -16,6 +11,7 @@ namespace GenshinMod.Content.NPCs.Slimes
     {
         public override void SafeSetStaticDefaults()
         {
+            Main.npcFrameCount[NPC.type] = 3;
         }
 
         public override void SafeSetDefaults()
@@ -30,6 +26,7 @@ namespace GenshinMod.Content.NPCs.Slimes
             NPC.knockBackResist = 1f;
 
             GenshinGlobalNPC.Element = GenshinElement.HYDRO;
+            GenshinGlobalNPC.ResistanceGeo = 1f;
         }
 
         public override void OnSpawn(IEntitySource source)
