@@ -39,13 +39,13 @@ Items: {
 NPCs: {
 	HypostasisGeo.DisplayName: Geo Hypostasis
 	HypostasisGeoPillar.DisplayName: Geo Hypostasis Pillar
-	SlimeHydro.DisplayName: Slime Hydro
-	SlimeAnemo.DisplayName: Slime Anemo
-	SlimeCryo.DisplayName: Slime Cryo
-	SlimeElectro.DisplayName: Slime Electro
-	SlimeElectroYellow.DisplayName: Slime Electro Yellow
-	SlimeGeo.DisplayName: Slime Geo
-	SlimePyro.DisplayName: Slime Pyro
+	SlimeHydro.DisplayName: Hydro Slime
+	SlimeAnemo.DisplayName: Anemo Slime
+	SlimeCryo.DisplayName: Cryo Slime
+	SlimeElectro.DisplayName: Electro Slime
+	SlimeElectroYellow.DisplayName: Mutant Electro Slime
+	SlimeGeo.DisplayName: Geo Slime
+	SlimePyro.DisplayName: Pyro Slime
 }
 
 Projectiles: {
@@ -107,8 +107,9 @@ Projectiles: {
 }
 
 Configs: {
-	GenshinConfig: {
-		DisplayName: Configuration
+	GenshinConfigClient: {
+		DisplayName: Echoes of Teyvat - Client config
+		Headers.Misc: General Options
 
 		EnableBurstQuotes: {
 			Label: Enable elemental burst quotes

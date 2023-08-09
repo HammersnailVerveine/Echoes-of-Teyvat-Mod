@@ -1,4 +1,5 @@
-﻿using GenshinMod.Common.GameObjects.Enums;
+﻿using GenshinMod.Common.Configs;
+using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Common.ModObjects.Weapons;
 using GenshinMod.Content.Dusts;
@@ -437,7 +438,7 @@ namespace GenshinMod.Common.GameObjects
                 Energy -= ability.Energy;
                 AbilityCurrent = ability;
                 ability.Use();
-                if (ability == AbilityBurst && ModContent.GetInstance<GenshinConfig>().EnableBurstQuotes)
+                if (ability == AbilityBurst && ModContent.GetInstance<GenshinConfigClient>().EnableBurstQuotes)
                     CombatText.NewText(Player.Hitbox, Color.White, BurstQuotes[Main.rand.Next(3)]);
             }
         }
