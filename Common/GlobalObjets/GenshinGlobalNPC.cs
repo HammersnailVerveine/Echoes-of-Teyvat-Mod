@@ -545,7 +545,7 @@ namespace GenshinMod.Common.GlobalObjets
                 if (genshinCharacter.TryApplyElement(npc)) shouldProceed = true;
                 mastery = genshinCharacter.StatElementalMastery;
                 player = genshinCharacter.Player;
-                refDirection = -player.direction;
+                refDirection = player.direction;
                 source = player.GetSource_Misc("GenshinMod Elemental Reaction");
                 genshinPlayer = player.GetModPlayer<GenshinPlayer>();
                 transformativeDamage = genshinCharacter.ReactionTransformativeDamage;
