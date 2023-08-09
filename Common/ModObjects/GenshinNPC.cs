@@ -13,19 +13,57 @@ namespace GenshinMod.Common.ModObjects
         public Vector2 TargetPosition = Vector2.Zero;
         public Vector2 TargetPositionForced = Vector2.Zero;
 
-        public bool NoBestiaryEntry = true;
-
-        public bool TargetLocalPlayer => NPC.target == Main.myPlayer;
-        public Vector2 GetTargetPosition => TargetPositionForced != Vector2.Zero ? TargetPositionForced : TargetPosition;
-
-        public Player PlayerTarget => Main.player[NPC.target];
-
         public int TimeAlive = 0;
+        public int TimerInState = 0;
+
+        public bool NoBestiaryEntry = true;
+        public bool TargetLocalPlayer => NPC.target == Main.myPlayer;
+        public Vector2 GetTargetPosition => TargetPositionForced != Vector2.Zero ? TargetPositionForced : PlayerTarget.Center;
+        public Vector2 VectorToTarget => GetTargetPosition - NPC.Center;
+        public Player PlayerTarget => Main.player[NPC.target];
+        public bool TileCollision() => Collision.AnyCollision(NPC.position, NPC.velocity, NPC.width, NPC.height).Length() > 0f;
+        public bool TileCollision(Vector2 direction) => Collision.AnyCollision(NPC.position - direction * 0.01f, direction, NPC.width, NPC.height).Length() > 0f;
+        public void SetFrame(int frame) => NPC.frame.Y = NPC.frame.Height * frame;
+        public void UpdateTargetPosition() => TargetPosition = PlayerTarget.Center;
         public abstract void SafeSetDefaults();
         public abstract void SafeSetStaticDefaults();
         public virtual void SafeAI() { }
+        public virtual void SafeResetEffects() { }
         public virtual void OnFirstFrame() { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) => true;
+
+
+        public const int AI_Field_State = 0;
+        public const int AI_Field_Misc = 1;
+
+        public float AI_Misc
+        {
+            get => NPC.ai[AI_Field_Misc];
+            set => NPC.ai[AI_Field_Misc] = value;
+        }
+
+        public float AI_State
+        {
+            get => NPC.ai[AI_Field_State];
+            set => NPC.ai[AI_Field_State] = value;
+        }
+
+        public void SetAI(int field, float value, bool netUpdate = true)
+        {
+            switch (field)
+            {
+                case AI_Field_State:
+                    TimerInState = 0;
+                    NPC.ai[AI_Field_State] = value;
+                    break;
+                case AI_Field_Misc:
+                    NPC.ai[AI_Field_Misc] = value;
+                    break;
+                default:
+                    break;
+            }
+            if (netUpdate) NPC.netUpdate = true;
+        }
 
         public sealed override void SetDefaults()
         {
@@ -55,8 +93,21 @@ namespace GenshinMod.Common.ModObjects
                 NPC.TargetClosest();
                 OnFirstFrame();
             }
-            SafeAI();
+
+            if (!GenshinGlobalNPC.ReactionFrozen)
+            {
+                SafeAI();
+                TimerInState++;
+            }
+
             TimeAlive++;
+            UpdateTargetPosition();
+            TargetPositionForced = Vector2.Zero;
+        }
+
+        public sealed override void ResetEffects()
+        {
+            SafeResetEffects();
         }
 
         public sealed override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

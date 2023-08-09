@@ -40,6 +40,12 @@ NPCs: {
 	HypostasisGeo.DisplayName: Geo Hypostasis
 	HypostasisGeoPillar.DisplayName: Geo Hypostasis Pillar
 	SlimeHydro.DisplayName: Slime Hydro
+	SlimeAnemo.DisplayName: Slime Anemo
+	SlimeCryo.DisplayName: Slime Cryo
+	SlimeElectro.DisplayName: Slime Electro
+	SlimeElectroYellow.DisplayName: Slime Electro Yellow
+	SlimeGeo.DisplayName: Slime Geo
+	SlimePyro.DisplayName: Slime Pyro
 }
 
 Projectiles: {

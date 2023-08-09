@@ -823,6 +823,7 @@ namespace GenshinMod.Common.GameObjects
                         {
                             GenshinPlayer.OnCharacterDeath();
                             Health = 0;
+                            Energy = 0;
                             RemoveVanityWeapon(300);
                         }
                         else

@@ -117,10 +117,6 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             return false;
         }
 
-        public override void ResetEffects()
-        {
-        }
-
         public override bool CanHitPlayer(Player target, ref int cooldownSlot) => false;
     }
 }

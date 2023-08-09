@@ -93,6 +93,11 @@ namespace GenshinMod.Common.ModObjects
                 // TEMP
                 character.StatEnergyRecharge += 1f;
                 character.StatHealingReceived -= 0.5f;
+                character.StatDamageReactionSuperconduct -= 0.5f;
+                character.StatDamageReactionElectrocharged -= 0.5f;
+                character.StatDamageReactionOverloaded -= 0.5f;
+                character.StatDamageReactionShatter -= 0.5f;
+                character.StatDamageReactionSwirl -= 0.5f;
                 // TEMP
             }
 

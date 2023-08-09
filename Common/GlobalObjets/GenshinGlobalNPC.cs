@@ -383,7 +383,6 @@ namespace GenshinMod.Common.GlobalObjets
                 Vector2 position = npc.Center - Main.screenPosition;
                 Rectangle rect = npc.frame;
                 rect.Height -= 2;
-                position.Y -= 6;
                 SpriteEffects effects = npc.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
                 spriteBatch.Draw(texture, position, rect, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, npc.rotation + 0.05f * npc.direction, rect.Size() * 0.5f, 1.2f, effects, 0f);
                 spriteBatch.Draw(texture, position, rect, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, npc.rotation - 0.05f * npc.direction, rect.Size() * 0.5f, 1.2f, effects, 0f);

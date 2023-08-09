@@ -129,8 +129,6 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             Timer++;
             if (InCombat)
             {
-                TargetPosition = PlayerTarget.Center;
-
                 if (PillarSelected != null && !PillarSelected.active)
                 {
                     ChangeCombatState(4);
@@ -602,7 +600,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             return false;
         }
 
-        public override void ResetEffects()
+        public override void SafeResetEffects()
         {
             GenshinGlobalNPC.TimerElementGeo = 600;
             ScaleCore += (ScaleCoreTarget - ScaleCore) * 0.025f;

@@ -8,7 +8,7 @@ using Terraria.ID;
 
 namespace GenshinMod.Content.NPCs.Slimes
 {
-    public class SlimeHydro : GenshinNPC
+    public class SlimeElectroYellow : GenshinNPC
     {
         private const int State_Waiting = 0;
         private const int State_Jumping_Begin = 1;
@@ -31,8 +31,8 @@ namespace GenshinMod.Content.NPCs.Slimes
             NPC.knockBackResist = 1f;
             NPC.alpha = 32;
 
-            GenshinGlobalNPC.Element = GenshinElement.HYDRO;
-            GenshinGlobalNPC.ResistanceHydro = 1f;
+            GenshinGlobalNPC.Element = GenshinElement.ELECTRO;
+            GenshinGlobalNPC.ResistanceElectro = 1f;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -109,7 +109,7 @@ namespace GenshinMod.Content.NPCs.Slimes
 
         public override void SafeResetEffects()
         {
-            GenshinGlobalNPC.TimerElementHydro = 600;
+            GenshinGlobalNPC.TimerElementElectro = 600;
         }
     }
 }
