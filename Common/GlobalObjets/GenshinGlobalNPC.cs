@@ -533,6 +533,7 @@ namespace GenshinMod.Common.GlobalObjets
             GenshinPlayer genshinPlayer = null; // If genshincharacter is null, tries to get the NPC target's modplayer
             IEntitySource source = npc.GetSource_Misc("GenshinMod Elemental Reaction"); // player is the source if not null
             float transformativeDamage;
+            bool transmitPlayerDamageOwnership = true;
 
             if (genshinProjectile != null) {
                 if (genshinProjectile.IgnoreICD) shouldProceed = true;
@@ -549,6 +550,7 @@ namespace GenshinMod.Common.GlobalObjets
                 source = player.GetSource_Misc("GenshinMod Elemental Reaction");
                 genshinPlayer = player.GetModPlayer<GenshinPlayer>();
                 transformativeDamage = genshinCharacter.ReactionTransformativeDamage;
+                transmitPlayerDamageOwnership = false;
             }
             else
             {
@@ -598,7 +600,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                         if (targetDamage > 0)
                                         {
-                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, refDirection, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1, false, AttackWeight.BLUNT);
+                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, refDirection, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1, false, AttackWeight.BLUNT, false, transmitPlayerDamageOwnership);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -734,7 +736,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.CRYO);
                                         if (targetDamage > 0)
                                         {
-                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0.5f, refDirection, false, GenshinElement.CRYO, GenshinProjectile.ElementApplicationStrong + 1);
+                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0.5f, refDirection, false, GenshinElement.CRYO, GenshinProjectile.ElementApplicationStrong + 1, transmitPlayer:transmitPlayerDamageOwnership);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SUPERCONDUCT), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -807,7 +809,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.PYRO);
                                         if (targetDamage > 0)
                                         {
-                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, refDirection, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1, false, AttackWeight.BLUNT);
+                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 15f, refDirection, false, GenshinElement.PYRO, GenshinProjectile.ElementApplicationStrong + 1, false, AttackWeight.BLUNT, transmitPlayer: transmitPlayerDamageOwnership);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.OVERLOADED), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -843,7 +845,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, GenshinElement.CRYO);
                                         if (targetDamage > 0)
                                         {
-                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0.5f, refDirection, false, GenshinElement.CRYO, GenshinProjectile.ElementApplicationStrong + 1);
+                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0.5f, refDirection, false, GenshinElement.CRYO, GenshinProjectile.ElementApplicationStrong + 1, transmitPlayer: transmitPlayerDamageOwnership);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SUPERCONDUCT), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -967,7 +969,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, swirlElement);
                                         if (targetDamage > 0)
                                         {
-                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0f, refDirection, false, GenshinElement.ANEMO, GenshinProjectile.ElementApplicationStrong + 1);
+                                            if (genshinPlayer != null) genshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0f, refDirection, false, GenshinElement.ANEMO, GenshinProjectile.ElementApplicationStrong + 1, transmitPlayer: transmitPlayerDamageOwnership);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
@@ -1026,9 +1028,11 @@ namespace GenshinMod.Common.GlobalObjets
                 if ((AffectedByElement(GenshinElement.HYDRO) || AffectedByElement(GenshinElement.HYDRO, false)) && (AffectedByElement(GenshinElement.ELECTRO) || AffectedByElement(GenshinElement.ELECTRO, false)))
                 {
                     Player player = null;
+                    bool transmitPlayerDamageOwnership = true;
                     if (ReactionElectrochargedPlayer > -1) player = Main.player[ReactionElectrochargedPlayer];
                     else
                     {
+                        transmitPlayerDamageOwnership = false;
                         foreach (Player p in Main.player)
                         {
                             if (p.active) player = p;
@@ -1052,7 +1056,7 @@ namespace GenshinMod.Common.GlobalObjets
                                         int targetDamage = genshinNPC.ApplyResistance(ReactionElectrochargedDamage, GenshinElement.ELECTRO);
                                         if (targetDamage > 0)
                                         {
-                                            player.GetModPlayer<GenshinPlayer>().TryApplyDamageToNPC(target, targetDamage, 0f, player.direction, false, GenshinElement.ELECTRO, GenshinProjectile.ElementApplicationMedium);
+                                            player.GetModPlayer<GenshinPlayer>().TryApplyDamageToNPC(target, targetDamage, 0f, player.direction, false, GenshinElement.ELECTRO, GenshinProjectile.ElementApplicationMedium, transmitPlayer: transmitPlayerDamageOwnership);
                                             CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.GetColor(GenshinElement.ELECTRO), targetDamage);
                                         }
                                         else CombatText.NewText(ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");

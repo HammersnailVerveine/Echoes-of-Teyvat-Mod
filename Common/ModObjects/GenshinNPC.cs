@@ -29,6 +29,8 @@ namespace GenshinMod.Common.ModObjects
         public abstract void SafeSetStaticDefaults();
         public virtual void SafeAI() { }
         public virtual void SafeResetEffects() { }
+        public virtual void SafeOnHitByProjectile(Projectile projectile, GenshinGlobalProjectile globalProjectile) { }
+        public virtual void OnTakeDamage(Player player, int damage) { } // Called anytime the npc takes damage. Damage is the remaining damage dealt to the npc. Player can be null.
         public virtual void OnFirstFrame() { }
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) => true;
 
@@ -108,6 +110,11 @@ namespace GenshinMod.Common.ModObjects
         public sealed override void ResetEffects()
         {
             SafeResetEffects();
+        }
+
+        public sealed override void OnHitByProjectile(Projectile projectile, NPC.HitInfo hit, int damageDone)
+        {
+            SafeOnHitByProjectile(projectile, projectile.GetGlobalProjectile<GenshinGlobalProjectile>());
         }
 
         public sealed override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

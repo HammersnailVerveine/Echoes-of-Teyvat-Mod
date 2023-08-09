@@ -340,7 +340,7 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
-        public void TryApplyDamageToNPC(NPC npc, int damage, float knockback, int direction, bool crit = false, GenshinElement element = GenshinElement.NONE, int gaugeApplication = 0, bool ignoreShields = false, AttackWeight attackWeight = AttackWeight.LIGHT, bool combatText = false)
+        public void TryApplyDamageToNPC(NPC npc, int damage, float knockback, int direction, bool crit = false, GenshinElement element = GenshinElement.NONE, int gaugeApplication = 0, bool ignoreShields = false, AttackWeight attackWeight = AttackWeight.LIGHT, bool combatText = false, bool transmitPlayer = true)
         {
             GenshinGlobalNPC globalNPC = npc.GetGlobalNPC<GenshinGlobalNPC>();
             if (npc.GetGlobalNPC<GenshinGlobalNPC>().HasShield() && !ignoreShields) foreach (GenshinShieldNPC shield in globalNPC.Shields) shield.Damage(GenshinShieldNPC.GetDamageUnit(gaugeApplication), element, attackWeight);
@@ -351,6 +351,8 @@ namespace GenshinMod.Common.ModObjects
                 if (damage > 0) CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage);
                 else CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
             }
+
+            if (npc.ModNPC is GenshinNPC genshinNPC) genshinNPC.OnTakeDamage(transmitPlayer ? Player : null, damage);
         }
 
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)

@@ -10,6 +10,7 @@ namespace GenshinMod.Content.NPCs.Slimes
 {
     public class SlimeCryo : GenshinNPC
     {
+        private bool WasHit;
         private const int State_Waiting = 0;
         private const int State_Jumping_Begin = 1;
         private const int State_Jumping = 2;
@@ -33,6 +34,11 @@ namespace GenshinMod.Content.NPCs.Slimes
 
             GenshinGlobalNPC.Element = GenshinElement.CRYO;
             GenshinGlobalNPC.ResistanceCryo = 1f;
+        }
+
+        public override void OnTakeDamage(Player player, int damage)
+        {
+            WasHit = true;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -67,10 +73,11 @@ namespace GenshinMod.Content.NPCs.Slimes
 
             if (TargetLocalPlayer)
             {
-                if (Main.rand.NextBool(4) && NPC.collideY && TimerInState % 60 == 45)
+                if ((Main.rand.NextBool(4) || WasHit) && NPC.collideY && TimerInState % 60 == 45)
                 {
                     SetAI(AI_Field_State, State_Jumping_Begin);
                     SetAI(AI_Field_Misc, Main.rand.NextFloat(5f) + 5f);
+                    WasHit = false;
                 }
             }
         }
@@ -101,7 +108,7 @@ namespace GenshinMod.Content.NPCs.Slimes
         public void AIStateJumping()
         {
             SetFrame(3);
-            if (NPC.collideY && TimerInState >= 10)
+            if ((NPC.collideY && TimerInState >= 10) || TimerInState > 120)
             {
                 SetAI(AI_Field_State, State_Waiting, false);
             }
