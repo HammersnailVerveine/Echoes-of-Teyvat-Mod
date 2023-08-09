@@ -634,12 +634,15 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         crystallizeElement = GenshinElement.PYRO;
                         if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
+                        reacted = true;
                     }
 
                     if (AffectedByElement(GenshinElement.ANEMO) && !reacted && canSwirl) // Pyro Swirl
                     {
                         swirlElement = GenshinElement.PYRO;
                         if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                 }
@@ -692,12 +695,15 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         crystallizeElement = GenshinElement.HYDRO;
                         if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
+                        reacted = true;
                     }
 
                     if (AffectedByElement(GenshinElement.ANEMO) && !reacted && canSwirl) // Hydro Swirl
                     {
                         swirlElement = GenshinElement.HYDRO;
                         if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                 }
@@ -777,12 +783,15 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         crystallizeElement = GenshinElement.CRYO;
                         if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
+                        reacted = true;
                     }
 
                     if (AffectedByElement(GenshinElement.ANEMO) && !reacted && canSwirl) // Cryo Swirl
                     {
                         swirlElement = GenshinElement.CRYO;
                         if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                 }
@@ -880,12 +889,15 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         crystallizeElement = GenshinElement.ELECTRO;
                         if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
+                        reacted = true;
                     }
 
                     if (AffectedByElement(GenshinElement.ANEMO) && !reacted && canSwirl) // Electro Swirl
                     {
                         swirlElement = GenshinElement.ELECTRO;
                         if (!HasShield()) TimerElementGeo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                 }
@@ -896,24 +908,28 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         crystallizeElement = GenshinElement.PYRO;
                         if (!HasShield()) TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Cryo Crystallize
                     {
                         crystallizeElement = GenshinElement.CRYO;
                         if (!HasShield()) TimerElementCryo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Electro Crystallize
                     {
                         crystallizeElement = GenshinElement.ELECTRO;
                         if (!HasShield()) TimerElementElectro -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Hydro Crystallize
                     {
                         crystallizeElement = GenshinElement.HYDRO;
                         if (!HasShield()) TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                 }
@@ -924,24 +940,28 @@ namespace GenshinMod.Common.GlobalObjets
                     {
                         swirlElement = GenshinElement.PYRO;
                         if (!HasShield()) TimerElementPyro -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.CRYO) && !reacted) // Cryo Swirl
                     {
                         swirlElement = GenshinElement.CRYO;
                         if (!HasShield()) TimerElementCryo -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.ELECTRO) && !reacted) // Electro Swirl
                     {
                         swirlElement = GenshinElement.ELECTRO;
                         if (!HasShield()) TimerElementElectro -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                     if (AffectedByElement(GenshinElement.HYDRO) && !reacted) // Hydro Swirl
                     {
                         swirlElement = GenshinElement.HYDRO;
                         if (!HasShield()) TimerElementHydro -= (int)(application * 0.5); // 0.5x modifier
+                        application = 0;
                         reacted = true;
                     }
                 }
@@ -965,7 +985,7 @@ namespace GenshinMod.Common.GlobalObjets
                                     GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
                                     if (genshinNPC.HitsSwirl < 2)
                                     {
-                                        genshinNPC.ApplyElement(npc, swirl, genshinCharacter, swirlElement, ref reactionDamage);
+                                        if (target != npc) genshinNPC.ApplyElement(npc, swirl, genshinCharacter, swirlElement, ref reactionDamage);
                                         int targetDamage = genshinNPC.ApplyResistance(reactionDamage, swirlElement);
                                         if (targetDamage > 0)
                                         {
@@ -1003,6 +1023,7 @@ namespace GenshinMod.Common.GlobalObjets
                     application = 0;
                 }
 
+                if (!canSwirl && TimerElementAnemo > 0) application = 0;
                 if (!HasShield()) InflictElement(element, application);
             }
         }
