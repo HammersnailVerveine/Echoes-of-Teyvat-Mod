@@ -201,14 +201,10 @@ namespace GenshinMod.Common.ModObjects
 
         public sealed override bool PreDraw(ref Color lightColor)
         {
-            if (ProjectileTrail)
-            {
-                PreDrawTrail(Main.spriteBatch, lightColor);
-            }
             return SafePreDraw(Main.spriteBatch, lightColor);
         }
 
-        public void PreDrawTrail(SpriteBatch spriteBatch, Color lightColor)
+        public void DrawTrail(SpriteBatch spriteBatch, Color lightColor)
         {
             float offSet = ProjectileTrailOffset + 0.5f;
             Vector2 drawOrigin = new Vector2(TextureAssets.Projectile[Projectile.type].Value.Width * offSet, Projectile.height * offSet);
@@ -224,12 +220,15 @@ namespace GenshinMod.Common.ModObjects
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
             SafePostDraw(lightColor, spriteBatch);
+            if (ProjectileTrail && ! PostDrawAdditive) DrawTrail(Main.spriteBatch, lightColor);
             if (PostDrawAdditive)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
 
                 SafePostDrawAdditive(lightColor, spriteBatch);
+
+                if (ProjectileTrail) DrawTrail(Main.spriteBatch, lightColor);
 
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);

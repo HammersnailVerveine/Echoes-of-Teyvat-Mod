@@ -29,6 +29,7 @@ namespace GenshinMod.Content.Projectiles
             Projectile.aiStyle = 0;
             Projectile.timeLeft = 600;
             Projectile.scale = 1f;
+            PostDrawAdditive = true;
             ProjectileTrail = true;
         }
 
@@ -69,7 +70,7 @@ namespace GenshinMod.Content.Projectiles
             Lighting.AddLight(Projectile.Center, 0.3f, 0.3f, 0.3f);
         }
 
-        public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
+        public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
         {
             Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
             spriteBatch.Draw(texture, drawPosition, null, Color.White * 0.8f, -Projectile.rotation, texture.Size() * 0.5f, Projectile.scale * 0.8f, SpriteEffects.None, 0f);
