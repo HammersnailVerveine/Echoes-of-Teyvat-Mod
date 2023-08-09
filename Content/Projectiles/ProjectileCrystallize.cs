@@ -32,6 +32,7 @@ namespace GenshinMod.Content.Projectiles
             ProjectileTrail = true;
             Projectile.alpha = 255;
             Projectile.tileCollide = true;
+            PostDrawAdditive = true;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -70,8 +71,19 @@ namespace GenshinMod.Content.Projectiles
             drawPosition.Y -= floatOffset;
             spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * lightFactorDisappear, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 0.6f, SpriteEffects.None, 0f);
             spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * lightFactor * lightFactorDisappear, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 0.8f * scaleMult, SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * 0.4f * lightFactor * lightFactorDisappear, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 1.15f * scaleMult, SpriteEffects.None, 0f);
-            spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * 0.2f * lightFactor * lightFactorDisappear, Projectile.rotation + TimeSpent * 0.05f, TextureSelf.Size() * 0.5f, Projectile.scale * 1.1f * scaleMult, SpriteEffects.None, 0f);
+        }
+
+        public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
+        {
+            float lightFactor = (float)Math.Sin(OwnerGenshinPlayer.Timer * 0.05f) * 0.2f + 0.9f;
+            float lightFactorDisappear = Projectile.timeLeft < 60 ? Projectile.timeLeft / 60f : 1f;
+            float scaleMult = (((float)Math.Sin(TimeSpent * 0.05f)) * 0.1f + 0.8f);
+            float floatOffset = (((float)Math.Sin(TimeSpent * 0.05f)) * 4f + 10f);
+            Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
+
+            drawPosition.Y -= floatOffset;
+            spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * 0.5f * lightFactor * lightFactorDisappear, Projectile.rotation, TextureSelf.Size() * 0.5f, Projectile.scale * 1.35f * scaleMult, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureSelf, drawPosition, null, GlowColor * 0.3f * lightFactor * lightFactorDisappear, Projectile.rotation + TimeSpent * 0.05f, TextureSelf.Size() * 0.5f, Projectile.scale * 1.25f * scaleMult, SpriteEffects.None, 0f);
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
