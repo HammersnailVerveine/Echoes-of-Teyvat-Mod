@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework;
+
 namespace GenshinMod.Common.GameObjects.Enums
 {
     public enum GenshinRarity : int
@@ -34,6 +36,23 @@ namespace GenshinMod.Common.GameObjects.Enums
                     return 1.2f;
                 default: // 1-3 stars
                     return 0.8f;
+            }
+        }
+
+        public static Color GetColor(GenshinRarity rarity)
+        {
+            switch (rarity)
+            {
+                case GenshinRarity.TWOSTAR:
+                    return new Color(100, 150, 125);
+                case GenshinRarity.THREESTAR:
+                    return new Color(100, 135, 170);
+                case GenshinRarity.FOURSTAR:
+                    return new Color(132, 114, 167);
+                case GenshinRarity.FIVESTAR:
+                    return new Color(174, 124, 50);
+                default: // one star
+                    return new Color(135, 135, 135);
             }
         }
     }

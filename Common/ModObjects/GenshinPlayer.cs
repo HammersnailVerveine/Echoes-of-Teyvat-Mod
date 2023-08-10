@@ -2,6 +2,8 @@
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.Loadables;
+using GenshinMod.Common.UI;
+using GenshinMod.Content.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -63,17 +65,6 @@ namespace GenshinMod.Common.ModObjects
         {
             CharacterTeam = new List<GenshinCharacter>();
             Shields = new List<GenshinShield>();
-            // TEMP
-            CharacterTeam.Add(new Content.Characters.Barbara.CharacterBarbara().Initialize(this));
-            CharacterTeam.Add(new Content.Characters.Kaeya.CharacterKaeya().Initialize(this));
-            CharacterTeam.Add(new Content.Characters.Lisa.CharacterLisa().Initialize(this));
-            CharacterTeam.Add(new Content.Characters.Amber.CharacterAmber().Initialize(this));
-            CharacterTeam.Add(new Content.Characters.Noelle.CharacterNoelle().Initialize(this));
-            CharacterTeam.Add(new Content.Characters.Jean.CharacterJean().Initialize(this));
-            CharacterTeam.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(this));
-            CharacterTeam.Add(new Content.Characters.Klee.CharacterKlee().Initialize(this));
-            // TEMP
-            CharacterCurrent = CharacterTeam[0];
         }
 
         public override void PreUpdate()
@@ -286,6 +277,15 @@ namespace GenshinMod.Common.ModObjects
                     Shields[i].OnKillBase(Shields[i].Health < 1);
                     Shields.RemoveAt(i);
                 }
+            }
+
+            UIStateTeambuilding teambuildingState = GenshinSystemUI.GetUIState<UIStateTeambuilding>();
+            teambuildingState.Visible = Main.playerInventory;
+            if (!teambuildingState.Visible)
+            {
+                teambuildingState.SelectedSlot = -5;
+                teambuildingState.PlayerTeam = null;
+                teambuildingState.PlayerCharacters = null;
             }
         }
 

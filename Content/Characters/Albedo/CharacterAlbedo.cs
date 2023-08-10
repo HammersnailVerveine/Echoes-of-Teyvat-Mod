@@ -16,6 +16,7 @@ namespace GenshinMod.Content.Characters.Albedo
         public override void SetDefaults()
         {
             Name = "Albedo";
+            Rarity = GenshinRarity.FIVESTAR;
             Element = GenshinElement.GEO;
             WeaponType = WeaponType.SWORD;
             AbilityNormal = new AbilitySwordNormal().Initialize(this);

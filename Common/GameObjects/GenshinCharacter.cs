@@ -29,6 +29,7 @@ namespace GenshinMod.Common.GameObjects
         public Texture2D TextureAbilitySkill;
         public Texture2D TextureAbilityBurst;
         public Texture2D TextureIcon;
+        public Texture2D TextureFull;
 
         // Default variables
 
@@ -47,6 +48,7 @@ namespace GenshinMod.Common.GameObjects
         public WeaponType WeaponType; // Character Weapon Type
         public bool Autoswing = true; // NA autoswing
         public bool AutoswingCA = false; // CA autoswing
+        public GenshinRarity Rarity = GenshinRarity.FOURSTAR;
 
         public string[] BurstQuotes;
 
@@ -185,6 +187,7 @@ namespace GenshinMod.Common.GameObjects
             TextureBody ??= ModContent.Request<Texture2D>(location + "_Body", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureLegs ??= ModContent.Request<Texture2D>(location + "_Legs", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureArms ??= ModContent.Request<Texture2D>(location + "_Arms", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            TextureFull ??= ModContent.Request<Texture2D>(location + "_Full", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureCompositeArm ??= ModContent.Request<Texture2D>(location + "_CompositeArm", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureIcon ??= ModContent.Request<Texture2D>(location + "_Icon", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             TextureAbilitySkill ??= ModContent.Request<Texture2D>(location + "_Ability_Skill", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;

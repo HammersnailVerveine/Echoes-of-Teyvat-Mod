@@ -9,6 +9,7 @@ namespace GenshinMod.Content.Characters.Klee
         public override void SetDefaults()
         {
             Name = "Klee";
+            Rarity = GenshinRarity.FIVESTAR;
             Element = GenshinElement.PYRO;
             WeaponType = WeaponType.CATALYST;
             AbilityNormal = new AbilityKleeNormal().Initialize(this);

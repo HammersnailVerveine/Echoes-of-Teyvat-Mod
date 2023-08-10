@@ -10,6 +10,7 @@ namespace GenshinMod.Content.Characters.Jean
         public override void SetDefaults()
         {
             Name = "Jean";
+            Rarity = GenshinRarity.FIVESTAR;
             Element = GenshinElement.ANEMO;
             WeaponType = WeaponType.SWORD;
             AbilityNormal = new AbilitySwordNormal().Initialize(this);
