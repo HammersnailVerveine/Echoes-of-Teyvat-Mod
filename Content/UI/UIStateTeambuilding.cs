@@ -267,14 +267,15 @@ namespace GenshinMod.Content.UI
             Texture2D MagicPixel = TextureAssets.MagicPixel.Value;
 
             // Draw background
-            spriteBatch.Draw(MagicPixel, new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height), GenshinRarityUtils.GetColor(character.Rarity));
+            //spriteBatch.Draw(MagicPixel, new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height), GenshinRarityUtils.GetColor(character.Rarity));
+            spriteBatch.Draw(MagicPixel, new Rectangle(rectangle.X + 2, rectangle.Y + 2, rectangle.Width - 4, rectangle.Height - 4), GenshinRarityUtils.GetColor(character.Rarity));
 
             // Character icon
             Texture2D characterTexture = character.TextureFull;
             int width = characterTexture.Width;
             int height = characterTexture.Height;
-            spriteBatch.Draw(characterTexture, new Rectangle(rectangle.X + (rectangle.Width - width) / 2 - 4, rectangle.Y + (rectangle.Height - height) / 2 - 8, width + 8, height + 8), Color.Black * 0.3f);
-            spriteBatch.Draw(characterTexture, new Rectangle(rectangle.X + (rectangle.Width - width) / 2, rectangle.Y + (rectangle.Height - height) / 2 - 4, characterTexture.Width, characterTexture.Height), Color.White);
+            spriteBatch.Draw(characterTexture, new Rectangle(rectangle.X + (rectangle.Width - width) / 2 - 4, rectangle.Y + (rectangle.Height - height) / 2 - 6, width + 8, height + 8), Color.Black * 0.3f);
+            spriteBatch.Draw(characterTexture, new Rectangle(rectangle.X + (rectangle.Width - width) / 2, rectangle.Y + (rectangle.Height - height) / 2 - 2, characterTexture.Width, characterTexture.Height), Color.White);
 
             // Character Element
             Texture2D elementTexture = GenshinElementUtils.GetTexture(character.Element);
