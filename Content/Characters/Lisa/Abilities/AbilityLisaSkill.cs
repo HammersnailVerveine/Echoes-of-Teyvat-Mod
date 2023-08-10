@@ -54,10 +54,16 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
             }
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.9f;
+        }
+
         public override void OnHold()
         {
             if (HoldTime % (HoldFull ? 15 : 30) == 0)
                 SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap);
+            Player.velocity.X *= 0.9f;
         }
 
         public override int GetScaling()

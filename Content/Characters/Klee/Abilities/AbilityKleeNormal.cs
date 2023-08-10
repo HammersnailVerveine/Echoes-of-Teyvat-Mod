@@ -23,6 +23,11 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             SoundEngine.PlaySound(SoundID.Item1);
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.9f;
+        }
+
         public override int GetScaling()
         {
             return (int)(0.7f * Character.EffectiveAttack * LevelScaling);

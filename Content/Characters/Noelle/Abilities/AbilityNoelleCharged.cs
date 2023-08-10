@@ -40,6 +40,11 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
             }
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.9f;
+        }
+
         public override void OnHold()
         {
             if (LinkedProjectile == -1)
@@ -66,6 +71,7 @@ namespace GenshinMod.Content.Characters.Noelle.Abilities
                 }
             }
             Character.RemoveVanityWeapon();
+            Player.velocity.X *= 0.9f;
         }
 
         public override void OnHoldReset()

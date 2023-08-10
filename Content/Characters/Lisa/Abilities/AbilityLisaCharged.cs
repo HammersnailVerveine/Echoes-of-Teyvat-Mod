@@ -44,6 +44,11 @@ namespace GenshinMod.Content.Characters.Lisa.Abilities
             SpawnProjectile(position, VelocityToCursor(), type);
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.8f;
+        }
+
         public override int GetScaling()
         {
             return (int)(1.77f * Character.EffectiveAttack * LevelScaling);

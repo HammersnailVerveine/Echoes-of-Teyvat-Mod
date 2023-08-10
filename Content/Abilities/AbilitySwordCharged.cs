@@ -37,6 +37,11 @@ namespace GenshinMod.Content.Abilities
             if (mult * (direction.X > 0 ? 1 : -1) < 0f) GenshinPlayer.ReverseUseArmDirection = true;
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.9f;
+        }
+
         public override int GetScaling()
         {
             return (int)(0.75f * Character.EffectiveAttack * LevelScaling);

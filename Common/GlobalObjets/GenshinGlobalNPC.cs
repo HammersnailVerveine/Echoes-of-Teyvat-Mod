@@ -88,6 +88,11 @@ namespace GenshinMod.Common.GlobalObjets
         public float ReactionTransformativeDamage => 16.05f * Level * 10f;
         public override bool InstancePerEntity => true;
 
+        public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+        {
+            maxSpawns = 0;
+        }
+
         public override void SetDefaults(NPC npc)
         {
             BaseKnockBackResist = npc.knockBackResist;

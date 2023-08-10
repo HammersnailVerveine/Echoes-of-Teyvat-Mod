@@ -25,6 +25,11 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             SpawnProjectile(Vector2.Zero, type);
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.9f;
+        }
+
         public override int GetScaling() // Droplets damage
         {
             return (int)(0.58f * Character.EffectiveAttack * LevelScaling);

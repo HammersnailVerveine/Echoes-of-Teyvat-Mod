@@ -60,6 +60,11 @@ namespace GenshinMod.Content.Characters.Barbara.Abilities
             SpawnProjectile(position, VelocityToCursor(), type);
         }
 
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.9f;
+        }
+
         public override int GetScaling()
         {
             return (int)(0.3f * Character.EffectiveAttack * LevelScaling);

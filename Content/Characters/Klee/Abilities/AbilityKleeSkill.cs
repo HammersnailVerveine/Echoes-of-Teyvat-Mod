@@ -14,7 +14,7 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
         public override void SetDefaults()
         {
             KnockBack = 5f;
-            UseTime = 60;
+            UseTime = 30;
             Velocity = 7f;
             Cooldown = 20 * 60;
             ChargesMax = 2;
@@ -31,6 +31,11 @@ namespace GenshinMod.Content.Characters.Klee.Abilities
             int type = ModContent.ProjectileType<KleeProjectileSkill>();
             SpawnProjectile(velocity, type);
             SoundEngine.PlaySound(SoundID.Item1);
+        }
+
+        public override void OnUsePreUpdate()
+        {
+            Player.velocity.X *= 0.9f;
         }
 
         public override int GetScaling()

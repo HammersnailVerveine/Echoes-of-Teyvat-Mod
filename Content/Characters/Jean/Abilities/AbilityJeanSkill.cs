@@ -67,6 +67,7 @@ namespace GenshinMod.Content.Characters.Jean.Abilities
                 }
             }
             Character.RemoveVanityWeapon();
+            Player.velocity.X *= 0.9f;
         }
 
         public override void OnHoldReset()
