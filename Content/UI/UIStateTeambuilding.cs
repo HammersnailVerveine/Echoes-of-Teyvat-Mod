@@ -224,9 +224,12 @@ namespace GenshinMod.Content.UI
         public void ValidateTeamChange()
         {
             GenshinPlayer genshinPlayer = Main.LocalPlayer.GetModPlayer<GenshinPlayer>();
+            GenshinCharacter selectedCharacter = genshinPlayer.CharacterCurrent;
+
             genshinPlayer.CharacterTeam.Clear();
             genshinPlayer.CharacterTeam = PlayerTeam;
-            if (genshinPlayer.CharacterCurrent != PlayerTeam[0])
+
+            if (!PlayerTeam.Contains(selectedCharacter))
                 genshinPlayer.CharacterCurrent = PlayerTeam[0];
 
             PlayerTeam = new List<GenshinCharacter>();
