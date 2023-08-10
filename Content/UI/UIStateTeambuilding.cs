@@ -226,7 +226,8 @@ namespace GenshinMod.Content.UI
             GenshinPlayer genshinPlayer = Main.LocalPlayer.GetModPlayer<GenshinPlayer>();
             genshinPlayer.CharacterTeam.Clear();
             genshinPlayer.CharacterTeam = PlayerTeam;
-            genshinPlayer.CharacterCurrent = PlayerTeam[0];
+            if (genshinPlayer.CharacterCurrent != PlayerTeam[0])
+                genshinPlayer.CharacterCurrent = PlayerTeam[0];
 
             PlayerTeam = new List<GenshinCharacter>();
             foreach (GenshinCharacter character in genshinPlayer.CharacterTeam) PlayerTeam.Add(character);
