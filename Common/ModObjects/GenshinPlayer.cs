@@ -2,6 +2,7 @@
 using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.Loadables;
+using GenshinMod.Common.ModObjects.ModSystems;
 using GenshinMod.Common.UI;
 using GenshinMod.Common.UI.UIs;
 using Microsoft.Xna.Framework;
@@ -490,6 +491,18 @@ namespace GenshinMod.Common.ModObjects
                     spriteBatch.Draw(textureArms, drawPosition, rectangleArms, GenshinElementUtils.GetColor(GenshinElement.CRYO) * 0.4f, 0f, textureArms.Size() * 0.5f, 1f, effect, 0f);
                 }
             }
+
+            // challenge keys (temp)
+
+            Vector2 drawPositionKey = Vector2.Transform(GenshinDemo.PositionChallengeLeft - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+            drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 8f) - 48;
+            Color keyColor = Lighting.GetColor((int)GenshinDemo.PositionChallengeLeft.X / 16, (int)GenshinDemo.PositionChallengeLeft.Y / 16) * 1.5f;
+            Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor * 0.35f, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1.05f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
+
+            drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 4f) - UIStateMisc.KeyTexture.Height / 2;
+            Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor * 0.8f, Timer * 0.005f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor * 0.5f, Timer * -0.0075f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.75f, SpriteEffects.None, 0f);
         }
 
         public void DrawCompositeArm(SpriteBatch spritebatch, bool offsetPosition = true, bool shortArm = false, float offsetX = 0f, float offsetY = 0f, float rotation = float.MaxValue)

@@ -1,5 +1,6 @@
 using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.ModObjects;
+using GenshinMod.Common.ModObjects.ModSystems;
 using GenshinMod.Common.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +15,8 @@ namespace GenshinMod.Common.UI.UIs
     public class UIStateMisc : GenshinUIState
     {
         public static Texture2D TextureArrowUp;
+        public static Texture2D KeyTexture;
+        public static Texture2D KeyTextureCube;
 
         public static bool ShowArrowUp = false;
 
@@ -23,6 +26,8 @@ namespace GenshinMod.Common.UI.UIs
         public override void OnInitialize()
         {
             TextureArrowUp ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/ArrowUp", AssetRequestMode.ImmediateLoad).Value;
+            KeyTexture ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/AbyssKey", AssetRequestMode.ImmediateLoad).Value;
+            KeyTextureCube ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/AbyssKeyCube", AssetRequestMode.ImmediateLoad).Value;
 
             Width.Set(0f, 0f);
             Height.Set(0f, 0f);

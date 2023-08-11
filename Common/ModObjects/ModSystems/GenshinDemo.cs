@@ -1,6 +1,9 @@
 using GenshinMod.Common.UI.UIs;
 using GenshinMod.Content.NPCs.Slimes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -13,6 +16,7 @@ namespace GenshinMod.Common.ModObjects.ModSystems
 {
     public class GenshinDemo : ModSystem
     {
+
         // Progression tags
 
         public static bool FirstChallenge = false;
@@ -23,8 +27,8 @@ namespace GenshinMod.Common.ModObjects.ModSystems
         private static Vector2 PositionCave = new Vector2(9760, 3003);
 
         private static Vector2 PositionChallengeCenter = new Vector2(8040, 5451);
-        private static Vector2 PositionChallengeLeft = new Vector2(7840, 5451);
-        private static Vector2 PositionChallengeRight = new Vector2(8256, 5451);
+        public static Vector2 PositionChallengeLeft = new Vector2(7840, 5451);
+        public static Vector2 PositionChallengeRight = new Vector2(8256, 5451);
 
         private static Vector2 SlimeHole1 = new Vector2(6130, 2950);
         private static Vector2 SlimeHole2 = new Vector2(6208, 2800);
@@ -77,6 +81,8 @@ namespace GenshinMod.Common.ModObjects.ModSystems
             Player player = Main.LocalPlayer;
             GenshinPlayer genshinPlayer = player.GetModPlayer<GenshinPlayer>();
 
+            // Show cave arrow
+
             if (player.Center.Distance(PositionCave) < 64)
             {
                 UIStateMisc.ShowArrowUp = true;
@@ -90,6 +96,8 @@ namespace GenshinMod.Common.ModObjects.ModSystems
                 }
             }
             else UIStateMisc.ShowArrowUp = false;
+
+            // Slimes spawn on the left of the map
 
             if (player.Center.X < 6600 && genshinPlayer.Timer % 300 == 0)
             {
@@ -129,13 +137,14 @@ namespace GenshinMod.Common.ModObjects.ModSystems
                 }
             }
 
+
+            // Misc
+
             UIStateTeambuilding.Available = player.position.Y < 4000;
 
             controlUpRelease = !player.controlUp;
             Main.time = 37000;
             Main.raining = false;
-
-            //Main.NewText(Main.MouseWorld.X + " " + Main.MouseWorld.Y);
         }
     }
 }
