@@ -46,7 +46,7 @@ namespace GenshinMod.Common.GameObjects
 
         public GenshinShieldNPC Initialize(GenshinGlobalNPC globalNPC, NPC npc, GenshinElement element = GenshinElement.NONE, int ai = 0) // "ai" is used to communicate more information if needed
         {
-            TextureBar ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/ShieldNPCBar", AssetRequestMode.ImmediateLoad).Value;
+            TextureBar ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/ShieldNPCBar", AssetRequestMode.ImmediateLoad).Value;
             GlobalNPC = globalNPC;
             NPC = npc;
             OnInitialize(ref element, ai);

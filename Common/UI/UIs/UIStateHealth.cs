@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace GenshinMod.Content.UI
+namespace GenshinMod.Common.UI.UIs
 {
     public class UIStateHealth : GenshinUIState
     {
@@ -23,8 +23,8 @@ namespace GenshinMod.Content.UI
 
         public override void OnInitialize()
         {
-            TextureBackground ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/TeamHealthBackground", AssetRequestMode.ImmediateLoad).Value;
-            TextureTeamHealth ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/TeamHealthBar", AssetRequestMode.ImmediateLoad).Value;
+            TextureBackground ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/TeamHealthBackground", AssetRequestMode.ImmediateLoad).Value;
+            TextureTeamHealth ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/TeamHealthBar", AssetRequestMode.ImmediateLoad).Value;
 
             Width.Set(0f, 0f);
             Height.Set(0f, 0f);
@@ -56,7 +56,7 @@ namespace GenshinMod.Content.UI
             foreach (GenshinCharacter character in genshinPlayer.CharacterTeam)
             {
                 bool active = character == characterCurrent;
-                float scale = (active ? 1.2f : 1f);
+                float scale = active ? 1.2f : 1f;
 
                 // Background
                 Vector2 backgroundPosition = new Vector2(dimensions.X - (active ? 7f : 0f), dimensions.Y + offsetY);

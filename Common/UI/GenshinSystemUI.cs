@@ -81,7 +81,7 @@ namespace GenshinMod.Common.UI
             Main.OnResolutionChanged += OnResolutionChanged;
             Main.OnPreDraw += ResetVariables;
 
-            PixelTexture = ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/Pixel", AssetRequestMode.ImmediateLoad).Value;
+            PixelTexture = ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/Pixel", AssetRequestMode.ImmediateLoad).Value;
         }
 
         public override void Unload()

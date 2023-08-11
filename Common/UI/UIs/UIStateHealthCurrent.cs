@@ -9,7 +9,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace GenshinMod.Content.UI
+namespace GenshinMod.Common.UI.UIs
 {
     public class UIStateHealthCurrent : GenshinUIState
     {
@@ -20,7 +20,7 @@ namespace GenshinMod.Content.UI
 
         public override void OnInitialize()
         {
-            TextureHealthBar ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/HealthBar", AssetRequestMode.ImmediateLoad).Value;
+            TextureHealthBar ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/HealthBar", AssetRequestMode.ImmediateLoad).Value;
 
             Width.Set(0f, 0f);
             Height.Set(0f, 0f);

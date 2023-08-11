@@ -3,7 +3,7 @@ using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.Loadables;
 using GenshinMod.Common.UI;
-using GenshinMod.Content.UI;
+using GenshinMod.Common.UI.UIs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

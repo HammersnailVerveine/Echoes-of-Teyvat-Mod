@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace GenshinMod.Content.UI
+namespace GenshinMod.Common.UI.UIs
 {
     public class UIStateAbility : GenshinUIState
     {
@@ -28,11 +28,11 @@ namespace GenshinMod.Content.UI
 
         public override void OnInitialize()
         {
-            TextureSkillBackground ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/CharacterSkill", AssetRequestMode.ImmediateLoad).Value;
-            TextureSkillCharge ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/CharacterSkillCharge", AssetRequestMode.ImmediateLoad).Value;
-            TextureSkillChargeFull ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/CharacterSkillCharge_Full", AssetRequestMode.ImmediateLoad).Value;
-            TextureBurstBackground ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/CharacterBurst", AssetRequestMode.ImmediateLoad).Value;
-            TextureBurstEnergy ??= ModContent.Request<Texture2D>("GenshinMod/Content/UI/Textures/CharacterBurst_Energy", AssetRequestMode.ImmediateLoad).Value;
+            TextureSkillBackground ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/CharacterSkill", AssetRequestMode.ImmediateLoad).Value;
+            TextureSkillCharge ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/CharacterSkillCharge", AssetRequestMode.ImmediateLoad).Value;
+            TextureSkillChargeFull ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/CharacterSkillCharge_Full", AssetRequestMode.ImmediateLoad).Value;
+            TextureBurstBackground ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/CharacterBurst", AssetRequestMode.ImmediateLoad).Value;
+            TextureBurstEnergy ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/CharacterBurst_Energy", AssetRequestMode.ImmediateLoad).Value;
 
             Width.Set(0f, 0f);
             Height.Set(0f, 0f);
@@ -72,7 +72,7 @@ namespace GenshinMod.Content.UI
 
             if (skillCooldown > 0) // Skill Text Cooldown Display
             {
-                string text = (Math.DivRem(skillCooldown, 60).Quotient).ToString();
+                string text = Math.DivRem(skillCooldown, 60).Quotient.ToString();
                 Vector2 position = skillLocation + new Vector2(TextureSkillBackground.Width, TextureSkillBackground.Height) * 0.32f;
                 if (text.Length == 1) position.X += 5.5f;
                 if (text.StartsWith("1")) position.X += 5f;
@@ -131,7 +131,7 @@ namespace GenshinMod.Content.UI
 
             if (burstCooldown > 0) // Bust Text Cooldown Display
             {
-                string text = (Math.DivRem(burstCooldown, 60).Quotient).ToString();
+                string text = Math.DivRem(burstCooldown, 60).Quotient.ToString();
                 Vector2 position = burstLocation + new Vector2(TextureBurstBackground.Width + 5f, TextureBurstBackground.Height) * 0.35f;
                 if (text.Length == 1) position.X += 5f;
                 if (text.StartsWith("1")) position.X += 5f;

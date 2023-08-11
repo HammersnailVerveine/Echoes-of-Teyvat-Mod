@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace GenshinMod.Content.UI
+namespace GenshinMod.Common.UI.UIs
 {
     public class UIStateTeambuilding : GenshinUIState
     {
