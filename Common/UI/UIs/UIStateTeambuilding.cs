@@ -227,7 +227,7 @@ namespace GenshinMod.Common.UI.UIs
                 }
             }
             else
-            {
+            { // Return tp spawn button
                 Rectangle drawRect = new(Main.screenWidth / 2 - 150, Main.screenHeight / 3, 300, 80);
                 DrawBackgroundRectangle(spriteBatch, drawRect, BackgroundBlack);
                 Vector2 textPosition = new Vector2(drawRect.X + 26, drawRect.Y + drawRect.Height / 2 - 12);
@@ -241,6 +241,7 @@ namespace GenshinMod.Common.UI.UIs
                 if (drawRect.Contains(Main.MouseScreen.ToPoint()) && Main.mouseLeft && Main.mouseLeftRelease)
                 {
                     player.Teleport(new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16), TeleportationStyleID.TeleporterTile);
+                    //Main.playerInventory = false;
                 }
             }
         }

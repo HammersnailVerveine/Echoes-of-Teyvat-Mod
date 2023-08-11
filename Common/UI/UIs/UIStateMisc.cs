@@ -17,6 +17,7 @@ namespace GenshinMod.Common.UI.UIs
         public static Texture2D TextureArrowUp;
         public static Texture2D KeyTexture;
         public static Texture2D KeyTextureCube;
+        public static Texture2D KeyTextureOutline;
 
         public static bool ShowArrowUp = false;
 
@@ -27,6 +28,7 @@ namespace GenshinMod.Common.UI.UIs
         {
             TextureArrowUp ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/ArrowUp", AssetRequestMode.ImmediateLoad).Value;
             KeyTexture ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/AbyssKey", AssetRequestMode.ImmediateLoad).Value;
+            KeyTextureOutline ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/AbyssKey_Outline", AssetRequestMode.ImmediateLoad).Value;
             KeyTextureCube ??= ModContent.Request<Texture2D>("GenshinMod/Common/UI/UIs/Textures/AbyssKeyCube", AssetRequestMode.ImmediateLoad).Value;
 
             Width.Set(0f, 0f);
