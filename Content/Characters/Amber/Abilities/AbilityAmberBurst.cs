@@ -19,9 +19,9 @@ namespace GenshinMod.Content.Characters.Amber.Abilities
             KnockBack = 0f;
             UseTime = 30;
             Velocity = AlmostImmobile;
-            Cooldown = 12 * 0;
+            Cooldown = 12 * 60;
             AbilityType = AbilityType.BURST;
-            Energy = 0;
+            Energy = 40;
         }
 
         public override void OnUse()
