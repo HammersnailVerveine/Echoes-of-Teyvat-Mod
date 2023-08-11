@@ -82,7 +82,7 @@ namespace GenshinMod.Common.ModObjects
                 character.Update();
 
                 // TEMP
-                character.StatEnergyRecharge += 1f;
+                character.StatEnergyRecharge += 0.5f;
                 character.StatHealingReceived -= 0.5f;
                 character.StatDamageReactionSuperconduct -= 0.5f;
                 character.StatDamageReactionElectrocharged -= 0.5f;
