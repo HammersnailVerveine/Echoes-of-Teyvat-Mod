@@ -102,6 +102,8 @@ namespace GenshinMod.Content.NPCs.Slimes
                 SetAI(AI_Field_State, State_Jumping, false);
                 NPC.velocity.Y = - AI_Misc;
                 NPC.velocity.X = 5f * (VectorToTarget.X > 0f ? 1 : -1);
+                NPC.direction = NPC.velocity.X < 0 ? -1 : 1;
+                NPC.spriteDirection = -NPC.direction;
             }
         }
 

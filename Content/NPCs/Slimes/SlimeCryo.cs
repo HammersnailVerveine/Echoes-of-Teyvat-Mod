@@ -30,7 +30,6 @@ namespace GenshinMod.Content.NPCs.Slimes
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
             NPC.knockBackResist = 1f;
-            NPC.alpha = 32;
 
             GenshinGlobalNPC.Element = GenshinElement.CRYO;
             GenshinGlobalNPC.ResistanceCryo = 1f;
@@ -102,6 +101,8 @@ namespace GenshinMod.Content.NPCs.Slimes
                 SetAI(AI_Field_State, State_Jumping, false);
                 NPC.velocity.Y = - AI_Misc;
                 NPC.velocity.X = 5f * (VectorToTarget.X > 0f ? 1 : -1);
+                NPC.direction = NPC.velocity.X < 0 ? -1 : 1;
+                NPC.spriteDirection = -NPC.direction;
             }
         }
 
