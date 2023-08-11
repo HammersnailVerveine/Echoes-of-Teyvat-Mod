@@ -90,7 +90,7 @@ namespace GenshinMod.Common.GlobalObjets
 
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
-            maxSpawns = 0;
+            //maxSpawns = 0;
         }
 
         public override void SetDefaults(NPC npc)

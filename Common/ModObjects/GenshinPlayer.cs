@@ -283,9 +283,9 @@ namespace GenshinMod.Common.ModObjects
             teambuildingState.Visible = Main.playerInventory;
             if (!teambuildingState.Visible)
             {
-                teambuildingState.SelectedSlot = -5;
-                teambuildingState.PlayerTeam = null;
-                teambuildingState.PlayerCharacters = null;
+                UIStateTeambuilding.SelectedSlot = -5;
+                UIStateTeambuilding.PlayerTeam = null;
+                UIStateTeambuilding.PlayerCharacters = null;
             }
         }
 

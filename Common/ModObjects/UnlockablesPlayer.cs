@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.ModObjects.ModSystems;
 using System.Collections.Generic;
 using Terraria.ModLoader;
 
@@ -18,9 +19,13 @@ namespace GenshinMod.Common.ModObjects
             UnlockedCharacters.Add(new Content.Characters.Lisa.CharacterLisa().Initialize(GenshinPlayer));
             UnlockedCharacters.Add(new Content.Characters.Noelle.CharacterNoelle().Initialize(GenshinPlayer));
             UnlockedCharacters.Add(new Content.Characters.Barbara.CharacterBarbara().Initialize(GenshinPlayer));
-            UnlockedCharacters.Add(new Content.Characters.Jean.CharacterJean().Initialize(GenshinPlayer));
-            UnlockedCharacters.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(GenshinPlayer));
-            UnlockedCharacters.Add(new Content.Characters.Klee.CharacterKlee().Initialize(GenshinPlayer));
+
+            if (GenshinDemo.SecondChallenge)
+            {
+                UnlockedCharacters.Add(new Content.Characters.Jean.CharacterJean().Initialize(GenshinPlayer));
+                UnlockedCharacters.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(GenshinPlayer));
+                UnlockedCharacters.Add(new Content.Characters.Klee.CharacterKlee().Initialize(GenshinPlayer));
+            }
 
             GenshinPlayer.CharacterTeam = new List<GenshinCharacter>();
             GenshinPlayer.CharacterTeam.Add(UnlockedCharacters[0]);

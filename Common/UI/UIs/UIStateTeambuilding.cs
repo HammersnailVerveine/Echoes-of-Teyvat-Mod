@@ -24,11 +24,11 @@ namespace GenshinMod.Common.UI.UIs
         private static Color BackgroundRed = new Color(100, 30, 45);
         private static Color LightBlue = new Color(44, 75, 126);
 
-        public int SelectedSlot = -5;
-        public List<GenshinCharacter> PlayerTeam;
-        public List<GenshinCharacter> PlayerCharacters;
+        public static int SelectedSlot = -5;
+        public static List<GenshinCharacter> PlayerTeam;
+        public static List<GenshinCharacter> PlayerCharacters;
 
-        public bool Available = true;
+        public static bool Available = true;
 
         public override int InsertionIndex(List<GameInterfaceLayer> layers)
             => layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));

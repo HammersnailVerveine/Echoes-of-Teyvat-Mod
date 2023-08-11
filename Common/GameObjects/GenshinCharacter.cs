@@ -197,9 +197,9 @@ namespace GenshinMod.Common.GameObjects
             ICDTrackers = new List<ICDTracker>();
             BurstQuotes = new string[3] {"", "", ""};
 
-            if (Weapon == null) TryEquipWeapon(GenshinWeapon.GetWeakestWeapon(WeaponType));
-
             SetupFull();
+
+            if (Weapon == null) TryEquipWeapon(GenshinWeapon.GetWeakestWeapon(WeaponType));
             return this;
         }
 
