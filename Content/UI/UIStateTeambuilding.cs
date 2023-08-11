@@ -257,7 +257,11 @@ namespace GenshinMod.Content.UI
                 genshinPlayer.CharacterCurrent = PlayerTeam[0];
 
             PlayerTeam = new List<GenshinCharacter>();
-            foreach (GenshinCharacter character in genshinPlayer.CharacterTeam) PlayerTeam.Add(character);
+            foreach (GenshinCharacter character in genshinPlayer.CharacterTeam)
+            {
+                character.SetupFull();
+                PlayerTeam.Add(character);
+            }
         }
 
         public void DrawBackgroundRectangle(SpriteBatch spriteBatch, Rectangle rectangle, Color backgroundColor)

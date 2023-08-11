@@ -116,7 +116,7 @@ namespace GenshinMod.Content.NPCs.Slimes
 
         public override void SafeResetEffects()
         {
-            GenshinGlobalNPC.TimerElementGeo = 600;
+            //GenshinGlobalNPC.TimerElementGeo = 600;
         }
     }
 }

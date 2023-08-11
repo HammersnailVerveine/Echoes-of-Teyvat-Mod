@@ -197,11 +197,17 @@ namespace GenshinMod.Common.GameObjects
             ICDTrackers = new List<ICDTracker>();
             BurstQuotes = new string[3] {"", "", ""};
 
-            SetDefaults();
-
             if (Weapon == null) TryEquipWeapon(GenshinWeapon.GetWeakestWeapon(WeaponType));
-            Health = EffectiveHealth;
+
+            SetupFull();
             return this;
+        }
+
+        public void SetupFull(bool fullEnergy = false)
+        {
+            SetDefaults();
+            Health = EffectiveHealth;
+            if (fullEnergy) Energy = AbilityBurst.Energy;
         }
 
         public void PreUpdate()
