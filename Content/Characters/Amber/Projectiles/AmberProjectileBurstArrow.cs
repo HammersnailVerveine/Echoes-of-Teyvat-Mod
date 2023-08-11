@@ -23,7 +23,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         {
             Projectile.width = 10;
             Projectile.height = 10;
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
             Projectile.aiStyle = 0;
             Projectile.timeLeft = 30;
             Projectile.scale = 1f;
@@ -52,6 +52,8 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         {
             Projectile.scale = 0.75f;
             if (Projectile.timeLeft <= 10) Disappearing = true;
+
+            Projectile.tileCollide = TimeSpent > 15;
 
             if (!Disappearing)
             {

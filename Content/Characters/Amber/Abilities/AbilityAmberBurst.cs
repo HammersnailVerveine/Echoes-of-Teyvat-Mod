@@ -19,9 +19,9 @@ namespace GenshinMod.Content.Characters.Amber.Abilities
             KnockBack = 0f;
             UseTime = 30;
             Velocity = AlmostImmobile;
-            Cooldown = 12 * 60;
+            Cooldown = 12 * 0;
             AbilityType = AbilityType.BURST;
-            Energy = 40;
+            Energy = 0;
         }
 
         public override void OnUse()
@@ -41,7 +41,7 @@ namespace GenshinMod.Content.Characters.Amber.Abilities
                 {
                     position += offSet;
                     offSet = Collision.TileCollision(position, offSet, 2, 2, true, false, (int)Player.gravDir);
-                    if (offSet.Length() < RangeRef)
+                    if (offSet.Length() < RangeRef - 1f)
                     {
                         break;
                     }
@@ -67,7 +67,7 @@ namespace GenshinMod.Content.Characters.Amber.Abilities
             {
                 position += offSet;
                 offSet = Collision.TileCollision(position, offSet, 2, 20, true, false, (int)Player.gravDir);
-                if (offSet.Length() < RangeRef)
+                if (offSet.Length() < RangeRef - 1f)
                 {
                     break;
                 }
