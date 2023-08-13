@@ -8,6 +8,7 @@ using GenshinMod.Common.UI.UIs;
 using GenshinMod.Content.Challenges.Demo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -232,11 +233,18 @@ namespace GenshinMod.Common.ModObjects
                     }
                     else
                     { // All the team is dead
-                        // TEMP
                         foreach (GenshinCharacter character in CharacterTeam)
+                        {
                             character.Revive();
+                            character.RestoreFull();
+                        }
                         TimerDeath = 1;
-                        // TEMP
+
+                        Player.Teleport(new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16), TeleportationStyleID.DebugTeleport);
+                        Main.playerInventory = false;
+
+                        CharacterCurrent.TimerCanUse = 60;
+                        CancelChallenge();
                     }
                 }
             }
@@ -295,6 +303,21 @@ namespace GenshinMod.Common.ModObjects
                 UIStateTeambuilding.SelectedSlot = -5;
                 UIStateTeambuilding.PlayerTeam = null;
                 UIStateTeambuilding.PlayerCharacters = null;
+            }
+
+            if (Challenge != null)
+            {
+                if (Player.position.X > Challenge.CenterLocation.X + Challenge.Border)
+                {
+                    Player.position.X = Challenge.CenterLocation.X + Challenge.Border - 0.001f;
+                    Player.velocity.X *= 0.01f;
+                }
+
+                if (Player.position.X < Challenge.CenterLocation.X - Challenge.Border)
+                {
+                    Player.position.X = Challenge.CenterLocation.X - Challenge.Border + 0.001f;
+                    Player.velocity.X *= 0.01f;
+                }
             }
         }
 
@@ -492,10 +515,43 @@ namespace GenshinMod.Common.ModObjects
                 }
             }
 
-            // challenge keys (temp)
 
-            if (Challenge == null)
-            {
+            if (Challenge != null)
+            { // Challenge borders
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
+
+                int height = UIStateMisc.TextureBorder.Height;
+                for (int k = -1; k < 2; k += 2)
+                {
+                    for (int i = 0; i < 200; i++)
+                    {
+                        Vector2 position = new Vector2(Challenge.CenterLocation.X + Challenge.Border * k + Player.width * 0.5f - 4, Player.Center.Y - height * 100 + height * i + Player.gfxOffY);
+                        float ColorMult = 1f - Player.Center.Distance(position) / 240f;
+                        if (ColorMult > 0f)
+                        {
+                            position = Vector2.Transform(position - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+                            spriteBatch.Draw(UIStateMisc.TextureBorder, position, Color.White * ColorMult);
+
+                            if (i % 3 == 0)
+                            {
+                                for (int j = 1; j < 6; j++)
+                                {
+                                    position.X += 6 * k;
+                                    position.Y -= (Timer * 0.2f % (UIStateMisc.TextureBorder.Height * 3f));
+                                    ColorMult = 1f - Player.Center.Distance(position + Main.screenPosition) / 240f;
+                                    spriteBatch.Draw(UIStateMisc.TextureBorder, position, Color.White * (ColorMult - 0.1f * j));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
+            }
+            else
+            { // challenge keys (temp)
                 // First key
 
                 Vector2 drawPositionKey = Vector2.Transform(GenshinDemo.PositionChallengeLeft - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
@@ -540,7 +596,7 @@ namespace GenshinMod.Common.ModObjects
                     if (Player.Center.Distance(GenshinDemo.PositionChallengeRight) < 64)
                     {
                         Main.spriteBatch.Draw(UIStateMisc.KeyTextureOutline, drawPositionKey, null, Color.White * 0.8f, 0f, UIStateMisc.KeyTextureOutline.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
-                        Vector2 textPosition = Vector2.Transform(GenshinDemo.PositionChallengeLeft - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+                        Vector2 textPosition = Vector2.Transform(GenshinDemo.PositionChallengeRight - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
                         textPosition.Y -= 100;
                         textPosition.X += 40;
                         ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Second challenge" + (GenshinDemo.SecondChallenge ? " (Completed)" : ""), textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
@@ -548,6 +604,13 @@ namespace GenshinMod.Common.ModObjects
                         ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Geo Hypostasis", textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
                         textPosition.Y += 50;
                         ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Right click to Interact", textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
+
+                        if (Main.MouseScreen.Distance(drawPositionKey) < 64 && Main.mouseRight && Main.mouseRightRelease)
+                        {
+                            StartChallenge<ChallengeDemoBoss>();
+                            CharacterCurrent.TimerCanUse = 60;
+                            SoundEngine.PlaySound(SoundID.MenuOpen);
+                        }
                     }
                     else Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor * 0.35f, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1.05f, SpriteEffects.None, 0f);
                     Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
@@ -556,13 +619,6 @@ namespace GenshinMod.Common.ModObjects
                     Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor * 0.75f, (Timer + 60) * 0.0075f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.6f, SpriteEffects.None, 0f);
                     Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor, (Timer + 60) * -0.005f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
                 }
-            }
-
-            if (Challenge != null)
-            {
-                Vector2 textPosition = Vector2.Transform(Challenge.CenterLocation - Main.screenPosition + new Vector2(-50, 50), Main.GameViewMatrix.EffectMatrix);
-                if (Challenge.OngoingWave) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Ongoing Wave", textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
-                else ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Next Wave : " + Math.DivRem(Challenge.Waves[0].delay, 60, out _), textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
             }
         }
 

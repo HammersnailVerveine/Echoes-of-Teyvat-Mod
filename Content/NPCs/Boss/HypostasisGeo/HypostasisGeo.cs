@@ -74,7 +74,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             NPC.width = 40;
             NPC.height = 40;
             NPC.damage = 200;
-            NPC.lifeMax = 750;
+            NPC.lifeMax = 600;
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath43;
             NPC.knockBackResist = 0f;
@@ -86,6 +86,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             GenshinGlobalNPC.ResistanceGeo = 1f;
             GenshinGlobalNPC.ElementSymbolDrawOffset = 32;
             GenshinGlobalNPC.GiveEnergyParticlesLife = false;
+
+            CanDespawn = false;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -291,7 +293,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                         if (CheckChange())
                             ChangeCubeState(1);
 
-                        if (Timer == 120 && Pillars.Count > 0)
+                        if (Timer == 30 && Pillars.Count > 0)
                         {
                             PillarSelected = Pillars[Main.rand.Next(Pillars.Count)];
                             PositionTarget = PillarSelected.Center - new Vector2(NPC.width * 0.5f, 192f);
@@ -301,7 +303,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                             ChangeCombatState(2);
                         }
 
-                        if (Timer == 300)
+                        if (Timer == 210)
                         { // randomly selects an attack
                             if (LingeringAttackTimer > 3000)
                             {
@@ -422,7 +424,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                                 NPC.life = (int)(NPC.lifeMax / 3 * RemainingPillars);
                         }
                         break;
-                    case 7: // Spawns delayed explosion where player will be attack
+                    case 7: // Attack : Spawns delayed explosion where player will be
                         if (CheckChange())
                         {
                             ChangeCubeState(4);
@@ -443,10 +445,10 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                             }
                         }
 
-                        if (Timer == 480)
+                        if (Timer == 360)
                             ChangeCombatState(3);
                         break;
-                    case 8: // Circle shoot attack
+                    case 8: // Attack : Circle shoot
                         if (CheckChange())
                         {
                             ChangeCubeState(3);
@@ -464,7 +466,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, velocity, type, NPC.damage, 0f);
                         }
 
-                        if (Timer == 560)
+                        if (Timer == 500)
                             ChangeCombatState(3);
                         break;
                     case 9: // Lingering cubes attack
@@ -492,7 +494,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                             }
                         }
 
-                        if (Timer == 560)
+                        if (Timer == 440)
                             ChangeCombatState(3);
                         break;
                     default:

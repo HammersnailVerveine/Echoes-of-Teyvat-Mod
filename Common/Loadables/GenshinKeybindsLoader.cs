@@ -24,7 +24,7 @@ namespace GenshinMod.Common.Loadables
             Character3 = KeybindLoader.RegisterKeybind(mod, "Character #3", Keys.D3);
             Character4 = KeybindLoader.RegisterKeybind(mod, "Character #4", Keys.D4);
             Character5 = KeybindLoader.RegisterKeybind(mod, "Character #5", Keys.D5);
-            Debug = KeybindLoader.RegisterKeybind(mod, "Debug", Keys.D6);
+            Debug = KeybindLoader.RegisterKeybind(mod, "Debug", Keys.OemTilde);
         }
 
         void ILoadable.Unload()

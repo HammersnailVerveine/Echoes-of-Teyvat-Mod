@@ -13,8 +13,9 @@ namespace GenshinMod.Common.ModObjects
         public Vector2 TargetPosition = Vector2.Zero;
         public Vector2 TargetPositionForced = Vector2.Zero;
 
-        public int TimeAlive = 0;
+        public int TimeAlive = 0; // Increased by 1 every frame while the npc is alive
         public int TimerInState = 0;
+        public bool CanDespawn; // if false, the NPC cannot despawn
 
         public bool NoBestiaryEntry = true;
         public bool TargetLocalPlayer => NPC.target == Main.myPlayer;
@@ -86,6 +87,12 @@ namespace GenshinMod.Common.ModObjects
                 };
                 NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
             }
+        }
+
+        public override bool CheckActive()
+        {
+            if (!CanDespawn) return false;
+            return base.CheckActive();
         }
 
         public sealed override void AI()

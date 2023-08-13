@@ -1,4 +1,5 @@
 ﻿using GenshinMod.Common.GameObjects;
+using GenshinMod.Common.ModObjects;
 using GenshinMod.Common.ModObjects.ModSystems;
 using GenshinMod.Content.NPCs.Slimes;
 using Microsoft.Xna.Framework;
@@ -14,7 +15,7 @@ namespace GenshinMod.Content.Challenges.Demo
         public override void Initialize()
         {
             CenterLocation = new Vector2(8040, 5451);
-            Width = 500;
+            Border = 500;
 
             List<Tuple<int, int>> enemies = new List<Tuple<int, int>>();
             enemies.Add(new Tuple<int, int>(ModContent.NPCType<SlimeAnemo>(), 240));
@@ -60,6 +61,15 @@ namespace GenshinMod.Content.Challenges.Demo
         public override void OnComplete()
         {
             GenshinDemo.FirstChallenge = true;
+        }
+
+        public override void OnStart()
+        {
+            GenshinPlayer genshinPlayer = Main.LocalPlayer.GetModPlayer<GenshinPlayer>();
+            foreach (GenshinCharacter genshinCharacter in genshinPlayer.CharacterTeam)
+            {
+                genshinCharacter.RestoreFull(true);
+            } 
         }
     }
 }

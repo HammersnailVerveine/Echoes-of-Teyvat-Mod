@@ -264,7 +264,7 @@ namespace GenshinMod.Common.UI.UIs
             PlayerTeam = new List<GenshinCharacter>();
             foreach (GenshinCharacter character in genshinPlayer.CharacterTeam)
             {
-                character.SetupFull();
+                character.RestoreFull();
                 PlayerTeam.Add(character);
             }
         }

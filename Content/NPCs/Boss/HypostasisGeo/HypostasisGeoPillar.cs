@@ -37,7 +37,7 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             NPC.width = 70;
             NPC.height = 106;
             NPC.damage = 0;
-            NPC.lifeMax = 1250;
+            NPC.lifeMax = 1000;
             NPC.HitSound = SoundID.NPCHit41;
             NPC.DeathSound = SoundID.NPCDeath43;
             NPC.knockBackResist = 0f;
@@ -46,6 +46,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             GenshinGlobalNPC.ElementSymbolDrawOffset = 32;
             GenshinGlobalNPC.BluntTarget = true;
             GenshinGlobalNPC.GiveEnergyParticlesLife = false;
+
+            CanDespawn = false;
         }
 
         public override void OnSpawn(IEntitySource source)

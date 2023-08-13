@@ -10,9 +10,9 @@ namespace GenshinMod.Common.GameObjects
     {
         public List<GenshinChallengeWave> Waves;
         public Vector2 CenterLocation;
-        public float Width;
+        public float Border;
 
-        private List<NPC> NPCs;
+        public List<NPC> NPCs;
 
         public GenshinChallenge()
         {
@@ -64,7 +64,9 @@ namespace GenshinMod.Common.GameObjects
             NPCs = new List<NPC>();
             foreach (Tuple<int, int> tuple in Waves[0].EnemyTypesAndOffsetX)
             {
-                NPCs.Add(Main.npc[NPC.NewNPC(Main.LocalPlayer.GetSource_FromThis(), (int)CenterLocation.X + tuple.Item2, (int)CenterLocation.Y, tuple.Item1)]);
+                NPC npc = Main.npc[NPC.NewNPC(Main.LocalPlayer.GetSource_FromThis(), (int)CenterLocation.X + tuple.Item2, (int)CenterLocation.Y, tuple.Item1)];
+                NPCs.Add(npc);
+                if (npc.ModNPC is GenshinNPC genshinNPC) genshinNPC.CanDespawn = false;
             }
             return false;
         }
@@ -73,7 +75,10 @@ namespace GenshinMod.Common.GameObjects
         {
             for (int i = NPCs.Count - 1; i >= 0; i--)
                 if (NPCs[i].active)
+                {
+                    if (NPCs[i].ModNPC is GenshinNPC genshinNPC) genshinNPC.CanDespawn = true;
                     NPCs[i].active = false;
+                }
         }
 
         public virtual void Initialize() { }

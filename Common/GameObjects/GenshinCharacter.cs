@@ -197,13 +197,13 @@ namespace GenshinMod.Common.GameObjects
             ICDTrackers = new List<ICDTracker>();
             BurstQuotes = new string[3] {"", "", ""};
 
-            SetupFull();
+            RestoreFull();
 
             if (Weapon == null) TryEquipWeapon(GenshinWeapon.GetWeakestWeapon(WeaponType));
             return this;
         }
 
-        public void SetupFull(bool fullEnergy = false)
+        public void RestoreFull(bool fullEnergy = false)
         {
             SetDefaults();
             Health = EffectiveHealth;
@@ -257,7 +257,7 @@ namespace GenshinMod.Common.GameObjects
                 Weapon.WeaponPostUpdateActive();
                 if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
 
-                if (!Main.playerInventory && IsAlive && !ReactionFrozen) // cannot use abilities with inventory open, while frozen or while dead
+                if (!Main.playerInventory && IsAlive && !ReactionFrozen && TimerCanUse < 1) // cannot use abilities with inventory open, while frozen or while dead
                 {
                     if (Main.mouseLeft && !GenshinPlayer.IsUsing) // Try use NA if LMB used
                     {
