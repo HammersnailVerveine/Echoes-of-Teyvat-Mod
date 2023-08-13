@@ -20,7 +20,7 @@ namespace GenshinMod.Common.ModObjects
             UnlockedCharacters.Add(new Content.Characters.Noelle.CharacterNoelle().Initialize(GenshinPlayer));
             UnlockedCharacters.Add(new Content.Characters.Barbara.CharacterBarbara().Initialize(GenshinPlayer));
 
-            if (GenshinDemo.SecondChallenge || true)
+            if (GenshinDemo.SecondChallenge)
             {
                 UnlockedCharacters.Add(new Content.Characters.Jean.CharacterJean().Initialize(GenshinPlayer));
                 UnlockedCharacters.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(GenshinPlayer));

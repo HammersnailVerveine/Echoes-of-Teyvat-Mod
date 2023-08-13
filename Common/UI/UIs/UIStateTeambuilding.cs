@@ -241,7 +241,11 @@ namespace GenshinMod.Common.UI.UIs
                 if (drawRect.Contains(Main.MouseScreen.ToPoint()) && Main.mouseLeft && Main.mouseLeftRelease)
                 {
                     player.Teleport(new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16), TeleportationStyleID.TeleporterTile);
-                    //Main.playerInventory = false;
+                    Main.playerInventory = false;
+
+                    GenshinPlayer genshinPlayer = player.GetModPlayer<GenshinPlayer>();
+                    genshinPlayer.CharacterCurrent.TimerCanUse = 60;
+                    genshinPlayer.CancelChallenge();
                 }
             }
         }

@@ -5,6 +5,7 @@ using GenshinMod.Common.Loadables;
 using GenshinMod.Common.ModObjects.ModSystems;
 using GenshinMod.Common.UI;
 using GenshinMod.Common.UI.UIs;
+using GenshinMod.Content.Challenges.Demo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,9 +13,11 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.UI.Chat;
 
 namespace GenshinMod.Common.ModObjects
 {
@@ -25,6 +28,8 @@ namespace GenshinMod.Common.ModObjects
         public GenshinCharacter CharacterCurrent; // Currently selected character;
         public List<GenshinCharacter> CharacterTeam; // Current team of characters
         public List<GenshinShield> Shields;
+
+        public GenshinChallenge Challenge;
 
         public byte TimerWet = 0;
         public int TimerMovement = 0; // Used for animations
@@ -125,6 +130,9 @@ namespace GenshinMod.Common.ModObjects
                 }
                 else TimerWet = 149;
             }
+
+            if (Challenge != null)
+                if (Challenge.Update()) Challenge = null;
         }
 
         public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
@@ -302,16 +310,8 @@ namespace GenshinMod.Common.ModObjects
 
                 if (GenshinKeybindsLoader.Debug.JustPressed)
                 {
-                    int select = 0;
-                    for (int i = 0; i < CharacterTeam.Count; i++)
-                    {
-                        if (CharacterTeam[i] == CharacterCurrent)
-                        {
-                            select = i + 1;
-                            if (select == CharacterTeam.Count) select = 0;
-                        }
-                    }
-                    TrySwapCharacter(select);
+                    GenshinDemo.FirstChallenge = false;
+                    GenshinDemo.SecondChallenge = false;
                 }
 
 
@@ -494,33 +494,76 @@ namespace GenshinMod.Common.ModObjects
 
             // challenge keys (temp)
 
-            // First key
+            if (Challenge == null)
+            {
+                // First key
 
-            Vector2 drawPositionKey = Vector2.Transform(GenshinDemo.PositionChallengeLeft - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
-            drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 8f) - 48;
-            Color keyColor = Lighting.GetColor((int)GenshinDemo.PositionChallengeLeft.X / 16, (int)GenshinDemo.PositionChallengeLeft.Y / 16) * 1.5f;
+                Vector2 drawPositionKey = Vector2.Transform(GenshinDemo.PositionChallengeLeft - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+                drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 8f) - 48;
+                Color keyColor = Lighting.GetColor((int)GenshinDemo.PositionChallengeLeft.X / 16, (int)GenshinDemo.PositionChallengeLeft.Y / 16) * 1.5f;
 
-            if (Player.Center.Distance(GenshinDemo.PositionChallengeLeft) < 64) Main.spriteBatch.Draw(UIStateMisc.KeyTextureOutline, drawPositionKey, null, Color.White * 0.8f, 0f, UIStateMisc.KeyTextureOutline.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
-            else Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor * 0.35f, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1.05f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
+                if (Player.Center.Distance(GenshinDemo.PositionChallengeLeft) < 64)
+                {
+                    Main.spriteBatch.Draw(UIStateMisc.KeyTextureOutline, drawPositionKey, null, Color.White * 0.8f, 0f, UIStateMisc.KeyTextureOutline.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
+                    Vector2 textPosition = Vector2.Transform(GenshinDemo.PositionChallengeLeft - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+                    textPosition.Y -= 100;
+                    textPosition.X += 40;
+                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "First challenge" + (GenshinDemo.FirstChallenge ? " (Completed)" : ""), textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
+                    textPosition.Y += 30;
+                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Slime Waves", textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
+                    textPosition.Y += 50;
+                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Right click to Interact", textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
 
-            drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 4f) - UIStateMisc.KeyTexture.Height / 2;
-            Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor * 0.75f, Timer * -0.0075f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.6f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor, Timer * 0.005f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
+                    if (Main.MouseScreen.Distance(drawPositionKey) < 64 && Main.mouseRight && Main.mouseRightRelease)
+                    {
+                        StartChallenge<ChallengeDemoFirst>();
+                        CharacterCurrent.TimerCanUse = 60;
+                        SoundEngine.PlaySound(SoundID.MenuOpen);
+                    }
+                }
+                else Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor * 0.35f, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1.05f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
 
-            // Second key
 
-            drawPositionKey = Vector2.Transform(GenshinDemo.PositionChallengeRight - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
-            drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 8f) - 48;
-            keyColor = Lighting.GetColor((int)GenshinDemo.PositionChallengeRight.X / 16, (int)GenshinDemo.PositionChallengeRight.Y / 16) * 1.5f;
+                drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 4f) - UIStateMisc.KeyTexture.Height / 2;
+                Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor * 0.75f, Timer * -0.0075f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.6f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor, Timer * 0.005f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
 
-            if (Player.Center.Distance(GenshinDemo.PositionChallengeRight) < 64) Main.spriteBatch.Draw(UIStateMisc.KeyTextureOutline, drawPositionKey, null, Color.White * 0.8f, 0f, UIStateMisc.KeyTextureOutline.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
-            else Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor * 0.35f, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1.05f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
+                if (GenshinDemo.FirstChallenge)
+                {
+                    // Second key
 
-            drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 4f) - UIStateMisc.KeyTexture.Height / 2;
-            Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor * 0.75f, (Timer + 60) * 0.0075f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.6f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor, (Timer + 60) * -0.005f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
+                    drawPositionKey = Vector2.Transform(GenshinDemo.PositionChallengeRight - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+                    drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 8f) - 48;
+                    keyColor = Lighting.GetColor((int)GenshinDemo.PositionChallengeRight.X / 16, (int)GenshinDemo.PositionChallengeRight.Y / 16) * 1.5f;
+
+                    if (Player.Center.Distance(GenshinDemo.PositionChallengeRight) < 64)
+                    {
+                        Main.spriteBatch.Draw(UIStateMisc.KeyTextureOutline, drawPositionKey, null, Color.White * 0.8f, 0f, UIStateMisc.KeyTextureOutline.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
+                        Vector2 textPosition = Vector2.Transform(GenshinDemo.PositionChallengeLeft - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
+                        textPosition.Y -= 100;
+                        textPosition.X += 40;
+                        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Second challenge" + (GenshinDemo.SecondChallenge ? " (Completed)" : ""), textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
+                        textPosition.Y += 30;
+                        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Geo Hypostasis", textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
+                        textPosition.Y += 50;
+                        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Right click to Interact", textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
+                    }
+                    else Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor * 0.35f, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1.05f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(UIStateMisc.KeyTexture, drawPositionKey, null, keyColor, 0f, UIStateMisc.KeyTexture.Size() * 0.5f, 1f, SpriteEffects.None, 0f);
+
+                    drawPositionKey.Y += (float)(Math.Sin(Timer * 0.025) * 4f) - UIStateMisc.KeyTexture.Height / 2;
+                    Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor * 0.75f, (Timer + 60) * 0.0075f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.6f, SpriteEffects.None, 0f);
+                    Main.spriteBatch.Draw(UIStateMisc.KeyTextureCube, drawPositionKey, null, keyColor, (Timer + 60) * -0.005f, UIStateMisc.KeyTextureCube.Size() * 0.5f, 0.8f, SpriteEffects.None, 0f);
+                }
+            }
+
+            if (Challenge != null)
+            {
+                Vector2 textPosition = Vector2.Transform(Challenge.CenterLocation - Main.screenPosition + new Vector2(-50, 50), Main.GameViewMatrix.EffectMatrix);
+                if (Challenge.OngoingWave) ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Ongoing Wave", textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
+                else ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, "Next Wave : " + Math.DivRem(Challenge.Waves[0].delay, 60, out _), textPosition, Color.White, 0f, Vector2.Zero, new Vector2(1f, 1f));
+            }
         }
 
         public void DrawCompositeArm(SpriteBatch spritebatch, bool offsetPosition = true, bool shortArm = false, float offsetX = 0f, float offsetY = 0f, float rotation = float.MaxValue)
@@ -616,6 +659,19 @@ namespace GenshinMod.Common.ModObjects
             }
 
             Shields.Add(shield);
+        }
+
+        public void StartChallenge<T>() where T : GenshinChallenge
+        {
+            var type = typeof(T);
+            Challenge = Activator.CreateInstance(type, true) as T;
+            Challenge.Start();
+        }
+
+        public void CancelChallenge()
+        {
+            if (Challenge != null) Challenge.Cancel();
+            Challenge = null;
         }
 
         public void OnCharacterDeath()
