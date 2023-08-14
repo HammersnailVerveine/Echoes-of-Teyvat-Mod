@@ -3,4 +3,5 @@ displayName = Echoes of Teyvat
 hideCode = true
 hideResources = true
 homepage = https://discord.gg/DZKtVwq
+modReferences = SubworldLibrary
 version = 0.1
