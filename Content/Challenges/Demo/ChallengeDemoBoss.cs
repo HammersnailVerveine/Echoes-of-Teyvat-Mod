@@ -15,7 +15,7 @@ namespace GenshinMod.Content.Challenges.Demo
         public override void Initialize()
         {
             CenterLocation = new Vector2(8040, 5451);
-            Border = 500;
+            Border = 880;
 
             List<Tuple<int, int>> enemies = new List<Tuple<int, int>>();
             enemies.Add(new Tuple<int, int>(ModContent.NPCType<HypostasisGeo>(), 0));
