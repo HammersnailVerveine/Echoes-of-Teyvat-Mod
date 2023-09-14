@@ -76,7 +76,11 @@ namespace GenshinMod.Common.GameObjects
             for (int i = NPCs.Count - 1; i >= 0; i--)
                 if (NPCs[i].active)
                 {
-                    if (NPCs[i].ModNPC is GenshinNPC genshinNPC) genshinNPC.CanDespawn = true;
+                    if (NPCs[i].ModNPC is GenshinNPC genshinNPC)
+                    {
+                        genshinNPC.CanDespawn = true;
+                        genshinNPC.OnChallengeDespawn();
+                    }
                     NPCs[i].active = false;
                 }
         }

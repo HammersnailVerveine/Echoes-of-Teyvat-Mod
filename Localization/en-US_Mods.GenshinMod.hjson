@@ -104,6 +104,8 @@ Projectiles: {
 	AmberProjectileExplosion.DisplayName: Amber Projectile Explosion
 	AmberProjectileBurstArrow.DisplayName: Amber Projectile Burst Arrow
 	AmberProjectileBurstMain.DisplayName: Amber Projectile Burst Main
+	ProjectileJeanBurst.DisplayName: Projectile Jean Burst
+	JeanProjectileBurstHit.DisplayName: Jean Projectile Burst Hit
 }
 
 Configs: {

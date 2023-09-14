@@ -33,6 +33,7 @@ namespace GenshinMod.Common.ModObjects
         public virtual void SafeOnHitByProjectile(Projectile projectile, GenshinGlobalProjectile globalProjectile) { }
         public virtual void OnTakeDamage(Player player, int damage) { } // Called anytime the npc takes damage. Damage is the remaining damage dealt to the npc. Player can be null.
         public virtual void OnFirstFrame() { }
+        public virtual void OnChallengeDespawn() { } // Called only when a challenge is failed and this enemy is despawned. Used to remove the geo hypostasis pillars for example
         public virtual bool SafePreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor) => true;
 
 

@@ -16,7 +16,7 @@ namespace GenshinMod.Content.Characters.Jean
             AbilityNormal = new AbilitySwordNormal().Initialize(this);
             AbilityCharged = new AbilityJeanCharged().Initialize(this);
             AbilitySkill = new AbilityJeanSkill().Initialize(this);
-            AbilityBurst = new AbilitySwordNormal().Initialize(this);
+            AbilityBurst = new AbilityJeanBurst().Initialize(this);
 
             BaseHealthMax = 14695;
             BaseAttackMax = 239;

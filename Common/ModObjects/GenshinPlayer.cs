@@ -82,6 +82,54 @@ namespace GenshinMod.Common.ModObjects
             }
         }
 
+        public override void OnEnterWorld()
+        {
+            for (int i = 0; i < Main.InventorySlotsTotal; i++)
+            {
+                Item item = Player.inventory[i];
+
+                if (item.type != ItemID.None)
+                {
+                    item.TurnToAir();
+                    item = new Item();
+                }
+            }
+
+            Player.trashItem.TurnToAir();
+
+            for (int i = 0; i < Player.armor.Length; i++)
+            {
+                if (Player.armor[i].type != ItemID.None)
+                {
+                    Player.armor[i].TurnToAir();
+                    Player.armor[i] = new Item();
+                }
+            }
+
+            for (int i = 0; i < Player.dye.Length; i++)
+            {
+                if (Player.dye[i].type != ItemID.None)
+                {
+                    Player.dye[i].TurnToAir();
+                    Player.dye[i] = new Item();
+                }
+            }
+
+            for (int i = 0; i < Player.miscEquips.Length; i++)
+            {
+                if (Player.miscEquips[i].type != ItemID.None)
+                {
+                    Player.miscEquips[i].TurnToAir();
+                    Player.miscEquips[i] = new Item();
+                }
+                if (Player.miscDyes[i].type != ItemID.None)
+                {
+                    Player.miscDyes[i].TurnToAir();
+                    Player.miscDyes[i] = new Item();
+                }
+            }
+        }
+
         public override void UpdateEquips()
         {
             foreach (GenshinCharacter character in CharacterTeam)
@@ -89,13 +137,15 @@ namespace GenshinMod.Common.ModObjects
                 character.Update();
 
                 // TEMP
-                character.StatEnergyRecharge += 0.5f;
-                character.StatHealingReceived -= 0.5f;
                 character.StatDamageReactionSuperconduct -= 0.5f;
                 character.StatDamageReactionElectrocharged -= 0.5f;
                 character.StatDamageReactionOverloaded -= 0.5f;
                 character.StatDamageReactionShatter -= 0.5f;
                 character.StatDamageReactionSwirl -= 0.5f;
+
+                character.StatEnergyRecharge += 0.5f;
+                character.StatHealingReceived -= 0.75f;
+                character.StatShieldStrength -= 0.5f;
                 // TEMP
             }
 

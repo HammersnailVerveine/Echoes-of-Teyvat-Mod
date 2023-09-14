@@ -544,6 +544,15 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
             }
         }
 
+        public override void OnChallengeDespawn()
+        {
+            foreach (NPC pillar in Pillars)
+            {
+                pillar.ai[1] = 1f; //despawns pillars
+                pillar.netUpdate = true;
+            }
+        }
+
         public override bool SafePreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             Vector2 drawPosition = Vector2.Transform(NPC.position + new Vector2(NPC.width * 0.5f, NPC.height * 0.5f + NPC.gfxOffY) - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);

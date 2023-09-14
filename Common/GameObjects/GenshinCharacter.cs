@@ -1,5 +1,6 @@
 ﻿using GenshinMod.Common.Configs;
 using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Common.ModObjects.Weapons;
 using GenshinMod.Content.Dusts;
@@ -195,7 +196,7 @@ namespace GenshinMod.Common.GameObjects
             GenshinPlayer = modPlayer;
             Player = modPlayer.Player;
             ICDTrackers = new List<ICDTracker>();
-            BurstQuotes = new string[3] {"", "", ""};
+            BurstQuotes = new string[3] { "", "", "" };
 
             RestoreFull();
 
@@ -490,10 +491,13 @@ namespace GenshinMod.Common.GameObjects
 
         public void GainEnergy(GenshinElement element, float value)
         {
-            if (element == GenshinElement.NONE) value *= 2;
-            else if (element == Element) value *= 3;
+            if (IsAlive)
+            {
+                if (element == GenshinElement.NONE) value *= 2;
+                else if (element == Element) value *= 3;
 
-            GainEnergyFlat(value);
+                GainEnergyFlat(value);
+            }
         }
 
         public void GainEnergyFlat(float value)
@@ -538,6 +542,8 @@ namespace GenshinMod.Common.GameObjects
             }
             return false;
         }
+
+        public void Heal(float value, bool combatText = true) => Heal((int)value, combatText);
 
         public void Heal(int value, bool combatText = true)
         {
@@ -876,13 +882,13 @@ namespace GenshinMod.Common.GameObjects
             }
         }
 
-        public void ApplyElement(GenshinElement element, int application = 570)
+        public void ApplyElement(GenshinElement element, int application = 570, bool friendly = false)
         {
             int damage = 0;
-            ApplyElement(element, ref damage, application);
+            ApplyElement(element, ref damage, application, friendly);
         }
 
-        public void ApplyElement(GenshinElement element, ref int damage, int application = 570)
+        public void ApplyElement(GenshinElement element, ref int damage, int application = 570, bool friendly = false)
         {
             bool reacted = false; // Individual attacks can only cause 1 reaction
             GenshinElement crystallizeElement = GenshinElement.NONE;
@@ -1190,22 +1196,52 @@ namespace GenshinMod.Common.GameObjects
 
             if (swirlElement != GenshinElement.NONE)
             {
-                if (TimerReaction <= 0)
-                {
-                    int reactionDamage = (int)(1005f / (Level * 10)); // Swirl deals 1005 dmg
-                    reactionDamage = ApplyResistance(reactionDamage, GenshinElement.ANEMO);
-                    if (reactionDamage > 0)
-                    {
-                        Damage(reactionDamage, GenshinElement.ANEMO, false, false, 0, true);
-                        CombatText.NewText(ExtendedHitboxFlat(), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), reactionDamage);
-                    }
-                    else CombatText.NewText(ExtendedHitboxFlat(), GenshinElementUtils.ColorImmune, "Immune");
-                }
-
                 int type = ModContent.ProjectileType<Content.Projectiles.ProjectileSwirl>();
                 int proj = Projectile.NewProjectile(Player.GetSource_Misc("GenshinMod Elemental Reaction"), Player.Center, Vector2.Zero, type, 0, 15f);
                 if (Main.projectile[proj].ModProjectile is Content.Projectiles.ProjectileSwirl swirl)
+                {
                     swirl.Element = swirlElement;
+
+                    if (TimerReaction <= 0 && !friendly)
+                    {
+                        int reactionDamage = (int)(1005f / (Level * 10)); // Swirl deals 1005 dmg
+                        reactionDamage = ApplyResistance(reactionDamage, GenshinElement.ANEMO);
+                        if (reactionDamage > 0)
+                        {
+                            Damage(reactionDamage, GenshinElement.ANEMO, false, false, 0, true);
+                            CombatText.NewText(ExtendedHitboxFlat(), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), reactionDamage);
+                        }
+                        else CombatText.NewText(ExtendedHitboxFlat(), GenshinElementUtils.ColorImmune, "Immune");
+                    }
+                    else if (friendly)
+                    {
+                        int reactionDamage = (int)(1005f / (Level * 10)); // Swirl deals 1005 dmg
+                        foreach (NPC target in Main.npc)
+                        {
+                            if (GenshinProjectile.IsValidTarget(target))
+                            {
+                                if (Player.Center.Distance(target.Center) < 128f)
+                                {
+                                    GenshinGlobalNPC genshinNPC = target.GetGlobalNPC<GenshinGlobalNPC>();
+                                    if (genshinNPC.HitsSwirl < 2)
+                                    {
+                                        genshinNPC.ApplyElement(target, swirl, this, swirlElement, ref reactionDamage);
+                                        int targetDamage = genshinNPC.ApplyResistance(reactionDamage, swirlElement);
+                                        if (targetDamage > 0)
+                                        {
+                                            GenshinPlayer.TryApplyDamageToNPC(target, targetDamage, 0f, -target.direction, false, GenshinElement.ANEMO, GenshinProjectile.ElementApplicationStrong + 1);
+                                            CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), targetDamage);
+                                        }
+                                        else CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
+                                        if (genshinNPC.HitsSwirl == 0) genshinNPC.TimerReactionSwirl = 30; // Reaction damage icd.
+                                        genshinNPC.HitsSwirl++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 CombatText.NewText(ReactionHitbox(), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), "Swirl");
                 application = 0;
             }

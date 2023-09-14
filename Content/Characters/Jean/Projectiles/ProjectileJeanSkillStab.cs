@@ -1,6 +1,7 @@
 ﻿using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Common.ModObjects.Weapons;
+using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -88,6 +89,8 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
                 {
                     OldPosition.RemoveAt(0);
                 }
+
+                SpawnDust<JeanDust>(Projectile.Center, Vector2.UnitY.RotatedBy(Projectile.rotation + MathHelper.ToRadians(45)), 1f, 1f, 10, 1, 3);
             }
             else if (OldPosition.Count > 1)
             {

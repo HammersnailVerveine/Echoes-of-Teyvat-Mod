@@ -36,7 +36,7 @@ namespace GenshinMod.Content.Characters.Barbara
 
         public override void SafePostUpdate()
         {
-            if (GenshinPlayer.Timer % 600 == 0) GainEnergyFlat(1f);
+            // if (GenshinPlayer.Timer % 600 == 0) GainEnergyFlat(1f);
         }
 
         public override void SafeResetEffects()

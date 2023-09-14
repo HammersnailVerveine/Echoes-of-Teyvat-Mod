@@ -72,7 +72,11 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                 NPC.ai[1]++;
                 if (TimeAlive > 60) TimeAlive = 60;
                 TimeAlive -= 2;
-                if (TimeAlive <= 0) NPC.active = false;
+                if (TimeAlive <= 0)
+                {
+                    CanDespawn = true;
+                    NPC.active = false;
+                }
             }
         }
 

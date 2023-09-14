@@ -1,6 +1,7 @@
 ﻿using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using GenshinMod.Common.ModObjects.Weapons;
+using GenshinMod.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -120,6 +121,8 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
 
             OwnerGenshinPlayer.CompositeArmOffset = direction * 8f;
             OwnerGenshinPlayer.CompositeArmAngle = direction.ToRotation();
+
+            SpawnDust<JeanDust>(Projectile.Center, Vector2.UnitY.RotatedBy(Projectile.rotation + MathHelper.ToRadians(45)), 1f, 1f, 10, 1, 5);
         }
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
