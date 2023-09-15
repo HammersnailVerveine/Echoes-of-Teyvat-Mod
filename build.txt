@@ -1,6 +1,6 @@
-author = Verveine
+author = Verveine, Amber
 displayName = Echoes of Teyvat
 hideCode = true
 hideResources = true
-homepage = https://discord.gg/DZKtVwq
-version = 0.1
+homepage = https://discord.gg/pgcWh7xmZd
+version = 0.1.1
