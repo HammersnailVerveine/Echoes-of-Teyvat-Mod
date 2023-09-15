@@ -76,6 +76,17 @@ namespace GenshinMod.Content.Abilities
 
         public override void OnHoldReset()
         {
+            if (LinkedProjectile != -1)
+            {
+                if (HoldTime < 60) GenshinPlayer.TryUseStamina((int)((60 - HoldTime) / 3f));
+                Projectile projectile = Main.projectile[LinkedProjectile];
+                if (projectile.type == ModContent.ProjectileType<ProjectileClaymoreCharged>() && projectile.timeLeft > 30)
+                {
+                    projectile.timeLeft = 30;
+                    projectile.netUpdate = true;
+                }
+                LinkedProjectile = -1;
+            }
         }
 
         public override int GetScaling()

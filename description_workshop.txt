@@ -1,0 +1,103 @@
+[img]https://i.imgur.com/Ceu0zVh.png[/img]
+
+[img]https://i.imgur.com/hm9ZB8v.png[/img]
+[*] Join the [img]https://i.imgur.com/GB1M4Hv.png[/img] [b][url=https://discord.gg/zhW9dm2]Discord[/url][/b]
+
+[b]Echoes of Teyvat[/b] is  a content mod completely overhauling Terraria mechanics and progression.
+It is played on a custom, handmade map, and removes most existing mechanics from the game, such as most NPCs, items, or access to the player inventory.
+[img]https://i.imgur.com/z8DzcFr.png[/img]
+
+[*][b][url=https://drive.google.com/file/d/1GsOD-QY6lF5FEMkKeQ2LsDmOrMHRf-pv]Download link[/url][/b]
+Place the map in your [code]..\Documents\My Games\Terraria\tModLoader\Worlds[/code] folder.
+
+[img]https://i.imgur.com/HIm7g3B.png[/img]
+[img]https://i.imgur.com/hTDTV7v.png[/img]
+
+[img]https://i.imgur.com/HIm7g3B.png[/img]
+
+[b]Echoes of Teyvat[/b] replaces terraria combat system with its own, replicating the one found in the game Genshin Impact.
+Terraria statistics, such as armor and damage are removed, and replaced with a more complete and complex system.
+Damage calculations are completely changed to match the ones from the reference game.
+[img]https://i.imgur.com/zLL2pYd.png[/img]
+In this mod, the player is able to freely [b]swap characters[/b]. Each one comes with a [b]unique element[/b] from a list of 7 (pyro, hydro, electro, cryo, anemo, geo, dendro). 
+[i]note : dendro is currently missing[/i].
+Each character uses a [b]specific weapon[/b] type (sword, catalyst, bow, polearm or claymore), and comes with 4 unique abilities : 
+[*] Normal attack (defaults to left click) : basic attacks of that character, tied to their weapon type
+[*] Charged attacks (defaults to right click) : heavy attacks of that character, consumes stamina except for bow characters.
+[*] Elemental Skill (defaults to E) : a special ability unique to each character. Has a cooldown, and usually generates energy.
+[*] Elemental Burst (defaults to Q) : a character’s “ultimate ability”. Requires energy to be cast.
+
+The mod implements the full [b]Elemental Reactions[/b] system from Genshin impact.
+Attacking enemies with a specific element will [b]apply that element to them[/b]. Attack with another element to trigger an [b]Elemental Reaction[/b] and cause special effects, such as freezing (hydro + cryo), triggering explosions (pyro + electro) or shielding yourself (any + geo).
+
+[img]https://i.imgur.com/XPUdfKo.png[/img]
+[i]The teambuilding UI. 
+Create parties of up to 4 characters and vanquish your foes![/i]
+
+[img]https://i.imgur.com/HIm7g3B.png[/img]
+
+In this [b]Demo Version[/b], the mod adds 8 unique characters (3 of which are unlocked after “completing” the Demo), 6 elemental slimes as enemies and 1 boss for you to test the mechanics implemented by the mod.
+Make sure to download the demo map as it is required to play the mod.
+[*][b][url=https://drive.google.com/file/d/1GsOD-QY6lF5FEMkKeQ2LsDmOrMHRf-pv]Download link[/url][/b]
+
+The characters the following : 
+[i]The kits are the same as the reference game, if you know the characters, they will work as you expect.[/i]
+
+[*] [b]Amber[/b], 4star Pyro Bow
+Normal attack : shoots arrows with a slight spread, dealing physical damage
+Charged attack : shoots an accurate arrow, dealing physical damage. After aiming for some time, it will cause pyro damage instead.
+Elemental Skill : Throws a doll, exploding after some time, dealing pyro damage. shoot the doll with a charged attack to make it explode early. The doll taunts nearby enemies.
+Elemental Burst : Releases a rain of arrows, continuously dealing pyro damage.
+
+[*] [b]Kaeya[/b], 4star Cryo Sword
+Normal attack : Kaeya slashes his sword, dealing physical damage.
+Charged attack : Rapidly spins his sword, dealing physical damage twice.
+Elemental Skill : A blast of cryo damage.
+Elemental Burst : Summons orbiting icicles, dealing cryo damage for a duration.
+
+[*] [b]Lisa[/b], 4star Electro Catalyst
+Normal attack : Deals electro damage to a target.
+Charged attack : Deals electro damage in an area, and applies one “skill” mark.
+Elemental Skill : Tap launches an electro bolt, dealing electro damage and applying one “skill” mark. Holding the key will deal electro damage in a large area, increasing if hit targets have “skill” marks (up to 3) on them.
+Elemental Burst : Summons a lantern, dealing continuous electro damage around it.
+
+[*] [b]Noelle[/b], 4star Geo Claymore
+Normal attack : Slashes her claymore, dealing physical damage
+Charged attack : Continuously spins her claymore at the cost of stamina, dealing physical damage.
+Elemental Skill : Shields the active character against incoming damage, dealing geo damage on activation and destruction of the shield.
+Elemental Burst : Rapidly spins her claymore dealing AoE Geo damage, before infusing her weapon with geo, gaining range and damage in the process.
+[i]note : infusiosn will replace the damage type dealt by the weapons normal and charged attacks. In this case, physical becomes geo.[/i]
+
+[*] [b]Barbara[/b], 4star Hydro Catalyst
+Normal attack : Deals hydro damage to a target.
+Charged attack : Deals hydro damage in a larger area.
+Elemental Skill : Summons a healing ring around the player. While active, periodically heals the current character, and applies hydro (both to the player and around them). If Barbara is the active character, her normal and charged attacks will heal the entire party while the ring is active.
+Elemental Burst : Heals the entiry party for a large amount.
+
+[i]The 3 following “five star” characters are unlocked after finishing the demo challenges.[/i]
+
+[*] [b]Klee[/b], 5star Pyro Catalyst
+Normal attack : Throws a bomb, dealing pyro damage
+Charged attack : Causes a large explosion, dealing massive pyro damage.
+Elemental Skill : Throws a bouncing bomb, dealing pyro damage. Upon explosing, the bomb will release mines for more pyro damage.
+Elemental Burst : Summons a pyro clover, periodically attacking nearby opponents with pyro until expiration.
+
+[*] [b]Albedo[/b], 5star Geo Sword
+Normal attack : Albedo slashes his sword, dealing physical damage.
+Charged attack : Rapidly spins his sword, dealing physical damage twice.
+Elemental Skill : Summons a “Solar Isotoma” towards the cursor, dealing geo damage. Dealing damage to an enemy within its radius will deal aditional geo damage every second.
+Elemental Burst : Blasts targets with geo damage. afterwards, deals geo damage to up to 6 targets within the elemental skill’s “Solar Isotoma” radius.
+
+[*] [b]Jean[/b], 5star Anemo Sword
+Normal attack : Jean slashes her sword, dealing physical damage.
+Charged attack : Jean stabs upwards with her sword, dealing physical damage. Hit targets will be affected with a slow-fall effect, preventing them from moving until they hit the ground.
+Elemental Skill : Tap : Stabs forwards, dealing anemo damage. Held : pulls enemies in at the cost of stamina, before performing the “tap” effect when released. If an enemy was airborned when hit by this ability, it will take fall damage (physical) upon hiting the ground.
+Elemental Burst : Summons a circle of anemo energy, healing the entire party and dealing anemo damage to nearby enemies. While staying in the circle, the active character is continuously healed and affected by anemo. Enemies are dealt anemo damage upon entering or exiting the circle.
+
+[i]”4 and 5 star” characters are a rarity classification used in the reference game.[/i]
+[i]More characters will be added in the future. We value fun and interesting compositions over exactly respecting how they behave in game, as such, some effects can be modified (such as Klee’s burst staying active when switching characters).[/i]
+
+[img]https://i.imgur.com/HIm7g3B.png[/img]
+[b]THANKS TO[/b]
+[*] Amber for her help with designing the mod, and contributing textures for characters.
+[*] Haidex for testing the demo.
