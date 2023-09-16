@@ -102,15 +102,19 @@ namespace GenshinMod.Common.GameObjects
 
         public int SpawnProjectileSpecific(IEntitySource source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, int owner, GenshinElement element, AbilityType damageType, float ai0 = 0, float ai1 = 0)
         {
-            int proj = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, owner, ai0, ai1);
-            Projectile projectile = Main.projectile[proj];
-            if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
+            if (Character.IsLocalPlayer)
             {
-                genshinProjectile.OwnerCharacter = Character;
-                genshinProjectile.Element = element;
-                genshinProjectile.AbilityType = damageType;
+                int proj = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, owner, ai0, ai1);
+                Projectile projectile = Main.projectile[proj];
+                if (projectile.ModProjectile is GenshinProjectile genshinProjectile)
+                {
+                    genshinProjectile.OwnerCharacter = Character;
+                    genshinProjectile.Element = element;
+                    genshinProjectile.AbilityType = damageType;
+                }
+                return proj;
             }
-            return proj;
+            return -1;
         }
 
         public int SpawnProjectileSpecific(IEntitySource source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, float ai0 = 0, float ai1 = 0)

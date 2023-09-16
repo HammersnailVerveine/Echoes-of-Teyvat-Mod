@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Projectiles
@@ -36,12 +37,17 @@ namespace GenshinMod.Content.Projectiles
             ElementApplication = ElementApplicationMedium;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             TrailTexture ??= GetTexture();
             ArrowTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture + "_Arrow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Projectile.width = (int)(ArrowTexture.Width * 0.25f);
+
+            if (Main.netMode != NetmodeID.Server)
+            {
+                Projectile.width = (int)(ArrowTexture.Width * 0.25f);
+            }
+
             Projectile.height = 4;
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();

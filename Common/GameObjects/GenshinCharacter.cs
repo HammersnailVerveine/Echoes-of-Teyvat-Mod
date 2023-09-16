@@ -253,7 +253,7 @@ namespace GenshinMod.Common.GameObjects
                 }
             }
 
-            else if (IsCurrentCharacter)
+            else if (IsCurrentCharacter && IsLocalPlayer)
             {
                 Weapon.WeaponPostUpdateActive();
                 if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
@@ -450,6 +450,30 @@ namespace GenshinMod.Common.GameObjects
                 ability.Use();
                 if (ability == AbilityBurst && ModContent.GetInstance<GenshinConfigClient>().EnableBurstQuotes)
                     CombatText.NewText(Player.Hitbox, Color.White, BurstQuotes[Main.rand.Next(3)]);
+
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    ModPacket packet = GenshinMod.Instance.GetPacket();
+                    packet.Write((byte)GenshinModMessageType.CharacterUseAbility);
+                    switch (AbilityCurrent.AbilityType)
+                    {
+                        case AbilityType.NORMAL:
+                            packet.Write((byte)0);
+                            break;
+                        case AbilityType.CHARGED:
+                            packet.Write((byte)1);
+                            break;
+                        case AbilityType.SKILL:
+                            packet.Write((byte)2);
+                            break;
+                        case AbilityType.BURST:
+                            packet.Write((byte)3);
+                            break;
+                        default:
+                            return;
+                    }
+                    packet.Send();
+                }
             }
         }
 
@@ -630,6 +654,7 @@ namespace GenshinMod.Common.GameObjects
         public bool CanUseAbility => AbilityCurrent == null && TimerCanUse <= 0;
         public bool IsHoldingAbility => AbilityHeld != null;
         public bool IsCurrentCharacter => GenshinPlayer.CharacterCurrent == this;
+        public bool IsLocalPlayer => Player == Main.LocalPlayer;
 
         public void TryEquipWeapon(GenshinWeapon weapon)
         {

@@ -19,11 +19,6 @@ namespace GenshinMod.Content.Weapons.Catalyst
 			BaseSubstat = 35.19f;
 		}
 
-		public override void SafeSetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Thrilling Tales of Dragon Slayers");
-		}
-
 		public override void WeaponOnSwapOut()
 		{
 			if (TimerBuffCooldown <= 0)

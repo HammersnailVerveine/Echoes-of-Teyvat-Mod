@@ -5,6 +5,7 @@ using GenshinMod.Content.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.IO;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -24,7 +25,7 @@ namespace GenshinMod.Common.ModObjects
         public bool CanReact = true; // Can the projectile trigger elemental reactions?
         public bool CanDealDamage = true; // Can the projectile deal damage? Used for klee bombs for example, that should be able to hit enemies but do not deal any damage
         public bool FirstFrameDamage; // The projectile resets immunity and deals damage on its first frame only
-        public GenshinCharacter OwnerCharacter; // Reference to the owner character
+        public GenshinCharacter OwnerCharacter = null; // Reference to the owner character
         public bool FirstHit = false; // Has the projectile hit a target yet ?
         public int TimeSpent = 0; // Time the projectile has spent alive
         public float DefenseIgnore = 0f; // % of enemy defense ignored.
@@ -32,6 +33,7 @@ namespace GenshinMod.Common.ModObjects
         public AttackWeight AttackWeight = AttackWeight.MEDIUM;
 
         public virtual void SafeAI() { }
+        public virtual void OnFirstFrame() { }
         public virtual void SafePostAI() { }
         public virtual void SafeOnHitNPC(NPC target) { }
         public virtual void OnFirstHitNPC(NPC target) { }
@@ -72,6 +74,7 @@ namespace GenshinMod.Common.ModObjects
                 else
                     Projectile.friendly = false;
             }
+            if (FirstFrame) OnFirstFrame();
             SafeAI();
         }
 
@@ -122,6 +125,24 @@ namespace GenshinMod.Common.ModObjects
                 genshinProjectile.AbilityType = damageType;
             }
             return proj;
+        }
+
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            if (OwnerCharacter != null) writer.Write(Projectile.owner);
+            else writer.Write((byte)255);
+            writer.Write((byte)Element);
+            writer.Write((byte)AbilityType);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            byte ownerID = reader.ReadByte();
+            if (ownerID != 255) OwnerCharacter = Main.player[ownerID].GetModPlayer<GenshinPlayer>().CharacterCurrent; // todo : actual character owner instead of current player character
+            Element = (GenshinElement)reader.ReadByte();
+            AbilityType = (AbilityType)reader.ReadByte();
+
+            //Main.NewText(Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType + " - OwnerCharacter : " + OwnerCharacter.Name);
         }
 
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage = 0, float knockback = 0f, float ai0 = 0, float ai1 = 0)

@@ -27,8 +27,8 @@ namespace GenshinMod.Common.ModObjects
         // Fields
 
         public GenshinCharacter CharacterCurrent; // Currently selected character;
-        public List<GenshinCharacter> CharacterTeam; // Current team of characters
-        public List<GenshinShield> Shields;
+        public List<GenshinCharacter> CharacterTeam = new List<GenshinCharacter>(); // Current team of characters
+        public List<GenshinShield> Shields = new List<GenshinShield>();
 
         public GenshinChallenge Challenge;
 

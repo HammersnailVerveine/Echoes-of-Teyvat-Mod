@@ -83,20 +83,25 @@ namespace GenshinMod.Common.ModObjects.Weapons.Projectiles
 
         public override void SendExtraAI(BinaryWriter writer)
         {
-            writer.Write(Weapon.Type);
+            if (Weapon != null) writer.Write(Weapon.Type);
+            else writer.Write(0);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
             int type = reader.ReadInt32();
-            Item item = new Item();
-            item.SetDefaults(type);
-            if (item.ModItem is GenshinWeapon weapon)
+            if (type != 0)
             {
-                WeaponTexture = ModContent.Request<Texture2D>(weapon.CombatTexture).Value;
-                Weapon = weapon;
+                Item item = new Item();
+                item.SetDefaults(type);
+                if (item.ModItem is GenshinWeapon weapon)
+                {
+                    WeaponTexture = ModContent.Request<Texture2D>(weapon.CombatTexture).Value;
+                    Weapon = weapon;
+                    return;
+                }
             }
-            else Projectile.Kill();
+            Projectile.Kill();
         }
 
         public override bool SafePreDraw(SpriteBatch spriteBatch, Color lightColor)

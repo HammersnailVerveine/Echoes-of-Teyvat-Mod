@@ -31,8 +31,8 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
             Projectile.penetrate = -1;
             PostDrawAdditive = true;
         }
-
-        public override void OnSpawn(IEntitySource source)
+        
+        public override void OnFirstFrame()
         {
             TrailTexture ??= GetTexture();
             OldPosition = new List<Vector2>();

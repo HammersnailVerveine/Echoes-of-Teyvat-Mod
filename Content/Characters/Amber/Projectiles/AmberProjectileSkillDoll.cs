@@ -37,8 +37,8 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
             PostDrawAdditive = true;
             AttackWeight = AttackWeight.LIGHT;
         }
-
-        public override void OnSpawn(IEntitySource source)
+        
+        public override void OnFirstFrame()
         {
             ProjectileTexture ??= GetTexture();
             OldPosition = new List<Vector2>();
