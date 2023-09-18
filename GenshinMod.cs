@@ -1,6 +1,7 @@
 using GenshinMod.Common.Configs;
 using GenshinMod.Common.GameObjects;
 using GenshinMod.Common.GameObjects.Enums;
+using GenshinMod.Common.GlobalObjets;
 using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using System;
@@ -160,6 +161,27 @@ namespace GenshinMod
                     genshinPlayer.CharacterTeam = new List<GenshinCharacter>();
                     genshinPlayer.CharacterTeam.Add(((GenshinCharacter)Activator.CreateInstance(T)).Initialize(genshinPlayer));
                     genshinPlayer.CharacterCurrent = genshinPlayer.CharacterTeam[0];
+                    return;
+                case GenshinModMessageType.CombatTextDamageServer:
+                    packet = GetPacket();
+                    packet.Write((byte)GenshinModMessageType.CombatTextDamage);
+                    packet.Write(reader.ReadByte());
+                    packet.Write(reader.ReadByte());
+                    packet.Write(reader.ReadInt32());
+                    packet.Send(-1, whoAmI);
+                    return;
+                case GenshinModMessageType.CombatTextDamage:
+                    NPC target = Main.npc[reader.ReadByte()];
+                    GenshinElement element = (GenshinElement)reader.ReadByte();
+                    int damage = reader.ReadInt32();
+                    if (damage > 0)
+                    {
+                        CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(target), GenshinElementUtils.GetColor(element), damage);
+                    }
+                    else
+                    {
+                        CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
+                    }
                     return;
                 default:
                     return;

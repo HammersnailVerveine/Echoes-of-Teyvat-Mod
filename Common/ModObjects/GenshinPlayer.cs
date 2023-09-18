@@ -393,7 +393,6 @@ namespace GenshinMod.Common.ModObjects
                         {
                             packet.Write((byte)i);
                             packet.Send();
-                            Main.NewText("Synced character ID " + i);
                             return;
                         }
                     }
@@ -420,11 +419,6 @@ namespace GenshinMod.Common.ModObjects
                     GenshinDemo.FirstChallenge = false;
                     GenshinDemo.SecondChallenge = false;
                     */
-                    Main.NewText(Main.LocalPlayer.whoAmI + " " + CharacterCurrent.IsLocalPlayer);
-                    foreach (Player player in Main.player)
-                    {
-                        if (player.active) Main.NewText(player.whoAmI);
-                    }
 
                     SyncCharacter = true;
                 }
@@ -462,12 +456,7 @@ namespace GenshinMod.Common.ModObjects
             if (npc.GetGlobalNPC<GenshinGlobalNPC>().HasShield() && !ignoreShields) foreach (GenshinShieldNPC shield in globalNPC.Shields) shield.Damage(GenshinShieldNPC.GetDamageUnit(gaugeApplication), element, attackWeight);
             else Player.ApplyDamageToNPC(npc, damage, knockback, direction, crit);
 
-            if (combatText)
-            {
-                if (damage > 0) CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage);
-                else CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
-            }
-
+            if (combatText) GenshinGlobalNPC.CombatTextDamage(npc, element, damage);
             if (npc.ModNPC is GenshinNPC genshinNPC) genshinNPC.OnTakeDamage(transmitPlayer ? Player : null, damage);
         }
 

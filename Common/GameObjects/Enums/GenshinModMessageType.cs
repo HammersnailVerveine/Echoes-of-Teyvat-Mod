@@ -9,6 +9,8 @@ namespace GenshinMod.Common.GameObjects.Enums
         CharacterStopHoldAbility,
         CharacterStopHoldAbilityServer,
         PlayerSendCurrentCharacter,
-        PlayerSendCurrentCharacterServer
+        PlayerSendCurrentCharacterServer,
+        CombatTextDamage,
+        CombatTextDamageServer
     }
 }

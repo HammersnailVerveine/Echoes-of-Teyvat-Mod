@@ -74,7 +74,11 @@ namespace GenshinMod.Common.ModObjects
                 else
                     Projectile.friendly = false;
             }
-            if (FirstFrame) OnFirstFrame();
+            if (FirstFrame)
+            {
+                Projectile.netUpdate = true;
+                OnFirstFrame();
+            }
             SafeAI();
         }
 
@@ -127,25 +131,24 @@ namespace GenshinMod.Common.ModObjects
             return proj;
         }
 
-        /*
         public override void SendExtraAI(BinaryWriter writer)
         {
-            if (OwnerCharacter != null) writer.Write(Projectile.owner);
-            else writer.Write((byte)255);
             writer.Write((byte)Element);
             writer.Write((byte)AbilityType);
+
+            Main.NewText("Sent projectile packet : " + Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
-            byte ownerID = reader.ReadByte();
-            if (ownerID != 255) OwnerCharacter = Main.player[ownerID].GetModPlayer<GenshinPlayer>().CharacterCurrent; // todo : actual character owner instead of current player character
+            if (Projectile.owner != Main.myPlayer && Projectile.owner != 255 && OwnerCharacter == null) 
+                OwnerCharacter = Main.player[Projectile.owner].GetModPlayer<GenshinPlayer>().CharacterCurrent;
+
             Element = (GenshinElement)reader.ReadByte();
             AbilityType = (AbilityType)reader.ReadByte();
 
-            //Main.NewText(Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType + " - OwnerCharacter : " + OwnerCharacter.Name);
+            Main.NewText(Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType);
         }
-        */
 
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage = 0, float knockback = 0f, float ai0 = 0, float ai1 = 0)
         {

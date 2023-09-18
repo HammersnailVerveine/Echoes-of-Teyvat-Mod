@@ -443,12 +443,8 @@ namespace GenshinMod.Common.GlobalObjets
                     CombatText.NewText(ReactionHitbox(npc), GenshinElementUtils.GetReactionColor(GenshinReaction.SHATTER), "Shatter");
                 }
 
-                if (damage > 0)
-                {
-                    CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage, crit);
-                    genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false, element, genshinProjectile.ElementApplication, false, genshinProjectile.AttackWeight);
-                }
-                else CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.ColorImmune, "Immune");
+                CombatTextDamage(npc, element, damage);
+                if (damage > 0) genshinCharacter.GenshinPlayer.TryApplyDamageToNPC(npc, damage, projectile.knockBack, projectile.direction, false, element, genshinProjectile.ElementApplication, false, genshinProjectile.AttackWeight);
             }
         }
 
@@ -1131,6 +1127,36 @@ namespace GenshinMod.Common.GlobalObjets
                     break;
                 default:
                     break;
+            }
+        }
+
+        public static void CombatTextDamage(NPC npc, GenshinElement element, int damage)
+        {
+            if (damage > 0)
+            {
+                CombatText.NewText(ExtendedHitboxFlat(npc), GenshinElementUtils.GetColor(element), damage);
+
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    ModPacket packet = GenshinMod.Instance.GetPacket();
+                    packet.Write((byte)GenshinModMessageType.CombatTextDamageServer);
+                    packet.Write((byte)npc.whoAmI);
+                    packet.Write((byte)element);
+                    packet.Write(damage);
+                    packet.Send();
+                }
+            }
+            else
+            {
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    ModPacket packet = GenshinMod.Instance.GetPacket();
+                    packet.Write((byte)GenshinModMessageType.CombatTextDamageServer);
+                    packet.Write((byte)npc.whoAmI);
+                    packet.Write((byte)element);
+                    packet.Write(-1);
+                    packet.Send();
+                }
             }
         }
 

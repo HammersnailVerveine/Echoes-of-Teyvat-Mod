@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace GenshinMod.Common.GameObjects.Enums
 {
-    public enum GenshinElement : int
+    public enum GenshinElement : byte
     {
         NONE = 0,
         GEO = 1,
@@ -18,7 +18,7 @@ namespace GenshinMod.Common.GameObjects.Enums
         HYDRO = 6,
         PYRO = 7
     }
-    public enum GenshinReaction : int
+    public enum GenshinReaction : byte
     {
         NONE = 0,
         VAPORIZE = 1,

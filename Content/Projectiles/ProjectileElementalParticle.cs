@@ -3,6 +3,7 @@ using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 
@@ -33,7 +34,7 @@ namespace GenshinMod.Content.Projectiles
             ProjectileTrail = true;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             texture ??= GetTexture();
             Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);
@@ -69,6 +70,9 @@ namespace GenshinMod.Content.Projectiles
             Projectile.rotation += 0.2f;
             Lighting.AddLight(Projectile.Center, 0.3f, 0.3f, 0.3f);
         }
+
+        public override void SendExtraAI(BinaryWriter writer) {}
+        public override void ReceiveExtraAI(BinaryReader reader) {}
 
         public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
         {

@@ -112,6 +112,7 @@ namespace GenshinMod.Common.GameObjects
                     genshinProjectile.OwnerCharacter = Character;
                     genshinProjectile.Element = element;
                     genshinProjectile.AbilityType = damageType;
+                    Main.NewText("test ability proj");
                 }
                 return proj;
             }
@@ -166,7 +167,7 @@ namespace GenshinMod.Common.GameObjects
         public virtual int GetScaling3() => 1;
         public virtual int GetScaling4() => 1;
     }
-    public enum AbilityType : int
+    public enum AbilityType : byte
     {
         NONE = 0,
         NORMAL = 1,
