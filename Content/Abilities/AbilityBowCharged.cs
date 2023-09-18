@@ -27,23 +27,27 @@ namespace GenshinMod.Content.Abilities
 
         public override void OnUse()
         {
-            int type = ModContent.ProjectileType<ProjectileBowArrow>();
-
-            Vector2 velocity = VelocityToCursor() * 15f;
-            if (HoldTime > 20)
+            if (IsLocalPlayer)
             {
-                float velocityMult = ((HoldTime - 20) / (HoldTimeFull - 60)) * 0.33f;
-                if (velocityMult > 0.5f) velocityMult = 0.5f;
-                velocity *= 1f + velocityMult;
+                int type = ModContent.ProjectileType<ProjectileBowArrow>();
+
+                Vector2 velocity = VelocityToCursor() * 15f;
+                if (HoldTime > 20)
+                {
+                    float velocityMult = ((HoldTime - 20) / (HoldTimeFull - 60)) * 0.33f;
+                    if (velocityMult > 0.5f) velocityMult = 0.5f;
+                    velocity *= 1f + velocityMult;
+                }
+
+                GenshinElement element = HoldFull ? Character.Element : GenshinElement.NONE;
+                int damage = HoldFull ? GetScaling2() : GetScaling();
+
+                int projID = SpawnProjectile(velocity, type, damage, element);
+                Projectile proj = Main.projectile[projID];
+                proj.position = Player.Center + velocity + new Vector2(proj.width, proj.height) * 0.5f - new Vector2(proj.width, proj.height);
+                proj.netUpdate = true;
             }
 
-            GenshinElement element = HoldFull ? Character.Element : GenshinElement.NONE;
-            int damage = HoldFull ? GetScaling2() : GetScaling();
-            
-            int projID = SpawnProjectile(velocity, type, damage, element);
-            Projectile proj = Main.projectile[projID];
-            proj.position = Player.Center + velocity + new Vector2(proj.width, proj.height) * 0.5f - new Vector2(proj.width, proj.height);
-            proj.netUpdate = true;
             SoundEngine.PlaySound(SoundID.Item5);
         }
 
@@ -54,7 +58,7 @@ namespace GenshinMod.Content.Abilities
 
         public override void OnHold()
         {
-            if (LinkedProjectile == -1)
+            if (LinkedProjectile == -1 && IsLocalPlayer)
             { // Spawn the projectile if it isn't there already
                 Vector2 direction = Main.MouseWorld - Player.Center;
                 direction.Normalize();

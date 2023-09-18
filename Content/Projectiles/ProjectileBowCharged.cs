@@ -97,17 +97,21 @@ namespace GenshinMod.Content.Projectiles
                 }
             }
 
-            if (OwnerCharacter.AbilityCharged.HoldTime >= 20 && Projectile.timeLeft > 20)
+            if (OwnerCharacter != null)
             {
-                ArrowOffsetMult = (float)(OwnerCharacter.AbilityCharged.HoldTime - 20) / (float)(OwnerCharacter.AbilityCharged.HoldTimeFull - 60);
-                if (ArrowOffsetMult > 1f) ArrowOffsetMult = 1f;
-            }
-            else
-            {
-                ArrowOffsetMult *= 0.3f;
+                if (OwnerCharacter.AbilityCharged.HoldTime >= 20 && Projectile.timeLeft > 20)
+                {
+                    ArrowOffsetMult = (float)(OwnerCharacter.AbilityCharged.HoldTime - 20) / (float)(OwnerCharacter.AbilityCharged.HoldTimeFull - 60);
+                    if (ArrowOffsetMult > 1f) ArrowOffsetMult = 1f;
+                }
+                else
+                {
+                    ArrowOffsetMult *= 0.3f;
+                }
+
+                if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull) Loaded = true;
             }
 
-            if (OwnerCharacter.AbilityCharged.HoldTime >= OwnerCharacter.AbilityCharged.HoldTimeFull) Loaded = true;
             if (Projectile.timeLeft == 21) Projectile.timeLeft++;
 
             Owner.direction = Projectile.Center.X > Owner.Center.X ? 1 : -1;
@@ -115,6 +119,8 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
+            if (OwnerCharacter == null) return;
+
             // Draw background composite arm
 
             Vector2 toOwner = Owner.Center - Projectile.Center;
@@ -198,6 +204,8 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
         {
+            if (OwnerCharacter == null) return;
+
             SpriteEffects effect = SpriteEffects.None;
             float colormult = 1f;
             if (OwnerCharacter.AbilityCharged.HoldTime < OwnerCharacter.AbilityCharged.HoldTimeFull && !Loaded) 

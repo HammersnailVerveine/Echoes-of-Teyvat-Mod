@@ -84,6 +84,8 @@ namespace GenshinMod.Common.ModObjects
 
         public override void OnEnterWorld()
         {
+            // Delete gear 
+
             for (int i = 0; i < Main.InventorySlotsTotal; i++)
             {
                 Item item = Player.inventory[i];
@@ -127,6 +129,45 @@ namespace GenshinMod.Common.ModObjects
                     Player.miscDyes[i].TurnToAir();
                     Player.miscDyes[i] = new Item();
                 }
+            }
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModPacket packet = GenshinMod.Instance.GetPacket();
+                packet.Write((byte)GenshinModMessageType.PlayerSendCurrentCharacterServer);
+                for (int i = 0; i < UnlockablesPlayer.UnlockedCharacters.Count; i++)
+                {
+                    if (UnlockablesPlayer.UnlockedCharacters[i].Item1.GetType() == CharacterCurrent.GetType())
+                    {
+                        packet.Write((byte)i);
+                        break;
+                    }
+                }
+                packet.Send();
+            }
+        }
+
+        public override void PlayerConnect()
+        {
+            if (Player.whoAmI != Main.myPlayer)
+            {
+                CharacterTeam = new List<GenshinCharacter>();
+                CharacterCurrent = new Content.Characters.Amber.CharacterAmber().Initialize(this);
+            }
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModPacket packet = GenshinMod.Instance.GetPacket();
+                packet.Write((byte)GenshinModMessageType.PlayerSendCurrentCharacterServer);
+                for (int i = 0; i < UnlockablesPlayer.UnlockedCharacters.Count; i++)
+                {
+                    if (UnlockablesPlayer.UnlockedCharacters[i].Item1.GetType() == CharacterCurrent.GetType())
+                    {
+                        packet.Write((byte)i);
+                        break;
+                    }
+                }
+                packet.Send();
             }
         }
 
@@ -329,7 +370,8 @@ namespace GenshinMod.Common.ModObjects
             foreach (CombatText ct in Main.combatText)
             {
                 if (ct.color == CombatText.DamagedHostile || ct.color == CombatText.DamagedHostileCrit
-                    || ct.color == CombatText.DamagedFriendly || ct.color == CombatText.DamagedFriendlyCrit)
+                    || ct.color == CombatText.DamagedFriendly || ct.color == CombatText.DamagedFriendlyCrit 
+                    || ct.color == CombatText.OthersDamagedHostile || ct.color == CombatText.OthersDamagedHostileCrit)
                     ct.active = false;
             }
 
@@ -383,8 +425,15 @@ namespace GenshinMod.Common.ModObjects
 
                 if (GenshinKeybindsLoader.Debug.JustPressed)
                 {
+                    /*
                     GenshinDemo.FirstChallenge = false;
                     GenshinDemo.SecondChallenge = false;
+                    */
+                    Main.NewText(Main.LocalPlayer.whoAmI + " " + CharacterCurrent.IsLocalPlayer);
+                    foreach (Player player in Main.player)
+                    {
+                        if (player.active) Main.NewText(player.whoAmI);
+                    }
                 }
 
 

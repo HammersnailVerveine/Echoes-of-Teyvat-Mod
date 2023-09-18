@@ -60,13 +60,13 @@ namespace GenshinMod.Common.UI.UIs
 
             if (Available)
             {
-                UnlockablesPlayer unlockables = player.GetModPlayer<UnlockablesPlayer>();
                 GenshinPlayer genshinPlayer = player.GetModPlayer<GenshinPlayer>();
 
                 if (PlayerCharacters == null)
                 {
                     PlayerCharacters = new List<GenshinCharacter>();
-                    foreach (GenshinCharacter character in unlockables.UnlockedCharacters) PlayerCharacters.Add(character);
+                    foreach (Tuple<GenshinCharacter, bool> tuple in UnlockablesPlayer.UnlockedCharacters) 
+                        if (tuple.Item2 == true) PlayerCharacters.Add(tuple.Item1);
                 }
 
                 if (PlayerTeam == null)

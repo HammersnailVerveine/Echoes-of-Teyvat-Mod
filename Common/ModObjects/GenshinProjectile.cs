@@ -127,6 +127,7 @@ namespace GenshinMod.Common.ModObjects
             return proj;
         }
 
+        /*
         public override void SendExtraAI(BinaryWriter writer)
         {
             if (OwnerCharacter != null) writer.Write(Projectile.owner);
@@ -144,6 +145,7 @@ namespace GenshinMod.Common.ModObjects
 
             //Main.NewText(Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType + " - OwnerCharacter : " + OwnerCharacter.Name);
         }
+        */
 
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage = 0, float knockback = 0f, float ai0 = 0, float ai1 = 0)
         {

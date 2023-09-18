@@ -100,24 +100,27 @@ namespace GenshinMod.Content.Projectiles
             direction *= ArrowOffsetMult * (ArrowTexture.Width * 0.5f + 2f);
             arrowDrawPosition += direction;
 
-            if (OwnerCharacter.Weapon is WeaponBow bow)
+            if (OwnerCharacter != null)
             {
-                Texture2D PixelTexture = GenshinSystemUI.PixelTexture;
-
-                Vector2 texturepos = (- new Vector2(WeaponTexture.Width, WeaponTexture.Height) * 0.5f + bow.StringOffSet) * Projectile.scale;
-                texturepos = texturepos.RotatedBy(Projectile.rotation);
-                Vector2 stringDirection = drawPosition - toOwner * (ArrowTexture.Width * 0.5f - 2f) + texturepos - arrowDrawPosition;
-                stringDirection = stringDirection.RotatedBy(MathHelper.ToRadians(180f));
-                Vector2 directionNormalized = stringDirection;
-                directionNormalized.Normalize();
-                directionNormalized *= 1.5f;
-                Color stringColor = bow.StringColor.MultiplyRGB(lightColor);
-
-                while (stringDirection.Length() > 1)
+                if (OwnerCharacter.Weapon is WeaponBow bow)
                 {
-                    spriteBatch.Draw(PixelTexture, drawPosition + texturepos + stringDirection, null, stringColor, Projectile.rotation, PixelTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
-                    spriteBatch.Draw(PixelTexture, drawPosition - Vector2.Reflect(texturepos + stringDirection, Projectile.velocity) , null, stringColor, Projectile.rotation, PixelTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
-                    stringDirection -= directionNormalized;
+                    Texture2D PixelTexture = GenshinSystemUI.PixelTexture;
+
+                    Vector2 texturepos = (-new Vector2(WeaponTexture.Width, WeaponTexture.Height) * 0.5f + bow.StringOffSet) * Projectile.scale;
+                    texturepos = texturepos.RotatedBy(Projectile.rotation);
+                    Vector2 stringDirection = drawPosition - toOwner * (ArrowTexture.Width * 0.5f - 2f) + texturepos - arrowDrawPosition;
+                    stringDirection = stringDirection.RotatedBy(MathHelper.ToRadians(180f));
+                    Vector2 directionNormalized = stringDirection;
+                    directionNormalized.Normalize();
+                    directionNormalized *= 1.5f;
+                    Color stringColor = bow.StringColor.MultiplyRGB(lightColor);
+
+                    while (stringDirection.Length() > 1)
+                    {
+                        spriteBatch.Draw(PixelTexture, drawPosition + texturepos + stringDirection, null, stringColor, Projectile.rotation, PixelTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(PixelTexture, drawPosition - Vector2.Reflect(texturepos + stringDirection, Projectile.velocity), null, stringColor, Projectile.rotation, PixelTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
+                        stringDirection -= directionNormalized;
+                    }
                 }
             }
 

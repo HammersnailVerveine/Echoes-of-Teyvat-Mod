@@ -74,6 +74,10 @@ namespace GenshinMod.Common.GameObjects
         public GenshinElement WeaponInfusion = GenshinElement.NONE;
         public bool WeaponInfusionOverridable = true;
 
+        // MP syncing fields
+
+        public bool SyncHoldingAbility = false;
+
         // Reaction-related variables
 
         public int TimerElementGeo = 0; // Geo element application on the player (has element if Timer > 0)
@@ -252,58 +256,68 @@ namespace GenshinMod.Common.GameObjects
                     AbilityCurrent = null;
                 }
             }
-
-            else if (IsCurrentCharacter && IsLocalPlayer)
+            else if (IsCurrentCharacter)
             {
-                Weapon.WeaponPostUpdateActive();
-                if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
-
-                if (!Main.playerInventory && IsAlive && !ReactionFrozen && TimerCanUse < 1) // cannot use abilities with inventory open, while frozen or while dead
+                if (IsLocalPlayer)
                 {
-                    if (Main.mouseLeft && !GenshinPlayer.IsUsing) // Try use NA if LMB used
-                    {
-                        if (AbilityNormal.HoldTimeMax > 0)
-                            TryHoldAbility(AbilityNormal, Main.mouseLeftRelease);
-                        else if (Main.mouseLeftRelease || Autoswing)
-                            TryUseAbility(AbilityNormal);
-                    }
+                    Weapon.WeaponPostUpdateActive();
+                    if (TimerVanityWeapon <= 0) Weapon.SpawnVanityWeapon();
 
-                    if (Main.mouseRight && !GenshinPlayer.IsUsing) // Try use CA if LMB used
+                    if (!Main.playerInventory && IsAlive && !ReactionFrozen && TimerCanUse < 1) // cannot use abilities with inventory open, while frozen or while dead
                     {
-                        if (AbilityCharged.HoldTimeMax > 0)
-                            TryHoldAbility(AbilityCharged, Main.mouseRightRelease);
-                        else if (Main.mouseRightRelease || AutoswingCA)
-                            TryUseAbility(AbilityCharged);
-                    }
+                        if (Main.mouseLeft && !GenshinPlayer.IsUsing) // Try use NA if LMB used
+                        {
+                            if (AbilityNormal.HoldTimeMax > 0)
+                                TryHoldAbility(AbilityNormal, Main.mouseLeftRelease);
+                            else if (Main.mouseLeftRelease || Autoswing)
+                                TryUseAbility(AbilityNormal);
+                        }
 
-                    if (GenshinPlayer.KeySkill && !GenshinPlayer.IsUsing) // Try use Skill if Skill key used
-                    {
-                        if (AbilitySkill.HoldTimeMax > 0)
-                            TryHoldAbility(AbilitySkill, GenshinPlayer.KeySkillRelease);
-                        else if (GenshinPlayer.KeySkillRelease)
-                            TryUseAbility(AbilitySkill);
-                    }
+                        if (Main.mouseRight && !GenshinPlayer.IsUsing) // Try use CA if LMB used
+                        {
+                            if (AbilityCharged.HoldTimeMax > 0)
+                                TryHoldAbility(AbilityCharged, Main.mouseRightRelease);
+                            else if (Main.mouseRightRelease || AutoswingCA)
+                                TryUseAbility(AbilityCharged);
+                        }
 
-                    if (GenshinPlayer.KeyBurst && !GenshinPlayer.IsUsing) // Try use Burst if Burst key used
-                    {
-                        if (AbilityBurst.HoldTimeMax > 0)
-                            TryHoldAbility(AbilityBurst, GenshinPlayer.KeyBurstRelease);
-                        else if (GenshinPlayer.KeyBurstRelease)
-                            TryUseAbility(AbilityBurst);
-                    }
+                        if (GenshinPlayer.KeySkill && !GenshinPlayer.IsUsing) // Try use Skill if Skill key used
+                        {
+                            if (AbilitySkill.HoldTimeMax > 0)
+                                TryHoldAbility(AbilitySkill, GenshinPlayer.KeySkillRelease);
+                            else if (GenshinPlayer.KeySkillRelease)
+                                TryUseAbility(AbilitySkill);
+                        }
 
-                    if (IsHoldingAbility)
-                    {
-                        if ((AbilityHeld == AbilityNormal && !Main.mouseLeft)
-                            || (AbilityHeld == AbilityCharged && !Main.mouseRight)
-                            || (AbilityHeld == AbilitySkill && !GenshinPlayer.KeySkill)
-                            || (AbilityHeld == AbilityBurst && !GenshinPlayer.KeyBurst))
-                            StopHoldAbility();
+                        if (GenshinPlayer.KeyBurst && !GenshinPlayer.IsUsing) // Try use Burst if Burst key used
+                        {
+                            if (AbilityBurst.HoldTimeMax > 0)
+                                TryHoldAbility(AbilityBurst, GenshinPlayer.KeyBurstRelease);
+                            else if (GenshinPlayer.KeyBurstRelease)
+                                TryUseAbility(AbilityBurst);
+                        }
+
+                        if (IsHoldingAbility)
+                        {
+                            if ((AbilityHeld == AbilityNormal && !Main.mouseLeft)
+                                || (AbilityHeld == AbilityCharged && !Main.mouseRight)
+                                || (AbilityHeld == AbilitySkill && !GenshinPlayer.KeySkill)
+                                || (AbilityHeld == AbilityBurst && !GenshinPlayer.KeyBurst))
+                                StopHoldAbility();
+                        }
                     }
-                }
-                else if (IsHoldingAbility)
+                    else if (IsHoldingAbility)
+                    {
+                        StopHoldAbility();
+                    }
+                } 
+                else
                 {
-                    StopHoldAbility();
+                    if (SyncHoldingAbility)
+                    {
+                        AbilityHeld.Hold();
+                        GenshinPlayer.IsHolding = true;
+                    }
                 }
             }
         }
@@ -454,7 +468,7 @@ namespace GenshinMod.Common.GameObjects
                 if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     ModPacket packet = GenshinMod.Instance.GetPacket();
-                    packet.Write((byte)GenshinModMessageType.CharacterUseAbility);
+                    packet.Write((byte)GenshinModMessageType.CharacterUseAbilityServer);
                     switch (AbilityCurrent.AbilityType)
                     {
                         case AbilityType.NORMAL:
@@ -479,27 +493,80 @@ namespace GenshinMod.Common.GameObjects
 
         public void TryHoldAbility(GenshinAbility ability, bool keyReleased)
         {
-            if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy && (keyReleased || AbilityHeld != null))
+            if (IsLocalPlayer)
             {
-                ability.Hold();
-                GenshinPlayer.IsHolding = true;
-                AbilityHeld = ability;
-                if (ability.HoldMax)
+                if (!ability.IsUsed() && ability.CanUse() && CanUseAbility && Energy >= ability.Energy && (keyReleased || AbilityHeld != null))
                 {
-                    if (GenshinPlayer.TryUseStamina(ability.Stamina))
+                    if (Main.netMode == NetmodeID.MultiplayerClient && ability.HoldTime == 0)
                     {
-                        Energy -= ability.Energy;
-                        AbilityCurrent = ability;
-                        AbilityHeld = null;
-                        ability.Use();
+                        ModPacket packet = GenshinMod.Instance.GetPacket();
+                        packet.Write((byte)GenshinModMessageType.CharacterStartHoldAbilityServer);
+                        switch (ability.AbilityType)
+                        {
+                            case AbilityType.NORMAL:
+                                packet.Write((byte)0);
+                                break;
+                            case AbilityType.CHARGED:
+                                packet.Write((byte)1);
+                                break;
+                            case AbilityType.SKILL:
+                                packet.Write((byte)2);
+                                break;
+                            case AbilityType.BURST:
+                                packet.Write((byte)3);
+                                break;
+                            default:
+                                return;
+                        }
+                        packet.Send();
+                        Main.NewText("send packet (holding)");
                     }
-                    ability.HoldReset();
+
+                    ability.Hold();
+                    GenshinPlayer.IsHolding = true;
+                    AbilityHeld = ability;
+                    if (ability.HoldMax)
+                    {
+                        if (GenshinPlayer.TryUseStamina(ability.Stamina))
+                        {
+                            Energy -= ability.Energy;
+                            AbilityCurrent = ability;
+                            AbilityHeld = null;
+                            ability.Use();
+
+                            if (Main.netMode == NetmodeID.MultiplayerClient)
+                            {
+                                ModPacket packet = GenshinMod.Instance.GetPacket();
+                                packet.Write((byte)GenshinModMessageType.CharacterStopHoldAbilityServer);
+                                packet.Write(true);
+                                packet.Send();
+                                Main.NewText("send packet (stop holding)");
+                            }
+                        }
+                        else
+                        {
+                            if (Main.netMode == NetmodeID.MultiplayerClient)
+                            {
+                                ModPacket packet = GenshinMod.Instance.GetPacket();
+                                packet.Write((byte)GenshinModMessageType.CharacterStopHoldAbilityServer);
+                                packet.Write(false);
+                                packet.Send();
+                                Main.NewText("send packet (stop holding)");
+                            }
+                        }
+                        ability.HoldReset();
+                    }
                 }
+            }
+            else
+            {
+
             }
         }
 
         public void StopHoldAbility()
         {
+            bool sentPacket = false;
             if (!AbilityHeld.IsUsed() && AbilityHeld.CanUse() && CanUseAbility && Energy >= AbilityHeld.Energy)
             {
                 if (GenshinPlayer.TryUseStamina(AbilityHeld.Stamina))
@@ -507,8 +574,31 @@ namespace GenshinMod.Common.GameObjects
                     Energy -= AbilityHeld.Energy;
                     AbilityCurrent = AbilityHeld;
                     AbilityCurrent.Use();
+
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
+                    {
+                        ModPacket packet = GenshinMod.Instance.GetPacket();
+                        packet.Write((byte)GenshinModMessageType.CharacterStopHoldAbilityServer);
+                        packet.Write(true);
+                        packet.Send();
+                        Main.NewText("send packet (stop holding)");
+                        sentPacket = true;
+                    }
                 }
             }
+
+            if (!sentPacket)
+            {
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    ModPacket packet = GenshinMod.Instance.GetPacket();
+                    packet.Write((byte)GenshinModMessageType.CharacterStopHoldAbilityServer);
+                    packet.Write(false);
+                    packet.Send();
+                    Main.NewText("send packet (stop holding)");
+                }
+            }
+
             AbilityHeld.HoldReset();
             AbilityHeld = null;
         }
@@ -654,7 +744,7 @@ namespace GenshinMod.Common.GameObjects
         public bool CanUseAbility => AbilityCurrent == null && TimerCanUse <= 0;
         public bool IsHoldingAbility => AbilityHeld != null;
         public bool IsCurrentCharacter => GenshinPlayer.CharacterCurrent == this;
-        public bool IsLocalPlayer => Player == Main.LocalPlayer;
+        public bool IsLocalPlayer => Player.whoAmI == Main.myPlayer;
 
         public void TryEquipWeapon(GenshinWeapon weapon)
         {

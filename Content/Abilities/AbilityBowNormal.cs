@@ -22,12 +22,16 @@ namespace GenshinMod.Content.Abilities
 
         public override void OnUse()
         {
-            int type = ModContent.ProjectileType<ProjectileBowArrow>();
-            int projID = SpawnProjectile(VelocityToCursor().RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(-5, 5))) * 15f, type, GenshinElement.NONE);
-            Projectile proj = Main.projectile[projID];
-            proj.position = Player.Center + new Vector2(proj.width, proj.height) * 0.5f - new Vector2(proj.width, proj.height);
-            proj.netUpdate = true;
-            SpawnProjectile(VelocityToCursor(), ModContent.ProjectileType<ProjectileBowNormal>());
+            if (IsLocalPlayer)
+            {
+                int type = ModContent.ProjectileType<ProjectileBowArrow>();
+                int projID = SpawnProjectile(VelocityToCursor().RotatedBy(MathHelper.ToRadians(Main.rand.NextFloat(-5, 5))) * 15f, type, GenshinElement.NONE);
+                Projectile proj = Main.projectile[projID];
+                proj.position = Player.Center + new Vector2(proj.width, proj.height) * 0.5f - new Vector2(proj.width, proj.height);
+                proj.netUpdate = true;
+                SpawnProjectile(VelocityToCursor(), ModContent.ProjectileType<ProjectileBowNormal>());
+            }
+
             SoundEngine.PlaySound(SoundID.Item5);
             Character.RemoveVanityWeapon();
         }

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Amber.Projectiles
 {
@@ -13,8 +14,8 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         public static Texture2D TrailTexture;
         public Texture2D ArrowTexture;
 
-        public List<Vector2> OldPosition;
-        public List<float> OldRotation;
+        public List<Vector2> OldPosition = new();
+        public List<float> OldRotation = new();
 
         public bool Disappearing;
         public float ColorMult = 0f;
@@ -34,9 +35,9 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         
         public override void OnFirstFrame()
         {
+            GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             TrailTexture ??= GetTexture();
-            OldPosition = new List<Vector2>();
-            OldRotation = new List<float>();
+            ArrowTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture + "_Arrow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)

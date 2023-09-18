@@ -28,9 +28,9 @@ namespace GenshinMod.Content.Challenges.Demo
             {
                 UnlockablesPlayer unlockables = Main.LocalPlayer.GetModPlayer<UnlockablesPlayer>();
                 GenshinPlayer genshinPlayer = Main.LocalPlayer.GetModPlayer<GenshinPlayer>();
-                unlockables.UnlockedCharacters.Add(new Content.Characters.Jean.CharacterJean().Initialize(genshinPlayer));
-                unlockables.UnlockedCharacters.Add(new Content.Characters.Albedo.CharacterAlbedo().Initialize(genshinPlayer));
-                unlockables.UnlockedCharacters.Add(new Content.Characters.Klee.CharacterKlee().Initialize(genshinPlayer));
+                unlockables.UnlockCharacter<Characters.Jean.CharacterJean>();
+                unlockables.UnlockCharacter<Characters.Albedo.CharacterAlbedo>();
+                unlockables.UnlockCharacter<Characters.Klee.CharacterKlee>();
             }
             GenshinDemo.SecondChallenge = true;
         }

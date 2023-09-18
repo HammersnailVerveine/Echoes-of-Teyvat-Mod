@@ -35,6 +35,7 @@ namespace GenshinMod.Common.GameObjects
         public bool HoldCast => HoldTime == HoldTimeFull;
         public bool HoldFull => HoldTime >= HoldTimeFull;
         public bool HoldMax => HoldTime >= HoldTimeMax;
+        public bool IsLocalPlayer => Player == Main.LocalPlayer;
 
         public abstract void SetDefaults();
         public abstract void OnUse();
