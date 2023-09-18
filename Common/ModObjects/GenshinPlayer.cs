@@ -66,6 +66,10 @@ namespace GenshinMod.Common.ModObjects
         public bool IsUsing => TimerUse > 0;
         public bool IsDead => TimerDeath > 0;
 
+        // MP syncing
+
+        public bool SyncCharacter = true;
+
         // Overrides
 
         public override void Initialize()
@@ -131,44 +135,7 @@ namespace GenshinMod.Common.ModObjects
                 }
             }
 
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                ModPacket packet = GenshinMod.Instance.GetPacket();
-                packet.Write((byte)GenshinModMessageType.PlayerSendCurrentCharacterServer);
-                for (int i = 0; i < UnlockablesPlayer.UnlockedCharacters.Count; i++)
-                {
-                    if (UnlockablesPlayer.UnlockedCharacters[i].Item1.GetType() == CharacterCurrent.GetType())
-                    {
-                        packet.Write((byte)i);
-                        break;
-                    }
-                }
-                packet.Send();
-            }
-        }
-
-        public override void PlayerConnect()
-        {
-            if (Player.whoAmI != Main.myPlayer)
-            {
-                CharacterTeam = new List<GenshinCharacter>();
-                CharacterCurrent = new Content.Characters.Amber.CharacterAmber().Initialize(this);
-            }
-
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                ModPacket packet = GenshinMod.Instance.GetPacket();
-                packet.Write((byte)GenshinModMessageType.PlayerSendCurrentCharacterServer);
-                for (int i = 0; i < UnlockablesPlayer.UnlockedCharacters.Count; i++)
-                {
-                    if (UnlockablesPlayer.UnlockedCharacters[i].Item1.GetType() == CharacterCurrent.GetType())
-                    {
-                        packet.Write((byte)i);
-                        break;
-                    }
-                }
-                packet.Send();
-            }
+            SyncCharacter = true;
         }
 
         public override void UpdateEquips()
@@ -411,6 +378,30 @@ namespace GenshinMod.Common.ModObjects
                     Player.velocity.X *= 0.01f;
                 }
             }
+
+            // Syncing
+            if (SyncCharacter)
+            {
+                SyncCharacter = false;
+                if (Main.netMode == NetmodeID.MultiplayerClient && Player.whoAmI == Main.myPlayer)
+                {
+                    ModPacket packet = GenshinMod.Instance.GetPacket();
+                    packet.Write((byte)GenshinModMessageType.PlayerSendCurrentCharacterServer);
+                    for (int i = 0; i < UnlockablesPlayer.UnlockedCharacters.Count; i++)
+                    {
+                        if (UnlockablesPlayer.UnlockedCharacters[i].Item1.GetType() == CharacterCurrent.GetType())
+                        {
+                            packet.Write((byte)i);
+                            packet.Send();
+                            Main.NewText("Synced character ID " + i);
+                            return;
+                        }
+                    }
+                    packet.Write(0);
+                    packet.Send();
+                    Main.NewText("Error syncing character");
+                }
+            }
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
@@ -434,6 +425,8 @@ namespace GenshinMod.Common.ModObjects
                     {
                         if (player.active) Main.NewText(player.whoAmI);
                     }
+
+                    SyncCharacter = true;
                 }
 
 
@@ -784,6 +777,7 @@ namespace GenshinMod.Common.ModObjects
                         CharacterCurrent = CharacterTeam[slot];
                         CharacterCurrent.OnSwapInGlobal();
                         SoundEngine.PlaySound(SoundID.MenuOpen);
+                        SyncCharacter = true; // Sync character swap in mp;
                         return;
                     }
                 }

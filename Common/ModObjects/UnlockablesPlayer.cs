@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
 using GenshinMod.Content.Characters;
+using Terraria;
+using Terraria.ID;
+using GenshinMod.Common.GameObjects.Enums;
 
 namespace GenshinMod.Common.ModObjects
 {
@@ -39,6 +42,23 @@ namespace GenshinMod.Common.ModObjects
                 UnlockCharacter<Content.Characters.Albedo.CharacterAlbedo>();
                 UnlockCharacter<Content.Characters.Klee.CharacterKlee>();
             }
+
+            /*
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModPacket packet = GenshinMod.Instance.GetPacket();
+                packet.Write((byte)GenshinModMessageType.PlayerSendCurrentCharacterServer);
+                for (int i = 0; i < UnlockedCharacters.Count; i++)
+                {
+                    if (UnlockedCharacters[i].Item1.GetType() == GenshinPlayer.CharacterCurrent.GetType())
+                    {
+                        packet.Write((byte)i);
+                        break;
+                    }
+                }
+                packet.Send();
+            }
+            */
         }
 
         public void UnlockCharacter<T>()

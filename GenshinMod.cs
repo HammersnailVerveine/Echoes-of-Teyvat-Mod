@@ -4,6 +4,7 @@ using GenshinMod.Common.GameObjects.Enums;
 using GenshinMod.Common.ModObjects;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
@@ -154,9 +155,11 @@ namespace GenshinMod
                     return;
                 case GenshinModMessageType.PlayerSendCurrentCharacter:
                     GenshinPlayer genshinPlayer = Main.player[reader.ReadByte()].GetModPlayer<GenshinPlayer>();
-                    Type T = UnlockablesPlayer.UnlockedCharacters[reader.ReadByte()].GetType();
+                    Type T = UnlockablesPlayer.UnlockedCharacters[reader.ReadByte()].Item1.GetType();
                     Main.NewText(T.ToString());
-                    genshinPlayer.CharacterCurrent = ((GenshinCharacter)Activator.CreateInstance(T)).Initialize(genshinPlayer);
+                    genshinPlayer.CharacterTeam = new List<GenshinCharacter>();
+                    genshinPlayer.CharacterTeam.Add(((GenshinCharacter)Activator.CreateInstance(T)).Initialize(genshinPlayer));
+                    genshinPlayer.CharacterCurrent = genshinPlayer.CharacterTeam[0];
                     return;
                 default:
                     return;
