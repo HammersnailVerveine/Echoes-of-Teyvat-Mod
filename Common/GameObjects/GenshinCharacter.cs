@@ -519,7 +519,6 @@ namespace GenshinMod.Common.GameObjects
                                 return;
                         }
                         packet.Send();
-                        Main.NewText("send packet (holding)");
                     }
 
                     ability.Hold();
@@ -540,7 +539,6 @@ namespace GenshinMod.Common.GameObjects
                                 packet.Write((byte)GenshinModMessageType.CharacterStopHoldAbilityServer);
                                 packet.Write(true);
                                 packet.Send();
-                                Main.NewText("send packet (stop holding)");
                             }
                         }
                         else
@@ -551,7 +549,6 @@ namespace GenshinMod.Common.GameObjects
                                 packet.Write((byte)GenshinModMessageType.CharacterStopHoldAbilityServer);
                                 packet.Write(false);
                                 packet.Send();
-                                Main.NewText("send packet (stop holding)");
                             }
                         }
                         ability.HoldReset();
@@ -581,7 +578,6 @@ namespace GenshinMod.Common.GameObjects
                         packet.Write((byte)GenshinModMessageType.CharacterStopHoldAbilityServer);
                         packet.Write(true);
                         packet.Send();
-                        Main.NewText("send packet (stop holding)");
                         sentPacket = true;
                     }
                 }
@@ -595,7 +591,6 @@ namespace GenshinMod.Common.GameObjects
                     packet.Write((byte)GenshinModMessageType.CharacterStopHoldAbilityServer);
                     packet.Write(false);
                     packet.Send();
-                    Main.NewText("send packet (stop holding)");
                 }
             }
 

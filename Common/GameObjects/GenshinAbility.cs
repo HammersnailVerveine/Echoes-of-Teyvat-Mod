@@ -112,7 +112,6 @@ namespace GenshinMod.Common.GameObjects
                     genshinProjectile.OwnerCharacter = Character;
                     genshinProjectile.Element = element;
                     genshinProjectile.AbilityType = damageType;
-                    Main.NewText("test ability proj");
                 }
                 return proj;
             }

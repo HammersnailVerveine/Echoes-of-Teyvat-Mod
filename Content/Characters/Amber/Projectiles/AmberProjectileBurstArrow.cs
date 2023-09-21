@@ -37,7 +37,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             TrailTexture ??= GetTexture();
-            ArrowTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture + "_Arrow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            ArrowTexture = ModContent.Request<Texture2D>(OwnerCharacter.Weapon.Texture + "_Arrow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)

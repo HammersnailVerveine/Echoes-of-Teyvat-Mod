@@ -136,7 +136,7 @@ namespace GenshinMod.Common.ModObjects
             writer.Write((byte)Element);
             writer.Write((byte)AbilityType);
 
-            Main.NewText("Sent projectile packet : " + Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType);
+            //Main.NewText("Sent projectile packet : " + Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType);
         }
 
         public override void ReceiveExtraAI(BinaryReader reader)
@@ -147,7 +147,7 @@ namespace GenshinMod.Common.ModObjects
             Element = (GenshinElement)reader.ReadByte();
             AbilityType = (AbilityType)reader.ReadByte();
 
-            Main.NewText(Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType);
+            //Main.NewText(Projectile.Name + " - Element : " + Element + " - AbilityType : " + AbilityType);
         }
 
         public int SpawnProjectile(Vector2 position, Vector2 velocity, int type, int damage = 0, float knockback = 0f, float ai0 = 0, float ai1 = 0)

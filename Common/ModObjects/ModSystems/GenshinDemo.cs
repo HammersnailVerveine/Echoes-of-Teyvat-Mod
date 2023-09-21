@@ -8,7 +8,9 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.Audio;
+using Terraria.Chat;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -76,6 +78,55 @@ namespace GenshinMod.Common.ModObjects.ModSystems
             SecondChallenge = flags[1];
         }
 
+        public override void PostUpdateEverything()
+        {
+            if (Main.netMode == NetmodeID.Server)
+            {
+                foreach (Player client in Main.player)
+                {
+                    if (client.GetModPlayer<GenshinPlayer>().Timer % 300 == 0 && client.Center.X < 6600 && client.active)
+                    {
+                        bool anyNPC = false;
+
+                        foreach (NPC npc in Main.npc)
+                            if (npc.Center.Distance(client.Center) < 400 && GenshinProjectile.IsValidTarget(npc)) anyNPC = true;
+
+                        if (!anyNPC)
+                        {
+                            int type;
+
+                            switch (Main.rand.Next(6))
+                            {
+                                case 1:
+                                    type = ModContent.NPCType<SlimeAnemo>();
+                                    break;
+                                case 2:
+                                    type = ModContent.NPCType<SlimeCryo>();
+                                    break;
+                                case 3:
+                                    type = ModContent.NPCType<SlimeElectro>();
+                                    break;
+                                case 4:
+                                    type = ModContent.NPCType<SlimeGeo>();
+                                    break;
+                                case 5:
+                                    type = ModContent.NPCType<SlimeHydro>();
+                                    break;
+                                default:
+                                    type = ModContent.NPCType<SlimePyro>();
+                                    break;
+                            }
+
+                            int index = NPC.NewNPC(client.GetSource_FromThis(), (int)SlimeHole1.X, (int)SlimeHole1.Y, type);
+                            NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, index);
+                            index = NPC.NewNPC(client.GetSource_FromThis(), (int)SlimeHole2.X, (int)SlimeHole2.Y, type);
+                            NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, index);
+                        }
+                    }
+                }
+            }
+        }
+
         public override void UpdateUI(GameTime gameTime)
         {
             Player player = Main.LocalPlayer;
@@ -99,41 +150,44 @@ namespace GenshinMod.Common.ModObjects.ModSystems
 
             // Slimes spawn on the left of the map
 
-            if (player.Center.X < 6600 && genshinPlayer.Timer % 300 == 0)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                bool anyNPC = false;
-
-                foreach (NPC npc in Main.npc)
-                    if (npc.Center.Distance(player.Center) < 400 && GenshinProjectile.IsValidTarget(npc)) anyNPC = true;
-
-                if (!anyNPC)
+                if (player.Center.X < 6600 && genshinPlayer.Timer % 300 == 0)
                 {
-                    int type;
+                    bool anyNPC = false;
 
-                    switch (Main.rand.Next(6))
+                    foreach (NPC npc in Main.npc)
+                        if (npc.Center.Distance(player.Center) < 400 && GenshinProjectile.IsValidTarget(npc)) anyNPC = true;
+
+                    if (!anyNPC)
                     {
-                        case 1:
-                            type = ModContent.NPCType<SlimeAnemo>();
-                            break;
-                        case 2:
-                            type = ModContent.NPCType<SlimeCryo>();
-                            break;
-                        case 3:
-                            type = ModContent.NPCType<SlimeElectro>();
-                            break;
-                        case 4:
-                            type = ModContent.NPCType<SlimeGeo>();
-                            break;
-                        case 5:
-                            type = ModContent.NPCType<SlimeHydro>();
-                            break;
-                        default:
-                            type = ModContent.NPCType<SlimePyro>();
-                            break;
-                    }
+                        int type;
 
-                    NPC.NewNPC(player.GetSource_FromThis(), (int)SlimeHole1.X, (int)SlimeHole1.Y, type);
-                    NPC.NewNPC(player.GetSource_FromThis(), (int)SlimeHole2.X, (int)SlimeHole2.Y, type);
+                        switch (Main.rand.Next(6))
+                        {
+                            case 1:
+                                type = ModContent.NPCType<SlimeAnemo>();
+                                break;
+                            case 2:
+                                type = ModContent.NPCType<SlimeCryo>();
+                                break;
+                            case 3:
+                                type = ModContent.NPCType<SlimeElectro>();
+                                break;
+                            case 4:
+                                type = ModContent.NPCType<SlimeGeo>();
+                                break;
+                            case 5:
+                                type = ModContent.NPCType<SlimeHydro>();
+                                break;
+                            default:
+                                type = ModContent.NPCType<SlimePyro>();
+                                break;
+                        }
+
+                        NPC.NewNPC(player.GetSource_FromThis(), (int)SlimeHole1.X, (int)SlimeHole1.Y, type);
+                        NPC.NewNPC(player.GetSource_FromThis(), (int)SlimeHole2.X, (int)SlimeHole2.Y, type);
+                    }
                 }
             }
 

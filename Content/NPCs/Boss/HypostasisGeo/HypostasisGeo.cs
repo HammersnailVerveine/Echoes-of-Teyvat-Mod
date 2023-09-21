@@ -455,6 +455,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                             SymbolGlowTarget = 0.7f;
                         }
 
+                        if (Timer == 120) Exposed = true;
+
                         if (Timer >= 260 && Timer < 440 && Timer % 15 == 0)
                         {
                             int type = OwnedProjectileTypes[0];
@@ -475,6 +477,8 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo
                             ChangeCubeState(6);
                             SymbolGlowTarget = 0.7f;
                         }
+
+                        if (Timer == 120) Exposed = true;
 
                         if (Timer == 180)
                         {

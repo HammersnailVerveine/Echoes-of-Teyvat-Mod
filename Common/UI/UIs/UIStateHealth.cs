@@ -50,6 +50,7 @@ namespace GenshinMod.Common.UI.UIs
             Player player = Main.LocalPlayer;
             GenshinPlayer genshinPlayer = player.GetModPlayer<GenshinPlayer>();
             GenshinCharacter characterCurrent = genshinPlayer.CharacterCurrent;
+            if (characterCurrent == null) return;
             CalculatedStyle dimensions = GetDimensions();
 
             int offsetY = 0;

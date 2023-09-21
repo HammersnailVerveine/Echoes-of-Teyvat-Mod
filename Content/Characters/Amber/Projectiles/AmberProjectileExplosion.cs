@@ -20,7 +20,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.aiStyle = 0;
-            Projectile.timeLeft = 20;
+            Projectile.timeLeft = 50;
             Projectile.penetrate = -1;
             Projectile.alpha = 255;
             Main.projFrames[Projectile.type] = 9;
@@ -42,7 +42,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         {
             Projectile.friendly = FirstFrame;
             Lighting.AddLight(Projectile.Center, 0.5f, 0.5f, 0.5f);
-            if (TimeSpent % 2 == 0)
+            if (TimeSpent % 3 == 0)
             {
                 Projectile.frame++;
                 if (Projectile.frame > 9)

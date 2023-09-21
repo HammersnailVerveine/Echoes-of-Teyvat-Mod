@@ -136,6 +136,20 @@ namespace GenshinMod.Common.ModObjects
             }
 
             SyncCharacter = true;
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                foreach (Player player in Main.player)
+                {
+                    if (player.active)
+                    {
+                        ModPacket packet = GenshinMod.Instance.GetPacket();
+                        packet.Write((byte)GenshinModMessageType.PlayerRequestCharacterServer);
+                        packet.Write((byte)player.whoAmI);
+                        packet.Send();
+                    }
+                }
+            }
         }
 
         public override void UpdateEquips()
