@@ -15,8 +15,10 @@ namespace GenshinMod.Common.GameObjects.Enums
         NPCSyncElement,
         NPCSyncElementServer,
         CombatText,
+        CombatTextServer,
+        CombatTextReactionDamage,
+        CombatTextReactionDamageServer,
         CombatTextReaction,
-        CombatTextReactionServer,
-        CombatTextServer
+        CombatTextReactionServer
     }
 }

@@ -15,11 +15,6 @@ namespace GenshinMod.Content.Projectiles
         public static Texture2D TextureSelf;
         public Color GlowColor;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Crytallize");
-        }
-
         public override void SetDefaults()
         {
             Projectile.width = 8;
@@ -35,7 +30,7 @@ namespace GenshinMod.Content.Projectiles
             PostDrawAdditive = true;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureSelf ??= GetTexture();
             GlowColor = GetColor(GetElement());

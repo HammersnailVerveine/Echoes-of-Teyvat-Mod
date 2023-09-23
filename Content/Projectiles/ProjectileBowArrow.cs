@@ -19,8 +19,6 @@ namespace GenshinMod.Content.Projectiles
         public List<Vector2> OldPosition;
         public List<float> OldRotation;
 
-        public bool Disappearing;
-
         public override void SetDefaults()
         {
             Projectile.width = 10;
@@ -55,24 +53,26 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafeOnHitNPC(NPC target)
         {
-            Disappearing = true;
+            Projectile.ai[0] = 1f;
             Projectile.friendly = false;
             Projectile.timeLeft = 30;
             Projectile.penetrate = -1;
+            Projectile.netUpdate = true;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Disappearing = true;
+            Projectile.ai[0] = 1f;
             Projectile.friendly = false;
             Projectile.timeLeft = 30;
             Projectile.penetrate = -1;
+            Projectile.netUpdate = true;
             return false;
         }
 
         public override void SafeAI()
         {
-            if (!Disappearing)
+            if (Projectile.ai[0] != 1f)
             {
                 // Gravity
                 Projectile.velocity.Y += 0.25f;
@@ -89,7 +89,7 @@ namespace GenshinMod.Content.Projectiles
                 Projectile.velocity *= 0f;
             }
 
-            if (OldPosition.Count > 15 || (Disappearing && OldPosition.Count > 0))
+            if (OldPosition.Count > 15 || (Projectile.ai[0] == 1f && OldPosition.Count > 0))
             {
                 OldPosition.RemoveAt(0);
                 OldRotation.RemoveAt(0);
@@ -98,7 +98,7 @@ namespace GenshinMod.Content.Projectiles
 
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
-            if (!Disappearing)
+            if (Projectile.ai[0] != 1f)
             {
                 Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition, Main.GameViewMatrix.EffectMatrix);
                 spriteBatch.Draw(ArrowTexture, drawPosition, null, lightColor * 1.5f, Projectile.rotation, ArrowTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.None, 0f);
@@ -109,7 +109,7 @@ namespace GenshinMod.Content.Projectiles
         {
             float rotation = Projectile.rotation;
 
-            if (!Disappearing)
+            if (Projectile.ai[0] != 1f)
             {
                 if (Element != GenshinElement.NONE)
                 {

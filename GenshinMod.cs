@@ -119,9 +119,6 @@ namespace GenshinMod
                         ability.Hold();
                         character.SyncHoldingAbility = true;
                     }
-
-                    Main.NewText("start holding " + character.Player.name);
-                    Main.NewText(character.Player.name + " " + character.IsLocalPlayer + " " + character.IsCurrentCharacter + " " + character.SyncHoldingAbility);
                     return;
                 case GenshinModMessageType.CharacterStopHoldAbilityServer:
                     packet = GetPacket();
@@ -147,7 +144,6 @@ namespace GenshinMod
 
                     character.AbilityHeld = null;
                     character.SyncHoldingAbility = false;
-                    Main.NewText("stop holding " + character.Player.name);
                     return;
                 case GenshinModMessageType.PlayerSendCurrentCharacterServer:
                     packet = GetPacket();
@@ -159,7 +155,6 @@ namespace GenshinMod
                 case GenshinModMessageType.PlayerSendCurrentCharacter:
                     GenshinPlayer genshinPlayer = Main.player[reader.ReadByte()].GetModPlayer<GenshinPlayer>();
                     Type T = UnlockablesPlayer.UnlockedCharacters[reader.ReadByte()].Item1.GetType();
-                    Main.NewText(T.ToString());
                     genshinPlayer.CharacterTeam = new List<GenshinCharacter>();
                     genshinPlayer.CharacterTeam.Add(((GenshinCharacter)Activator.CreateInstance(T)).Initialize(genshinPlayer));
                     genshinPlayer.CharacterCurrent = genshinPlayer.CharacterTeam[0];
@@ -185,6 +180,21 @@ namespace GenshinMod
                     GenshinElement element = (GenshinElement)reader.ReadByte();
                     int damage = reader.ReadInt32();
                     if (damage > 0) CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(target), GenshinElementUtils.GetColor(element), damage);
+                    else CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
+                    return;
+                case GenshinModMessageType.CombatTextReactionDamageServer:
+                    packet = GetPacket();
+                    packet.Write((byte)GenshinModMessageType.CombatText);
+                    packet.Write(reader.ReadByte());
+                    packet.Write(reader.ReadByte());
+                    packet.Write(reader.ReadInt32());
+                    packet.Send(-1, whoAmI);
+                    return;
+                case GenshinModMessageType.CombatTextReactionDamage:
+                    target = Main.npc[reader.ReadByte()];
+                    GenshinReaction reaction = (GenshinReaction)reader.ReadByte();
+                    damage = reader.ReadInt32();
+                    if (damage > 0) CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(target), GenshinElementUtils.GetReactionColor(reaction), damage);
                     else CombatText.NewText(GenshinGlobalNPC.ExtendedHitboxFlat(target), GenshinElementUtils.ColorImmune, "Immune");
                     return;
                 case GenshinModMessageType.CombatTextReactionServer:
@@ -215,6 +225,7 @@ namespace GenshinMod
                             return;
                         case GenshinReaction.SUPERCONDUCT:
                             CombatText.NewText(GenshinGlobalNPC.ReactionHitbox(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SUPERCONDUCT), "Superconduct");
+                            target.GetGlobalNPC<GenshinGlobalNPC>().ReactionSuperconduct = 60 * 12; // Phys res debuff 12 sec.
                             return;
                         case GenshinReaction.SWIRL:
                             CombatText.NewText(GenshinGlobalNPC.ReactionHitbox(target), GenshinElementUtils.GetReactionColor(GenshinReaction.SWIRL), "Swirl");

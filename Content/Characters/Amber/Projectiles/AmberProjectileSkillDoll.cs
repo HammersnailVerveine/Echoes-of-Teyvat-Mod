@@ -96,11 +96,12 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
                 {
                     if (projectile.ModProjectile is Content.Projectiles.ProjectileBowArrow arrow)
                     {
-                        if (arrow.Projectile.Center.Distance(Projectile.Center) < 32f && arrow.OwnerCharacter is CharacterAmber && arrow.Element == GenshinElement.PYRO && !arrow.Disappearing)
+                        if (arrow.Projectile.Center.Distance(Projectile.Center) < 32f && arrow.OwnerCharacter is CharacterAmber && arrow.Element == GenshinElement.PYRO && arrow.Projectile.ai[0] != 1f)
                         {
                             Projectile.damage *= 3;
                             Projectile.Kill();
-                            arrow.Disappearing = true;
+                            arrow.Projectile.ai[0] = 1f;
+                            arrow.Projectile.netUpdate = true;
                         }
                     }
                 }

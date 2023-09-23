@@ -10,13 +10,8 @@ namespace GenshinMod.Content.Projectiles
 {
     public class ProjectileOverloaded : GenshinProjectile
     {
-        public Texture2D TextureProjectile;
+        public static Texture2D TextureProjectile;
         float alpha = 1f;
-
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Overload Blast");
-        }
 
         public override void SetDefaults()
         {
@@ -32,7 +27,7 @@ namespace GenshinMod.Content.Projectiles
             AttackWeight = AttackWeight.BLUNT;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);
             TextureProjectile ??= GetTexture();

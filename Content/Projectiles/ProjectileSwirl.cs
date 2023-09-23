@@ -4,21 +4,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.ID;
 
 namespace GenshinMod.Content.Projectiles
 {
     public class ProjectileSwirl : GenshinProjectile
     {
-        public Texture2D TextureProjectile;
+        public static Texture2D TextureProjectile;
         float alpha = 1f;
         float rotationRand = 0f;
-
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Swirl");
-        }
 
         public override void SetDefaults()
         {
@@ -35,7 +29,7 @@ namespace GenshinMod.Content.Projectiles
             IgnoreICD = true;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureProjectile ??= GetTexture();
             Projectile.scale = 0.5f;
