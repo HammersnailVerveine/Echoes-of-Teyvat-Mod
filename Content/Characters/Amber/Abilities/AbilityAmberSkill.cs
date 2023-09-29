@@ -39,7 +39,7 @@ namespace GenshinMod.Content.Characters.Amber.Abilities
             velocity.Normalize();
             velocity *= new Vector2(refX, refY).Length() * 0.5f;
             velocity.X = refX * 0.45f;
-            velocity.Y -= 3f;
+            velocity.Y -= Math.Abs(refX) * 0.4f;
 
             SpawnProjectile(Player.Center, velocity, type);
 

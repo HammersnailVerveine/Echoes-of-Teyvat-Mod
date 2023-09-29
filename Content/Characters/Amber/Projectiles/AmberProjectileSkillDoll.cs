@@ -21,8 +21,6 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         public List<Vector2> OldPosition;
         public List<float> OldRotation;
 
-        bool HitGround = false;
-
         public override void SetDefaults()
         {
             Projectile.width = 20;
@@ -49,7 +47,6 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Projectile.velocity.Y *= 0f;
-            HitGround = true;
             return false;
         }
 
