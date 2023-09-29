@@ -43,6 +43,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
             ProjectileTexture ??= GetTexture();
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
+            Projectile.direction = Projectile.velocity.X > 0 ? 1 : -1;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -61,9 +62,16 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
 
         public override void SafeAI()
         {
+            /*
             Projectile.velocity.Y += 0.25f;
             Projectile.velocity.X *= 0.99f;
             if (HitGround) Projectile.velocity.X *= 0.95f;
+            */
+
+            if (Math.Abs(Projectile.velocity.X) > 0.1f) Projectile.velocity.X -= 0.1f * Projectile.direction;
+            else Projectile.velocity.X = 0f;
+            Projectile.velocity.Y += 0.25f;
+
             Projectile.rotation = Projectile.velocity.X / 10f;
 
             if (Projectile.velocity.X > 0.5f && TimeSpent < 60) Projectile.timeLeft++;

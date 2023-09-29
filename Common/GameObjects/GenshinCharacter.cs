@@ -152,7 +152,7 @@ namespace GenshinMod.Common.GameObjects
         public float StatResistancePyro = 0f; // 0f = 100% damage taken by Pyro, 1f = immune, can be negative to take more damage (base = 0%)
         public float StatResistancePhysical = 0f; // 0f = 100% damage taken by Physical (or "none"), 1f = immune, can be negative to take more damage (base = 0%)
 
-        public float WeaponSize = 1f;
+        public float WeaponSize = 1f; // Character weapon size multiplier
 
         public List<ICDTracker> ICDTrackers;
 

@@ -1,6 +1,6 @@
 namespace GenshinMod.Common.GameObjects.Enums
 {
-    public enum AttackWeight : int
+    public enum AttackWeight : byte
     {
         LIGHT = 0,
         MEDIUM = 1,
