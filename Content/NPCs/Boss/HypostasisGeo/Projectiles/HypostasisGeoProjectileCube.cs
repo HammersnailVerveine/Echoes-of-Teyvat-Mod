@@ -69,10 +69,6 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
             SpawnDust<HypostasisGeoDustSmall>(0f, 1f, 16, 1, 60);
         }
 
-        public override void Kill(int timeLeft)
-        {
-        }
-
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Projectile.tileCollide = false;

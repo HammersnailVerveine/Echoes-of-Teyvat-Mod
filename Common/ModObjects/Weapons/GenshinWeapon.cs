@@ -97,7 +97,7 @@ namespace GenshinMod.Common.ModObjects.Weapons
             {
                 var proj = Main.projectile.First(i => i.active && i.owner == Player.whoAmI && i.type == anchorType);
                 if (proj != null && proj.ModProjectile is WeaponAnchor anchor)
-                    anchor.Kill(proj.timeLeft);
+                    anchor.OnKill(proj.timeLeft);
             }
         }
 

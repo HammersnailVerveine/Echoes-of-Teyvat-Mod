@@ -78,10 +78,6 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
             else Projectile.friendly = false;
         }
 
-        public override void Kill(int timeLeft)
-        {
-        }
-
         public void CalculateNodes()
         {
             Projectile.width = 1;

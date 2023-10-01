@@ -48,7 +48,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             Lighting.AddLight(Projectile.Center, 0.2f, 0.2f, 0.2f);
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             int type = ModContent.ProjectileType<KleeExplosionMedium>();
             SpawnProjectile(Projectile.Center, VelocityImmobile, type, Projectile.damage, Projectile.knockBack);

@@ -50,7 +50,7 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
             return false;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             int type = ModContent.ProjectileType<AmberProjectileExplosion>();
             SpawnProjectile(Projectile.Center, VelocityImmobile, type, Projectile.damage, Projectile.knockBack);

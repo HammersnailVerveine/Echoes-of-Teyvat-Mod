@@ -62,7 +62,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             Projectile.rotation += Projectile.velocity.Length() / 75f * Projectile.direction;
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             int type = ModContent.ProjectileType<KleeExplosionMedium>();
             SpawnProjectile(Projectile.Center, VelocityImmobile, type, Projectile.damage, Projectile.knockBack);

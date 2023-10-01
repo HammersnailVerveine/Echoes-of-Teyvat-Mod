@@ -59,7 +59,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             SpawnDust<KleeSparkleDustBigRed>(0.5f, 1f, 10, 1, 300);
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             int type = ModContent.ProjectileType<KleeExplosionSmall>();
             SpawnProjectile(Projectile.Center, VelocityImmobile, type, Projectile.damage * 5, Projectile.knockBack);

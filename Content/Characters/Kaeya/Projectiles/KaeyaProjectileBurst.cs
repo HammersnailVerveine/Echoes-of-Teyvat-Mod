@@ -89,7 +89,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
             }
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             SpawnDust<KaeyaDustFrost>(1f, 1f, 10, 8);
             SpawnDust<KaeyaDustFrostBig>(0.75f, 1f, 5, 3);

@@ -99,10 +99,6 @@ namespace GenshinMod.Content.NPCs.Boss.HypostasisGeo.Projectiles
             SpawnDust<HypostasisGeoDustSmall>(0f, 1f, 16, 1, 25);
         }
 
-        public override void Kill(int timeLeft)
-        {
-        }
-
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
             Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);

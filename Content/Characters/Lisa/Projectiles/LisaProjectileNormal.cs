@@ -55,10 +55,6 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
             if (TimeSpent > 10) lightmult *= 0.9f;
         }
 
-        public override void Kill(int timeLeft)
-        {
-        }
-
         public void CalculateNodes()
         {
             Positions = new List<Vector2>();

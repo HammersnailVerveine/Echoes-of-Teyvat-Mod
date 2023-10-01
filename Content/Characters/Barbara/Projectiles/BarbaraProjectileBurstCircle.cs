@@ -53,7 +53,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
             }
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             SpawnDust<BarbaraDustBubble>(0.5f, Main.rand.NextFloat(1f, 2f), (int)(10 * Projectile.scale), 15);
             for (int i = 0; i < 15; i++)

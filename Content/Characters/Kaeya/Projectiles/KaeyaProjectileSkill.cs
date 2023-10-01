@@ -87,10 +87,6 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
             else multAlpha *= 0.935f;
         }
 
-        public override void Kill(int timeLeft)
-        {
-        }
-
         public override void SafePostDraw(Color lightColor, SpriteBatch spriteBatch)
         {
             if (!FirstFrame)

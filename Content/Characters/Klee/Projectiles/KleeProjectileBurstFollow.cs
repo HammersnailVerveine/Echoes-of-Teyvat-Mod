@@ -88,7 +88,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             SpawnDust<KleeSparkleDustBigRed>(1f, 1f, 10, 1, 20);
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
 
             SpawnDust<KleeSparkleDust>(1f, 1f, 30, 8);

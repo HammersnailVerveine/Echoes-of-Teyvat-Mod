@@ -50,7 +50,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
                 Positions.RemoveAt(0);
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             if (timeLeft > 0)
                 SpawnDust<LisaDustRound>(1f, 1f, 10, 10);

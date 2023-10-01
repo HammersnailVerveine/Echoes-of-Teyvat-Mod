@@ -74,7 +74,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
             }
         }
 
-        public override void Kill(int timeLeft)
+        public override void OnKill(int timeLeft)
         {
             SpawnDust<BarbaraDustStarBig>(0.1f, 1f, 0, 4);
             SpawnDust<BarbaraDustStar>(0.2f, 1f, 0, 4);
