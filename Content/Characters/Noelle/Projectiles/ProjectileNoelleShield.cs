@@ -15,11 +15,6 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
     {
         public static Texture2D TextureSelf;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Shield Shatter");
-        }
-
         public override void SetDefaults()
         {
             Projectile.width = 96;
@@ -47,7 +42,7 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
                 Projectile.friendly = false;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureSelf ??= ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         }

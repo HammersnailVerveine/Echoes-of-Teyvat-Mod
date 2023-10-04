@@ -35,7 +35,6 @@ namespace GenshinMod.Content.Characters.Amber.Projectiles
         
         public override void OnFirstFrame()
         {
-            GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             TrailTexture ??= GetTexture();
             ArrowTexture = ModContent.Request<Texture2D>(OwnerCharacter.Weapon.Texture + "_Arrow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         }

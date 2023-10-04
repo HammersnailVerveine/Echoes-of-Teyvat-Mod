@@ -33,7 +33,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
             AttackWeight = AttackWeight.LIGHT;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             Projectile.scale = 2.5f;
             Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);

@@ -34,7 +34,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             CanDealDamage = false;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             SpawnDust<KleeSparkleDust>(Projectile.position, Projectile.velocity * 2, 0f, 1.5f, 8, 3);
         }

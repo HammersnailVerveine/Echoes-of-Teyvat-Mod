@@ -34,7 +34,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             CanDealDamage = false;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             for (int i = 0; i < 5; i++) // Dust
             {

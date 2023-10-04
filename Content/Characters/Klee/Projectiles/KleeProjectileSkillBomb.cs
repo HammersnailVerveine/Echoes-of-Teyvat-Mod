@@ -35,7 +35,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             CanDealDamage = false;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             Projectile.frame = Main.rand.Next(8);
             Projectile.timeLeft -= Main.rand.Next(60);

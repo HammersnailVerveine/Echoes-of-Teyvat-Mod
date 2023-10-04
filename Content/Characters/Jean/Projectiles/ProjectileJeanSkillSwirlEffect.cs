@@ -12,7 +12,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
 {
     public class ProjectileJeanSkillSwirlEffect : GenshinProjectile
     {
-        public Texture2D TextureProjectile;
+        public static Texture2D TextureProjectile;
         float alpha = 1f;
         float rotationRand = 0f;
 
@@ -36,7 +36,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
             IgnoreICD = true;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureProjectile ??= GetTexture();
             Projectile.scale = 0.5f;
@@ -54,6 +54,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
 
         public override void SafePostDrawAdditive(Color lightColor, SpriteBatch spriteBatch)
         {
+            if (TextureProjectile == null) return;
             Vector2 drawPosition = Vector2.Transform(Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), Main.GameViewMatrix.EffectMatrix);
             Color color = GenshinElementUtils.GetColor(Element) * alpha;
             if (TimeSpent <= 5) color *= TimeSpent * 0.2f;

@@ -39,7 +39,7 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
             AttackWeight = AttackWeight.BLUNT;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureProjectile = GetTexture();
             TextureGlow ??= ModContent.Request<Texture2D>(Texture + "_GlowMask", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;

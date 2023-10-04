@@ -36,15 +36,11 @@ namespace GenshinMod.Content.Characters.Albedo.Projectiles
             FirstFrameDamage = true;
             AttackWeight = AttackWeight.BLUNT;
         }
-
-        public override void OnSpawn(IEntitySource source)
+        
+        public override void OnFirstFrame()
         {
             TextureSelf ??= GetTexture();
             Projectile.rotation = Projectile.velocity.ToRotation();
-            Vector2 direction = Projectile.Center - Owner.Center;
-            direction.Normalize();
-            direction *= 15f;
-            Vector2 position = Owner.Center + direction;
             HitNPC = new List<int>();
         }
 

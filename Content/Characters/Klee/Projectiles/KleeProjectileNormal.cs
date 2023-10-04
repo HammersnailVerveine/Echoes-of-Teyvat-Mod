@@ -36,7 +36,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             CanDealDamage = false;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);
             Projectile.frame = Main.rand.Next(2);

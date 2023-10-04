@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace GenshinMod.Content.Characters.Jean.Projectiles
@@ -20,15 +19,10 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
         public List<int> HitNPCPending;
         Vector2 pushDirection = Vector2.Zero;
 
-        public override void SetStaticDefaults()
-        {
-            // DisplayName.SetDefault("Jean Slash");
-        }
-
         public override void SetDefaults()
         {
-            Projectile.width = 10;
-            Projectile.height = 10;
+            Projectile.width = 1;
+            Projectile.height = 1;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.aiStyle = 0;
@@ -42,16 +36,21 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
             ElementalParticleBonusChance = 67;
             AttackWeight = AttackWeight.MEDIUM;
         }
-
-        public override void OnSpawn(IEntitySource source)
+        
+        public override void OnFirstFrame()
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             WeaponTexture = ModContent.Request<Texture2D>(ownerPlayer.CharacterCurrent.Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Projectile.width = (int)(WeaponTexture.Width * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
-            Projectile.height = (int)(WeaponTexture.Height * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
             OldPosition = new List<Vector2>();
             HitNPC = new List<int>();
             HitNPCPending = new List<int>();
+
+            if (IsLocalOwner)
+            {
+                Projectile.width = (int)(WeaponTexture.Width * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
+                Projectile.height = (int)(WeaponTexture.Height * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
+                Projectile.position -= new Vector2(Projectile.width, Projectile.height) * 0.5f;
+            }
         }
 
         public override void SafeOnHitNPC(NPC target)
@@ -115,8 +114,11 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
                 {
                     if (OwnerCharacter is CharacterJean jean)
                     {
-                        int targetDamage = npc.GetGlobalNPC<Common.GlobalObjets.GenshinGlobalNPC>().ApplyResistance((int)(jean.AbilitySkill.GetScaling2() * npc.knockBackResist), GenshinElement.NONE);
-                        OwnerGenshinPlayer.TryApplyDamageToNPC(npc, targetDamage, 0f, -npc.direction, combatText: true);
+                        if (IsLocalOwner)
+                        {
+                            int targetDamage = npc.GetGlobalNPC<Common.GlobalObjets.GenshinGlobalNPC>().ApplyResistance((int)(jean.AbilitySkill.GetScaling2() * npc.knockBackResist), GenshinElement.NONE);
+                            OwnerGenshinPlayer.TryApplyDamageToNPC(npc, targetDamage, 0f, -npc.direction, combatText: true);
+                        }
                         HitNPCPending.RemoveAt(i);
                     }
                 }

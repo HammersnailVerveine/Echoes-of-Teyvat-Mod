@@ -29,7 +29,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
             AttackWeight = AttackWeight.LIGHT;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             for (int i = 0; i < 8; i++)
             {

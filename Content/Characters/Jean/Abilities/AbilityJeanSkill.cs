@@ -21,8 +21,8 @@ namespace GenshinMod.Content.Characters.Jean.Abilities
             AbilityType = AbilityType.SKILL;
             HoldTimeMax = 370;
             HoldTimeFull = 0;
-            Cooldown = 60 * 6;
-            CooldownHeld = 60 * 6;
+            Cooldown = 60 * 6 * 0;
+            CooldownHeld = 60 * 6 * 0;
         }
 
         public override void OnUse()

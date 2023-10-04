@@ -35,7 +35,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
 
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             Projectile.rotation = Main.rand.NextFloat(-(float)Math.PI / 4f, (float)Math.PI / 4f);
             Projectile.spriteDirection = Main.rand.NextBool() ? 1 : -1;

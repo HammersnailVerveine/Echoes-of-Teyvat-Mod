@@ -35,7 +35,7 @@ namespace GenshinMod.Content.Characters.Lisa.Projectiles
             Projectile.penetrate = -1;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             for (int i = 0; i < 35; i++)
             {

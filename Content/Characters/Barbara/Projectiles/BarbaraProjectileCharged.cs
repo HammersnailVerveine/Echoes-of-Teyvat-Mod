@@ -37,18 +37,12 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
             AttackWeight = AttackWeight.LIGHT;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureSelf ??= ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             Projectile.rotation = Main.rand.NextFloat(-(float)Math.PI / 4f, (float)Math.PI / 4f);
             Projectile.spriteDirection = Main.rand.NextBool() ? 1 : -1;
             Projectile.scale = 0.8f;
-
-            /*
-			SpawnDust<BarbaraDustBubble>(0.5f, 1f, 10, 7);
-			SpawnDust<BarbaraDustStar>(0.2f, 1f, 0, 5);
-			SpawnDust<BarbaraDustStarBig>(0.1f, 1f, 0, 2);
-			*/
 
             Vector2 direction = Projectile.Center - Owner.Center;
             if (direction.Length() > 30f)

@@ -42,17 +42,21 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
             AttackWeight = AttackWeight.BLUNT;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             Weapon = ownerPlayer.CharacterCurrent.Weapon;
             WeaponTexture = ModContent.Request<Texture2D>(Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Projectile.width = (int)(WeaponTexture.Width * ownerPlayer.CharacterCurrent.WeaponSize);
-            Projectile.height = (int)(WeaponTexture.Height * ownerPlayer.CharacterCurrent.WeaponSize);
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
             HitNPC = new List<int>();
             ProjectileNoelleNormal.LoadTextures();
+
+            if (IsLocalOwner)
+            {
+                Projectile.width = (int)(WeaponTexture.Width * ownerPlayer.CharacterCurrent.WeaponSize);
+                Projectile.height = (int)(WeaponTexture.Height * ownerPlayer.CharacterCurrent.WeaponSize);
+            }
         }
 
         public override void SafeAI()

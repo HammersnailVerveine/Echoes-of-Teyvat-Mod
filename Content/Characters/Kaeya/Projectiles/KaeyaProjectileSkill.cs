@@ -36,7 +36,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
             ElementalParticleBonusChance = 67;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureWeapon = GetWeaponTexture();
             TextureProjectile = GetTexture();

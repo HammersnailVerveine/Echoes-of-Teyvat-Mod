@@ -14,18 +14,22 @@ namespace GenshinMod.Content.Characters.Noelle.Projectiles
     {
         public static Texture2D TextureGlow;
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             GenshinPlayer ownerPlayer = Owner.GetModPlayer<GenshinPlayer>();
             Weapon = ownerPlayer.CharacterCurrent.Weapon;
             WeaponTexture = ModContent.Request<Texture2D>(Weapon.Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Projectile.width = (int)(WeaponTexture.Width * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
-            Projectile.height = (int)(WeaponTexture.Height * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
             Projectile.scale = ownerPlayer.CharacterCurrent.WeaponSize;
             OldPosition = new List<Vector2>();
             OldRotation = new List<float>();
             HitNPC = new List<int>();
             LoadTextures();
+
+            if (IsLocalOwner)
+            {
+                Projectile.width = (int)(WeaponTexture.Width * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
+                Projectile.height = (int)(WeaponTexture.Height * 1.4f * ownerPlayer.CharacterCurrent.WeaponSize);
+            }
         }
 
         public static void LoadTextures()

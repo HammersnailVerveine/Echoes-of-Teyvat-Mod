@@ -34,7 +34,7 @@ namespace GenshinMod.Content.Characters.Kaeya.Projectiles
             Projectile.alpha = 255;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureProjectile ??= ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             OldPosition = new List<Vector2>();

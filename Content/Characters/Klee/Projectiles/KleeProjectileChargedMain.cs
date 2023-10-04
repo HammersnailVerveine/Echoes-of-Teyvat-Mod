@@ -29,11 +29,6 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             Projectile.tileCollide = true;
             Projectile.aiStyle = 0;
             Projectile.timeLeft = 75;
-            Projectile.scale = 1f;
-        }
-
-        public override void OnSpawn(IEntitySource source)
-        {
             Projectile.scale = 0f;
         }
 

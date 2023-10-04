@@ -31,7 +31,7 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
             AttackWeight = AttackWeight.LIGHT;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             texture ??= ModContent.Request<Texture2D>(Texture, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         }

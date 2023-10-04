@@ -33,7 +33,7 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             Projectile.scale = 1f;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             Projectile.scale = 0f;
             enemyTarget = Main.npc[(int)Projectile.ai[0]];

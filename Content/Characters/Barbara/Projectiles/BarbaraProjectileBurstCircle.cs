@@ -28,11 +28,11 @@ namespace GenshinMod.Content.Characters.Barbara.Projectiles
             Projectile.timeLeft = 70;
             Projectile.penetrate = -1;
             Projectile.alpha = 255;
+            Projectile.scale = 0.25f;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
-            Projectile.scale = 0.25f;
             Projectile.rotation = Main.rand.NextFloat((float)Math.PI * 2f);
             texture ??= GetTexture();
         }

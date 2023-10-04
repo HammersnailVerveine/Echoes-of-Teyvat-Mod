@@ -38,7 +38,7 @@ namespace GenshinMod.Content.Characters.Jean.Projectiles
             IgnoreICD = true;
         }
 
-        public override void OnSpawn(IEntitySource source)
+        public override void OnFirstFrame()
         {
             TextureProjectile ??= GetTexture();
             Projectile.scale = 0.5f;
