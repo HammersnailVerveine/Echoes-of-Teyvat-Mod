@@ -36,10 +36,6 @@ namespace GenshinMod.Content.Characters.Klee.Projectiles
             ElementalParticles = 4;
         }
 
-        public override void OnSpawn(IEntitySource source)
-        {
-        }
-
         public override void SafeAI()
         {
             Projectile.rotation = Projectile.velocity.Y / 9 * -Projectile.direction;
